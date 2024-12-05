@@ -12,8 +12,12 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies (bun)
+        run: bun install
       - name : npm run build
-        run: npm run build
+        run: bun run build
       - name: Build and push image and SBOM to OCI registry
         uses: nais/docker-build-push@v0
         id: docker-build-push
