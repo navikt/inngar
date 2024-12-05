@@ -6,9 +6,11 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import "@navikt/ds-css";
 
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
+import {Alert} from "@navikt/ds-react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -62,15 +64,20 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     stack = error.stack;
   }
 
+  details = error.data.message
+
   return (
     <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+      <Alert variant="error">
+        <h1>{message}</h1>
+        <p>{details}</p>
+        {stack && (
+            <pre className="w-full p-4 overflow-x-auto">
           <code>{stack}</code>
         </pre>
-      )}
+        )}
+      </Alert>
+
     </main>
   );
 }
