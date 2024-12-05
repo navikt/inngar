@@ -10,4 +10,4 @@ WORKDIR /app
 EXPOSE 3000
 
 ENV NODE_ENV=production
-CMD ["./server.index.js"]
+CMD ["./server/index.js"]
