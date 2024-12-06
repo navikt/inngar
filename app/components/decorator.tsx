@@ -18,7 +18,7 @@ const ClientOnly = ({ App }: {  }) => {
 }
 
 const InternarbeidsflateDecorator = () => {
-    const rootMountRef = useRef()
+    const rootMountRef = useRef(null)
     const appMountFunction = window.NAVSPA[exportName]
 
     useEffect(() => {
