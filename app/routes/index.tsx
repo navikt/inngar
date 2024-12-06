@@ -1,7 +1,8 @@
 import type { Route } from "./+types/index";
 import {Button} from "@navikt/ds-react";
 import {data, Form} from "react-router";
-import {logger} from "~/logger";
+import {loggerServer} from "~/logger.server";
+import Decorator from "~/components/decorator";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -29,16 +30,33 @@ export const action = async (args: Route.ActionArgs) => {
         body: JSON.stringify({ fnr })
       })
     } catch (e) {
-        logger.error("Kunne ikke opprette oppfolgingsperiode i veilarboppfolging", e)
+        loggerServer.error("Kunne ikke opprette oppfolgingsperiode i veilarboppfolging", e)
         throw data({ message: "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging" }, { status: 500 })
     }
 }
 
+// export const clientLoader = async () => {
+//     console.log("Client loader")
+//     return { data: 1 }
+// }
+// clientLoader.hydrate = true as const
+
+export function HydrateFallback() {
+    return <p>Loading...</p>;
+}
+
 export default function Index() {
-  return <div>
-    <Form method="post">
-      <input name="fnr" defaultValue="1234567890" />
-      <Button>Start arbeidsoppfølging</Button>
-    </Form>
+    return <div>
+        <Decorator />
+        <Form method="post">
+          <input name="fnr" defaultValue="1234567890"/>
+          <Button>Start arbeidsoppfølging</Button>
+        </Form>
+        <script
+          src="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/bundle.js"></script>
+        <link
+          rel="stylesheet"
+          href="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/index.css"
+        />
   </div>;
 }

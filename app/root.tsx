@@ -11,7 +11,6 @@ import "@navikt/ds-css";
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import {Alert} from "@navikt/ds-react";
-import {logger} from "~/logger";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -54,8 +53,6 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
 
-  logger.error("Noe gikk galt", error)
-
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "Error";
     details =
@@ -63,11 +60,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         ? "The requested page could not be found."
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
+    details = error?.message;
     stack = error.stack;
   }
 
-  details = error.data.message
+  details = error.data?.message
 
   return (
     <main className="pt-16 p-4 container mx-auto">

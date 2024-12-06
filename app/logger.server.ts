@@ -7,7 +7,7 @@ const maskedJsonFormat = format.printf((logEntry) => {
     })
 });
 
-export const logger = createLogger({
+export const loggerServer = createLogger({
     level: 'info',
     format: format.combine(
         format.splat(),
