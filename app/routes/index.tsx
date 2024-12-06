@@ -1,6 +1,7 @@
 import type { Route } from "./+types/index";
 import {Button} from "@navikt/ds-react";
 import {data, Form} from "react-router";
+import {logger} from "~/logger";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -28,7 +29,8 @@ export const action = async (args: Route.ActionArgs) => {
         body: JSON.stringify({ fnr })
       })
     } catch (e) {
-      throw data({ message: "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging" }, { status: 500 })
+        logger.error("Kunne ikke opprette oppfolgingsperiode i veilarboppfolging", e)
+        throw data({ message: "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging" }, { status: 500 })
     }
 }
 
