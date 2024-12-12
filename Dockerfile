@@ -10,8 +10,6 @@ COPY ./build /app/build
 
 WORKDIR /app
 
-RUN bun i @react-router/serve
-
 EXPOSE 3000
 
 ENV NODE_ENV=production
