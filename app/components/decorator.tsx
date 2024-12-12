@@ -33,6 +33,7 @@ const InternarbeidsflateDecorator = () => {
                 environment: 'q2',
                 urlFormat: "ANSATT",
                 showHotkeys: false,
+                proxy: '/api/modiacontextholder'
             })
         }
     })
