@@ -29,6 +29,8 @@ spec:
       rules:
         - application: veilarboppfolging
           namespace: poao
+        - application: modiacontextholder
+          namespace: personoversikt
   observability:
     autoInstrumentation:
       enabled: true
