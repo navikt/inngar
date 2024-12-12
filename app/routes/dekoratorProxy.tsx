@@ -19,12 +19,12 @@ export async function action({ request }: Route.ActionArgs) {
     return await fetch(newRequest);
 }
 
-export function handleError(
-    error: unknown,
-    { request }: Route.ActionArgs | Route.LoaderArgs
-) {
-    if (!process) return
-    if (!request.signal.aborted) {
-        loggerServer.error(error)
-    }
-}
+// export function handleError(
+//     error: unknown,
+//     { request }: Route.ActionArgs | Route.LoaderArgs
+// ) {
+//     if (!process) return
+//     if (!request.signal.aborted) {
+//         loggerServer.error(error)
+//     }
+// }
