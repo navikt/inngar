@@ -16,7 +16,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies (bun)
         run: bun install
-      - name : npm run build
+      - name : bun run build
         run: bun run build
       - name: Build and push image and SBOM to OCI registry
         uses: nais/docker-build-push@v0

@@ -7,6 +7,7 @@ COPY ./node_modules /app/node_modules
 COPY ./package.json /app/package.json
 COPY ./bun.lockb /app/bun.lockb
 COPY ./build /app/build
+COPY ./server.ts /app/server.ts
 
 WORKDIR /app
 
