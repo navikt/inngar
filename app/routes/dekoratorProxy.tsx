@@ -1,5 +1,6 @@
 import type { Route } from "./+types/dekoratorProxy";
 import { loggerServer } from "../logger";
+import * as process from "node:process";
 
 const target = "http://modiacontextholder.personoversikt";
 
@@ -23,6 +24,7 @@ export function handleError(
     error: unknown,
     { request }: Route.ActionArgs | Route.LoaderArgs
 ) {
+    if (!process) return
     if (!request.signal.aborted) {
         loggerServer.error(error)
     }

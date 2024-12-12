@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import url from "node:url";
-// import type { ServerBuild } from "react-router";
+import type { ServerBuild } from "react-router";
 import { createRequestHandler } from "@react-router/express";
 import compression from "compression";
 import express from "express";
@@ -10,8 +10,13 @@ import morgan from "morgan";
 import sourceMapSupport from "source-map-support";
 import getPort from "get-port";
 import { loggerServer as logger } from './app/logger'
+import * as process from "node:process";
 
 process.env.NODE_ENV = process.env.NODE_ENV ?? "production";
+
+process.on("unhandledRejection", (e) => {
+    logger.error(e)
+})
 
 sourceMapSupport.install({
     retrieveSourceMap: function (source) {
@@ -52,7 +57,7 @@ async function run() {
 
     let buildPath = path.resolve(buildPathArg);
 
-    let build = await import(url.pathToFileURL(buildPath).href);
+    let build: ServerBuild = await import(url.pathToFileURL(buildPath).href);
 
     let onListen = () => {
         let address =
