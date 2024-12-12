@@ -11,6 +11,15 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export function handleError(
+    error: unknown,
+    { request }: Route.ActionArgs | Route.LoaderArgs
+) {
+    if (!request.signal.aborted) {
+        loggerServer.error(error)
+    }
+}
+
 const veilarboppfolgingUrl = "http://poao.veilarboppfolging"
 
 export const action = async (args: Route.ActionArgs) => {
