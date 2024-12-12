@@ -9,7 +9,7 @@ import express from "express";
 import morgan from "morgan";
 import sourceMapSupport from "source-map-support";
 import getPort from "get-port";
-import { loggerServer as logger } from './app/logger'
+import { logger as logger } from '~/logger'
 import * as process from "node:process";
 
 process.env.NODE_ENV = process.env.NODE_ENV ?? "production";
@@ -70,9 +70,7 @@ async function run() {
         if (!address) {
             logger.info(`http://localhost:${port}`);
         } else {
-            logger.info(
-                `http://localhost:${port} (http://${address}:${port})`
-            );
+            logger.info(`http://inngar.dab:${port} (http://${address}:${port})`);
         }
     };
 

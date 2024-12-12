@@ -1,7 +1,7 @@
 import type { Route } from "./+types/index";
 import {Button} from "@navikt/ds-react";
 import {data, Form} from "react-router";
-import { loggerServer } from "../logger";
+import { logger } from "../logger";
 import Decorator from "~/components/decorator";
 
 export function meta({}: Route.MetaArgs) {
@@ -16,7 +16,7 @@ export function handleError(
     { request }: Route.ActionArgs | Route.LoaderArgs
 ) {
     if (!request.signal.aborted) {
-        loggerServer.error(error)
+        logger.error(error)
     }
 }
 
@@ -39,9 +39,14 @@ export const action = async (args: Route.ActionArgs) => {
         body: JSON.stringify({ fnr })
       })
     } catch (e) {
-        loggerServer.error("Kunne ikke opprette oppfolgingsperiode i veilarboppfolging", e)
+        logger.error("Kunne ikke opprette oppfolgingsperiode i veilarboppfolging", e)
         throw data({ message: "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging" }, { status: 500 })
     }
+}
+
+export const loader = () => {
+    logger.info("Hei")
+    return {}
 }
 
 // export const clientLoader = async () => {
@@ -55,6 +60,7 @@ export function HydrateFallback() {
 }
 
 export default function Index() {
+    logger.info("Log")
     return <div>
         <Decorator />
         <Form method="post">

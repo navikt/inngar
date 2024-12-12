@@ -1,5 +1,5 @@
 import type { Route } from "./+types/dekoratorProxy";
-import { loggerServer } from "../logger";
+// import { logger } from "../logger";
 
 const target = "http://modiacontextholder.personoversikt";
 
@@ -25,6 +25,6 @@ export async function action({ request }: Route.ActionArgs) {
 // ) {
 //     if (!process) return
 //     if (!request.signal.aborted) {
-//         loggerServer.error(error)
+//         logger.error(error)
 //     }
 // }

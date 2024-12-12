@@ -11,6 +11,7 @@ import "@navikt/ds-css";
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import {Alert} from "@navikt/ds-react";
+import {logger} from "~/logger";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -65,6 +66,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   details = error.data?.message
+
+  logger.error("Noe gikk veldig galt")
 
   return (
     <main className="pt-16 p-4 container mx-auto">

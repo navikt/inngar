@@ -1,5 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import type {DecoratorProps} from "~/components/decoratorProps";
+import type {Route} from "../../.react-router/types/app/routes/+types";
+import {logger} from "~/logger";
 
 const exportName = "internarbeidsflate-decorator-v3"
 
@@ -15,6 +17,15 @@ const ClientOnly = ({ App }: {  }) => {
         setRendered(true)
     }, [])
     return rendered ? <App /> : <div>Ikke noe decorator :(</div>
+}
+
+export function handleError(
+    error: unknown,
+    { request }: Route.ActionArgs | Route.LoaderArgs
+) {
+    if (!request.signal.aborted) {
+        logger.error(error)
+    }
 }
 
 const InternarbeidsflateDecorator = () => {
