@@ -1,6 +1,5 @@
 import type { Route } from "./+types/dekoratorProxy";
 import { loggerServer } from "../logger";
-import * as process from "node:process";
 
 const target = "http://modiacontextholder.personoversikt";
 
