@@ -88,7 +88,7 @@ async function run() {
     );
     app.use(build.publicPath, express.static(build.assetsBuildDirectory));
     app.use(express.static("public", { maxAge: "1h" }));
-    app.use(morgan("tiny", { stream: {
+    app.use(morgan("combined", { stream: {
         write: (message) => {
             logger.debug(message.trim());
         }
