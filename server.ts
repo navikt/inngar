@@ -9,7 +9,7 @@ import express from "express";
 import morgan from "morgan";
 import sourceMapSupport from "source-map-support";
 import getPort from "get-port";
-import { loggerServer as logger } from './app/logger.server'
+import { loggerServer as logger} from '~/logger'
 
 process.env.NODE_ENV = process.env.NODE_ENV ?? "production";
 

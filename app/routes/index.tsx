@@ -1,7 +1,7 @@
 import type { Route } from "./+types/index";
 import {Button} from "@navikt/ds-react";
 import {data, Form} from "react-router";
-import {loggerServer} from "~/logger.server";
+import { loggerServer } from "~/logger";
 import Decorator from "~/components/decorator";
 
 export function meta({}: Route.MetaArgs) {
