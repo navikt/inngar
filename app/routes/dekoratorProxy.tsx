@@ -1,14 +1,25 @@
 import type { Route } from "./+types/dekoratorProxy";
-// import { logger } from "../logger";
+import { logger } from "../logger";
 
 const target = "http://modiacontextholder.personoversikt";
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const newUrl = new URL(request.url);
-    newUrl.host = target;
+    try {
+        const newUrl = new URL(request.url);
+        newUrl.host = target;
 
-    const newRequest = new Request(newUrl.toString(), new Request(request));
-    return await fetch(newRequest);
+        const newRequest = new Request(newUrl.toString(), new Request(request));
+        return await fetch(newRequest)
+            .then(res => {
+                if (!res.ok) {
+                    logger.error("Dårlig respons", res)
+                }
+                return res
+            });
+    } catch (e) {
+        logger.error(e)
+        return new Response("Internal server error", { status: 500 })
+    }
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -19,12 +30,11 @@ export async function action({ request }: Route.ActionArgs) {
     return await fetch(newRequest);
 }
 
-// export function handleError(
-//     error: unknown,
-//     { request }: Route.ActionArgs | Route.LoaderArgs
-// ) {
-//     if (!process) return
-//     if (!request.signal.aborted) {
-//         logger.error(error)
-//     }
-// }
+export function handleError(
+    error: unknown,
+    { request }: Route.ActionArgs | Route.LoaderArgs
+) {
+    if (!request.signal.aborted) {
+        logger.error(error)
+    }
+}
