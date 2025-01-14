@@ -12,6 +12,11 @@ import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import {Alert} from "@navikt/ds-react";
 import {logger} from "~/logger";
+import * as process from "node:process";
+
+if (process && process.env && process.env.NODE_ENV === 'development') {
+  import('./mock/setupMock')
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

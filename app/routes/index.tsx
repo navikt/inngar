@@ -44,23 +44,11 @@ export const action = async (args: Route.ActionArgs) => {
     }
 }
 
-export const loader = () => {
-    logger.info("Hei")
-    return {}
-}
-
-// export const clientLoader = async () => {
-//     console.log("Client loader")
-//     return { data: 1 }
-// }
-// clientLoader.hydrate = true as const
-
 export function HydrateFallback() {
     return <p>Loading...</p>;
 }
 
 export default function Index() {
-    logger.info("Log")
     return <div>
         <Decorator />
         <Form method="post">
