@@ -100,11 +100,8 @@ export default function Index() {
                     <TextField
                         className="w-40"
                         label={"Fødselsnr:"}
-                        value={
-                            !fnrState.loading
-                                ? (fnrState.fnr ?? undefined)
-                                : undefined
-                        }
+                        readOnly
+                        value={!fnrState.loading ? (fnrState.fnr ?? "") : ""}
                     />
                     <Button>Start arbeidsoppfølging</Button>
                 </Form>

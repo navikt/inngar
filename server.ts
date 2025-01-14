@@ -13,7 +13,7 @@ import { logger as logger } from "./app/logger"
 import * as process from "node:process"
 
 process.on("unhandledRejection", (e) => {
-    logger.error(e)
+    logger.error("unhandledRejection:", e)
 })
 
 sourceMapSupport.install({
