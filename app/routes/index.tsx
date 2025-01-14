@@ -3,6 +3,7 @@ import {Button} from "@navikt/ds-react";
 import {data, Form} from "react-router";
 import { logger } from "../logger";
 import Decorator from "~/components/decorator";
+import {useState} from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -48,11 +49,16 @@ export function HydrateFallback() {
     return <p>Loading...</p>;
 }
 
+type FnrState = { loading: true } | { loading: false, fnr?: string | undefined | null }
+
 export default function Index() {
+    const [fnrState, setState] = useState<FnrState>({ loading: true })
     return <div>
-        <Decorator />
+        <Decorator onFnrChanged={(fnr) => {
+            setState({ loading: false, fnr })
+        }} />
         <Form method="post">
-          <input name="fnr" defaultValue="1234567890"/>
+          <input name="fnr" defaultValue="1234567890" value={!fnrState.loading ? fnrState.fnr : undefined}/>
           <Button>Start arbeidsoppfølging</Button>
         </Form>
         <script

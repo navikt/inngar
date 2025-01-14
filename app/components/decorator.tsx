@@ -19,6 +19,15 @@ const ClientOnly = ({ App }: {  }) => {
     return rendered ? <App /> : <div>Ikke noe decorator :(</div>
 }
 
+const ClientOnlyChild = ({ children }: { children:any }) => {
+    const [rendered, setRendered] = useState(false)
+    useEffect(() => {
+        setRendered(true)
+    }, [])
+    if (rendered) return children
+    else return null
+}
+
 export function handleError(
     error: unknown,
     { request }: Route.ActionArgs | Route.LoaderArgs
@@ -28,7 +37,9 @@ export function handleError(
     }
 }
 
-const InternarbeidsflateDecorator = () => {
+type OnFnrChanged = (fnr?: string | null | undefined) => void
+
+const InternarbeidsflateDecorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
     const rootMountRef = useRef(null)
     const appMountFunction = window.NAVSPA[exportName]
 
@@ -37,7 +48,7 @@ const InternarbeidsflateDecorator = () => {
             appMountFunction(rootMountRef.current, {
                 fetchActiveUserOnMount: true,
                 onEnhetChanged: () => {},
-                onFnrChanged: () => {},
+                onFnrChanged: onFnrChanged,
                 showSearchArea: true,
                 showEnheter: false,
                 appName: "Arbeidsoppfolging registrering",
@@ -52,7 +63,10 @@ const InternarbeidsflateDecorator = () => {
     return <div ref={rootMountRef} > </div>
 }
 
-const Decorator = () => {
-    return <ClientOnly App={InternarbeidsflateDecorator} />
+const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
+    // return <ClientOnly App={InternarbeidsflateDecorator} />
+    return <ClientOnlyChild >
+        <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />
+    </ClientOnlyChild>
 }
 export default Decorator
