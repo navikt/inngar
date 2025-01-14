@@ -16,7 +16,7 @@ export async function loader({ request }: Route.LoaderArgs) {
             return res
         })
     } catch (e) {
-        logger.error("Fikk ikke svar fra modiacontextholder", e)
+        logger.error(`Fikk ikke svar fra modiacontextholder: ${e.toString()}`)
         return new Response("Internal server error", { status: 500 })
     }
 }
