@@ -1,5 +1,6 @@
-import {setupServer} from "msw/node";
+
 import {handlers} from "~/mock/handlers";
+import {setupServer} from "msw/node";
 
 console.log("Setting up msw handlers...")
 
