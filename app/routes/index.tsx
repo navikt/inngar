@@ -5,6 +5,13 @@ import { logger } from "../logger";
 import Decorator from "~/components/decorator";
 import {useState} from "react";
 
+export async function clientLoader({  }) {
+
+    if(import.meta.env.DEV) {
+        import('../mock/setupMockClient')
+    }
+}
+
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
@@ -61,11 +68,5 @@ export default function Index() {
           <input name="fnr" defaultValue="1234567890" value={!fnrState.loading ? fnrState.fnr : undefined}/>
           <Button>Start arbeidsoppfølging</Button>
         </Form>
-        <script
-          src="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/bundle.js"></script>
-        <link
-          rel="stylesheet"
-          href="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/index.css"
-        />
   </div>;
 }
