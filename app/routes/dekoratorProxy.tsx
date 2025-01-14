@@ -24,7 +24,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 export async function action({ request }: Route.ActionArgs) {
     const newUrl = new URL(request.url)
     newUrl.host = target
-
+    logger.info(`Videresender contextholderkall til: ${newUrl.toString()}`)
     const newRequest = new Request(newUrl.toString(), new Request(request))
     return await fetch(newRequest)
 }
