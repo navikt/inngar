@@ -1,5 +1,5 @@
 import type { Route } from "./+types/index";
-import {Button} from "@navikt/ds-react";
+import {BodyShort, Button, Heading, TextField} from "@navikt/ds-react";
 import {data, Form} from "react-router";
 import { logger } from "../logger";
 import Decorator from "~/components/decorator";
@@ -64,9 +64,15 @@ export default function Index() {
         <Decorator onFnrChanged={(fnr) => {
             setState({ loading: false, fnr })
         }} />
-        <Form method="post">
-          <input name="fnr" defaultValue="1234567890" value={!fnrState.loading ? fnrState.fnr : undefined}/>
-          <Button>Start arbeidsoppfølging</Button>
-        </Form>
+        <div className="flex flex-col w-[600px] m-8 p-4 space-y-4">
+            <Heading size="large">Registrer arbeidsrettet oppfølging</Heading>
+            <BodyShort>
+                Arbeidsrettet oppfølging handler om å støtte personer som står utenfor eller er i fare for å falle ut av arbeidslivet, slik at de kan komme i arbeid eller beholde jobben. Dette innebærer tilrettelegging, veiledning og tett samarbeid mellom arbeidstaker, arbeidsgiver og ofte NAV eller andre aktører. Målet er å identifisere og redusere hindringer for arbeid, som helseutfordringer, manglende kompetanse eller sosiale forhold, og skape en plan for deltakelse i arbeidslivet. Oppfølgingen tilpasses individuelt for å sikre best mulig resultat.
+            </BodyShort>
+            <Form method="post" className="space-y-4">
+                <TextField className="w-40" label={"Fødselsnr:"} value={!fnrState.loading ? (fnrState.fnr ?? undefined) : undefined} />
+                <Button>Start arbeidsoppfølging</Button>
+            </Form>
+        </div>
   </div>;
 }
