@@ -33,6 +33,14 @@ export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
     const fnr = formdata.get("fnr")
 
+    if (!fnr) {
+        throw data(
+            {
+                message: `fnr er påkrevd`,
+            },
+            { status: 400 },
+        )
+    }
     if (typeof fnr !== "string") {
         throw data(
             {

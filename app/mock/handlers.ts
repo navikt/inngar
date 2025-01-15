@@ -4,19 +4,16 @@ import { http, HttpResponse, ws } from "msw"
 const urlBase = "http://modiacontextholder.personoversikt"
 
 export const handlers = [
-    http.get(
-        `${urlBase}/api/modiacontextholder/api/context/v2/aktivbruker`,
-        () => {
-            return HttpResponse.json({ aktivBruker: "24429106210" })
-        },
-    ),
-    http.post(`${urlBase}/api/modiacontextholder/api/context`, () => {
+    http.get(`${urlBase}/api/context/v2/aktivbruker`, () => {
+        return HttpResponse.json({ aktivBruker: "24429106210" })
+    }),
+    http.post(`${urlBase}/api/context`, () => {
         return HttpResponse.json({
             aktivBruker: "24429106210",
             aktivEnhet: "0219",
         })
     }),
-    http.get(`${urlBase}/api/modiacontextholder/api/decorator`, () => {
+    http.get(`${urlBase}/api/decorator`, () => {
         return HttpResponse.json({
             saksbehandler: {
                 ident: "Z994381",

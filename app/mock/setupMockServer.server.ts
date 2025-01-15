@@ -6,7 +6,7 @@ console.log("Setting up msw handlers...")
 const server = setupServer(...handlers)
 server.listen({
     onUnhandledRequest: (err, e) => {
-        console.error("Error in mock server", e)
+        console.error("Error in mock server", err)
     },
 })
 
