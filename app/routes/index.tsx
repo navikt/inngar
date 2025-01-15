@@ -86,30 +86,21 @@ export default function Index() {
     const error = fetcher.data?.error
     return (
         <div>
-            <div className="flex flex-col w-[600px] m-8 p-4 space-y-4">
+            <div className="flex flex-col w-[480px] m-8 p-4 space-y-4 mx-auto">
                 <Heading size="large">
-                    Registrer arbeidsrettet oppfølging
+                    Registrering for arbeidsrettet oppfølging
                 </Heading>
                 <BodyShort>
-                    Arbeidsrettet oppfølging handler om å støtte personer som
-                    står utenfor eller er i fare for å falle ut av arbeidslivet,
-                    slik at de kan komme i arbeid eller beholde jobben. Dette
-                    innebærer tilrettelegging, veiledning og tett samarbeid
-                    mellom arbeidstaker, arbeidsgiver og ofte NAV eller andre
-                    aktører. Målet er å identifisere og redusere hindringer for
-                    arbeid, som helseutfordringer, manglende kompetanse eller
-                    sosiale forhold, og skape en plan for deltakelse i
-                    arbeidslivet. Oppfølgingen tilpasses individuelt for å sikre
-                    best mulig resultat.
+                   Før du kan gjøre en § 14 a vurdering må du registrere innbyggeren for arbeidsrettet oppfølging.
                 </BodyShort>
+                <BodyShort>
+                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet dialog så snart oppfølgingen er startet.
+                </BodyShort>
+                <BodyShort>
+                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet dialog så snart oppfølgingen er startet.
+                </BodyShort>
+
                 <fetcher.Form method="post" className="space-y-4">
-                    <TextField
-                        className="w-40"
-                        id={"fnr"}
-                        label={"Fødselsnr:"}
-                        readOnly
-                        value={!fnrState.loading ? (fnrState.fnr ?? "") : ""}
-                    />
                     {error ? <FormError message={error} /> : null}
                     <Button>Start arbeidsoppfølging</Button>
                 </fetcher.Form>

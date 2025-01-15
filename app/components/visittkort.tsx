@@ -54,9 +54,11 @@ const VisittkortInner = () => {
 
 const Visittkort = () => {
     return (
+        <div className="bg-white">
         <ClientOnlyChild>
             <VisittkortInner />
         </ClientOnlyChild>
+            </div>
     )
 }
 export default Visittkort

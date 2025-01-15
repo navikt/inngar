@@ -58,7 +58,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     const [fnrState, setState] = useState<FnrState>({ loading: true })
 
     return (
-        <html lang="en">
+        <html lang="en" className="bg-bg-subtle">
             <head>
                 <meta charSet="utf-8" />
                 <meta
@@ -75,7 +75,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     href="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/index.css"
                 />
             </head>
-            <body>
+            <body >
                 <Decorator
                     onFnrChanged={(fnr) => {
                         setState({ loading: false, fnr })
