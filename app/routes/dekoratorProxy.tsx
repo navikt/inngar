@@ -5,7 +5,7 @@ const target = "http://modiacontextholder.personoversikt"
 
 const toContextHolderUrl = (urlString: string): string => {
     const url = new URL(urlString)
-    return `${target}${url.pathname}`
+    return `${target}${url.pathname.replace("/api/modiacontextholder", "")}`
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
