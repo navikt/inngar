@@ -3,17 +3,21 @@ import { logger } from "../logger"
 
 const target = "http://modiacontextholder.personoversikt"
 
+const toContextHolderUrl = (urlString: string): string => {
+    const url = new URL(urlString)
+    return `${target}${url.pathname}`
+}
+
 export async function loader({ request }: Route.LoaderArgs) {
     try {
-        const newUrl = new URL(request.url)
-        newUrl.host = target
-        logger.info(`Videresender contextholderkall til: ${newUrl.toString()}`)
-        const newRequest = new Request(newUrl.toString(), new Request(request))
-        return await fetch(newRequest).then((res) => {
-            if (!res.ok) {
-                logger.error("Dårlig respons", res)
+        const decoratorUrl = toContextHolderUrl(request.url)
+        logger.info(`Videresender contextholderkall til: ${decoratorUrl}`)
+        const newRequest = new Request(decoratorUrl, new Request(request))
+        return await fetch(newRequest).then((proxyResponse) => {
+            if (!proxyResponse.ok) {
+                logger.error("Dårlig respons", proxyResponse)
             }
-            return res
+            return proxyResponse
         })
     } catch (e) {
         logger.error(`Fikk ikke svar fra modiacontextholder: ${e.toString()}`)
@@ -22,10 +26,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-    const newUrl = new URL(request.url)
-    newUrl.host = target
-    logger.info(`Videresender contextholderkall til: ${newUrl.toString()}`)
-    const newRequest = new Request(newUrl.toString(), new Request(request))
+    const decoratorUrl = toContextHolderUrl(request.url)
+    logger.info(`Videresender contextholderkall til: ${decoratorUrl}`)
+    const newRequest = new Request(decoratorUrl, new Request(request))
     return await fetch(newRequest)
 }
 
