@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react"
-import type { DecoratorProps } from "~/components/decoratorProps"
 import type { Route } from "../../.react-router/types/app/routes/+types"
 import { logger } from "~/logger"
 import { getEnv } from "~/util/envUtil"
+import {ClientOnlyChild} from "~/util/remoteUtil";
+import type {DecoratorProps} from "~/components/decoratorProps";
 
 const exportName = "internarbeidsflate-decorator-v3"
 
@@ -13,23 +14,6 @@ declare const window: {
             props: DecoratorProps,
         ) => React.ReactElement
     }
-}
-
-const ClientOnly = ({ App }: {}) => {
-    const [rendered, setRendered] = useState(false)
-    useEffect(() => {
-        setRendered(true)
-    }, [])
-    return rendered ? <App /> : <div>Ikke noe decorator :(</div>
-}
-
-const ClientOnlyChild = ({ children }: { children: any }) => {
-    const [rendered, setRendered] = useState(false)
-    useEffect(() => {
-        setRendered(true)
-    }, [])
-    if (rendered) return children
-    else return null
 }
 
 export function handleError(
@@ -73,7 +57,6 @@ const InternarbeidsflateDecorator = ({
 }
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
-    // return <ClientOnly App={InternarbeidsflateDecorator} />
     return (
         <ClientOnlyChild>
             <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />

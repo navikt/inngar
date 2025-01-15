@@ -14,6 +14,8 @@ import { Alert } from "@navikt/ds-react"
 import { logger } from "~/logger"
 import Decorator from "~/components/decorator"
 import { createContext, useContext, useState } from "react"
+import { importSubApp } from "~/util/importUtil"
+import Visittkort from "~/components/visittkort"
 
 export const loader = () => {
     if (import.meta.env.DEV) {
@@ -34,6 +36,10 @@ export const links: Route.LinksFunction = () => [
     },
     { rel: "stylesheet", href: stylesheet },
 ]
+
+export const clientLoader = () => {
+    importSubApp("https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build")
+}
 
 type FnrState =
     | { loading: true }
@@ -63,6 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     }}
                 />
                 <FnrProvider.Provider value={fnrState}>
+                    <Visittkort />
                     {children}
                 </FnrProvider.Provider>
                 <ScrollRestoration />
