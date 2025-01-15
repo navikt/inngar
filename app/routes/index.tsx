@@ -34,7 +34,12 @@ export const action = async (args: Route.ActionArgs) => {
     const fnr = formdata.get("fnr")
 
     if (typeof fnr !== "string") {
-        throw data({ message: "fnr må være en string" }, { status: 400 })
+        throw data(
+            {
+                message: `fnr må være en string men var ${typeof fnr}`,
+            },
+            { status: 400 },
+        )
     }
     if (!fnr) {
         throw data({ message: "Fant ikke fnr" }, { status: 400 })
