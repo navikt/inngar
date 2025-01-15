@@ -1,15 +1,18 @@
 interface Manifest {
-    'index.html': { file: string };
+    "index.html": { file: string; css: string[] }
 }
 
-const importedApps: Record<string, boolean> = {};
+const importedApps: Record<string, boolean> = {}
 
-export const importSubApp = (url: string) => {
-    if (url in importedApps) return;
-    importedApps[url] = true;
+export const importSubApp = async (url: string) => {
+    // if (url in importedApps) return
+    // importedApps[url] = true
     return fetch(`${url}/asset-manifest.json`)
-        .then(res => res.json())
+        .then((res) => res.json())
         .then((manifest: Manifest) => {
-            import(/* @vite-ignore */ `${url}/${manifest['index.html'].file}`);
-        });
-};
+            return {
+                jsUrl: `${url}/${manifest["index.html"].file}`,
+                cssUrl: `${url}/${manifest["index.html"].css[0]}`,
+            }
+        })
+}

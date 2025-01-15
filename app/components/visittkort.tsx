@@ -11,6 +11,7 @@ interface VisittKortProps {
     fnr: string
     tilbakeTilFlate: string
     visVeilederVerktoy: boolean
+    key: string
 }
 
 declare const window: {
@@ -31,25 +32,24 @@ export function handleError(
     }
 }
 
-type OnFnrChanged = (fnr?: string | null | undefined) => void
-
 const VisittkortInner = () => {
     const rootMountRef = useRef(null)
     const fnrState = useFnrState()
-    const appMountFunction = window.NAVSPA[exportName]
 
     useEffect(() => {
-        if (rootMountRef.current && appMountFunction) {
-            appMountFunction(rootMountRef.current, {
-                enhet: undefined,
-                fnr: fnrState.loading == false ? fnrState.fnr : "",
-                tilbakeTilFlate: "",
-                visVeilederVerktoy: true,
-            })
-        }
+        if (!rootMountRef.current) return
+        if (fnrState.loading) return
+        const appMountFunction = window.NAVSPA[exportName]
+        const lol = appMountFunction(rootMountRef.current, {
+            enhet: undefined,
+            fnr: fnrState.fnr || "",
+            tilbakeTilFlate: "",
+            visVeilederVerktoy: true,
+            key: fnrState.fnr || "",
+        })
     })
 
-    return <div ref={rootMountRef}> </div>
+    return <div ref={rootMountRef}></div>
 }
 
 const Visittkort = () => {
