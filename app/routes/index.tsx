@@ -1,9 +1,14 @@
 import type { Route } from "./+types/index"
-import { BodyShort, Button, Heading, TextField } from "@navikt/ds-react"
-import { data, Form } from "react-router"
+import {
+    BodyShort,
+    Button,
+    ErrorSummary,
+    Heading,
+    TextField,
+} from "@navikt/ds-react"
+import { data, useFetcher, useLoaderData } from "react-router"
 import { logger } from "~/logger"
-import Decorator from "~/components/decorator"
-import { useState } from "react"
+import { useFnrState } from "~/root"
 
 export async function clientLoader({}) {
     if (import.meta.env.DEV) {
@@ -34,12 +39,7 @@ export const action = async (args: Route.ActionArgs) => {
     const fnr = formdata.get("fnr")
 
     if (!fnr) {
-        throw data(
-            {
-                message: `fnr er påkrevd`,
-            },
-            { status: 400 },
-        )
+        return { error: `Fødselsnummer er påkrevd` }
     }
     if (typeof fnr !== "string") {
         throw data(
@@ -80,19 +80,12 @@ export function HydrateFallback() {
     return <p>Loading...</p>
 }
 
-type FnrState =
-    | { loading: true }
-    | { loading: false; fnr?: string | undefined | null }
-
 export default function Index() {
-    const [fnrState, setState] = useState<FnrState>({ loading: true })
+    const fnrState = useFnrState()
+    const fetcher = useFetcher()
+    const error = fetcher.data?.error
     return (
         <div>
-            <Decorator
-                onFnrChanged={(fnr) => {
-                    setState({ loading: false, fnr })
-                }}
-            />
             <div className="flex flex-col w-[600px] m-8 p-4 space-y-4">
                 <Heading size="large">
                     Registrer arbeidsrettet oppfølging
@@ -109,16 +102,28 @@ export default function Index() {
                     arbeidslivet. Oppfølgingen tilpasses individuelt for å sikre
                     best mulig resultat.
                 </BodyShort>
-                <Form method="post" className="space-y-4">
+                <fetcher.Form method="post" className="space-y-4">
                     <TextField
                         className="w-40"
+                        id={"fnr"}
                         label={"Fødselsnr:"}
                         readOnly
                         value={!fnrState.loading ? (fnrState.fnr ?? "") : ""}
                     />
+                    {error ? <FormError message={error} /> : null}
                     <Button>Start arbeidsoppfølging</Button>
-                </Form>
+                </fetcher.Form>
             </div>
         </div>
+    )
+}
+
+const FormError = ({ message }: { message: string }) => {
+    return (
+        <ErrorSummary>
+            <ErrorSummary.Item href="#searchfield-r2">
+                {message}
+            </ErrorSummary.Item>
+        </ErrorSummary>
     )
 }

@@ -12,6 +12,8 @@ import type { Route } from "./+types/root"
 import stylesheet from "./app.css?url"
 import { Alert } from "@navikt/ds-react"
 import { logger } from "~/logger"
+import Decorator from "~/components/decorator"
+import { createContext, useContext, useState } from "react"
 
 export const loader = () => {
     if (import.meta.env.DEV) {
@@ -33,7 +35,16 @@ export const links: Route.LinksFunction = () => [
     { rel: "stylesheet", href: stylesheet },
 ]
 
+type FnrState =
+    | { loading: true }
+    | { loading: false; fnr?: string | undefined | null }
+
+const FnrProvider = createContext<FnrState>({ loading: true })
+export const useFnrState = () => useContext(FnrProvider)
+
 export function Layout({ children }: { children: React.ReactNode }) {
+    const [fnrState, setState] = useState<FnrState>({ loading: true })
+
     return (
         <html lang="en">
             <head>
@@ -46,7 +57,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
             </head>
             <body>
-                {children}
+                <Decorator
+                    onFnrChanged={(fnr) => {
+                        setState({ loading: false, fnr })
+                    }}
+                />
+                <FnrProvider.Provider value={fnrState}>
+                    {children}
+                </FnrProvider.Provider>
                 <ScrollRestoration />
                 <Scripts />
             </body>
