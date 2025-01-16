@@ -23,6 +23,8 @@ jobs:
         run: bun install
       - name : bun run build
         run: bun run build
+        env:
+          BUN_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Build and push image and SBOM to OCI registry
         uses: nais/docker-build-push@v0
         id: docker-build-push
