@@ -31,6 +31,8 @@ spec:
           namespace: poao
         - application: modiacontextholder
           namespace: personoversikt
+      external:
+        - host: cdn.nav.no
   observability:
     autoInstrumentation:
       enabled: true
