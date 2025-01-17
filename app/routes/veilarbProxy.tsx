@@ -1,6 +1,13 @@
 import type { Route } from "../../.react-router/types/app/routes/+types/dekoratorProxy"
 import { logger } from "~/logger"
+import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
+import { getEnv } from "~/util/envUtil"
+import { res } from "pino-std-serializers"
 
+interface App {
+    name: string
+    namespace: string
+}
 const mapTilApp = {
     veilarboppfolging: { name: "veilarboppfolging", namespace: "poao" },
     veilarbportefolje: { name: "veilarbportefolje", namespace: "obo" },
@@ -8,14 +15,28 @@ const mapTilApp = {
     veilarbdialog: { name: "veilarbdialog", namespace: "dab" },
 }
 
+// TODO: Use env-variables instead
+const cluster = getEnv().type === "prod" ? "dev-gcp" : "prod-gcp"
+const scopeFrom = (app: App) => `${cluster}:${app.name}:${app.namespace}`
+
 const getTargetApp = (url: URL) =>
     mapTilApp[new URL(url).pathname.split("/")[1] as keyof typeof mapTilApp]
 
-const toUrl = (
-    targetApp: { name: string; namespace: string },
-    url: URL,
-): string => {
+const toUrl = (targetApp: App, url: URL): string => {
     return `http://${targetApp.namespace}.${targetApp.name}${url.pathname}`
+}
+
+const oboExchange = async (request: Request, app: App) => {
+    const token = getToken(request)
+    if (!token) return new Response("Unauthorized", { status: 401 })
+    const validation = await validateToken(token)
+    if (!validation.ok) return new Response("Forbidden", { status: 403 })
+    const oboToken = await requestOboToken(token, scopeFrom(app))
+    const fromUrl = new URL(request.url)
+    return new Request(toUrl(app, fromUrl), {
+        ...request,
+        headers: { ...request.headers, Authorization: `Bearer ${oboToken}` },
+    })
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -24,13 +45,17 @@ export async function loader({ request }: Route.LoaderArgs) {
     const url = toUrl(targetApp, fromUrl)
     try {
         logger.info(`Videresender veilarb til: ${url}`)
-        const newRequest = new Request(url, new Request(request))
-        return await fetch(newRequest).then((proxyResponse) => {
-            if (!proxyResponse.ok) {
-                logger.error("Dårlig respons", proxyResponse)
-            }
-            return proxyResponse
-        })
+        const responseOrRequest = await oboExchange(request, targetApp)
+        if ("method" in responseOrRequest) {
+            return await fetch(responseOrRequest).then((proxyResponse) => {
+                if (!proxyResponse.ok) {
+                    logger.error("Dårlig respons", proxyResponse)
+                }
+                return proxyResponse
+            })
+        } else {
+            return responseOrRequest
+        }
     } catch (e) {
         logger.error(`Fikk ikke svar fra ${targetApp}}: ${e.toString()}`)
         return new Response("Internal server error", { status: 500 })
@@ -42,9 +67,18 @@ export async function action({ request }: Route.ActionArgs) {
     const targetApp = getTargetApp(fromUrl)
     const url = toUrl(targetApp, fromUrl)
     try {
-        logger.info(`Videresender veilarbkall til: ${url}`)
-        const newRequest = new Request(url, new Request(request))
-        return await fetch(newRequest)
+        logger.info(`Videresender veilarb til: ${url}`)
+        const responseOrRequest = await oboExchange(request, targetApp)
+        if ("method" in responseOrRequest) {
+            return await fetch(responseOrRequest).then((proxyResponse) => {
+                if (!proxyResponse.ok) {
+                    logger.error("Dårlig respons", proxyResponse)
+                }
+                return proxyResponse
+            })
+        } else {
+            return responseOrRequest
+        }
     } catch (e) {
         logger.error(`Veilarb kall feilet ${url}`, e)
         return new Response("Internal server error", { status: 500 })
