@@ -6,5 +6,17 @@ export default [
     route("/metrics", "routes/metrics.tsx"),
     route("/internal/isAlive", "routes/isAlive.tsx"),
     route("/internal/isReady", "routes/isReady.tsx"),
+    route("/veilarboppfolging/*", "routes/veilarbProxy.tsx", {
+        id: "veilarboppfolging",
+    }),
+    route("/veilarbportefolje/*", "routes/veilarbProxy.tsx", {
+        id: "veilarbportefolje",
+    }),
+    route("/veilarbperson/*", "routes/veilarbProxy.tsx", {
+        id: "veilarbperson",
+    }),
+    route("/veilarbdialog/*", "routes/veilarbProxy.tsx", {
+        id: "veilarbdialog",
+    }),
     route("*", "routes/redirectToIndex.tsx"),
 ] satisfies RouteConfig
