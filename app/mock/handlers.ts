@@ -1,68 +1,65 @@
 import { http, HttpResponse, ws } from "msw"
+import { hentStatusPayload } from "~/mock/mockdata/hent-status"
+import { decoratorPayload } from "~/mock/mockdata/decorator"
+import { dialogGraphqlPayload } from "~/mock/mockdata/dialogGraphql"
+import { hentPersonPayload } from "~/mock/mockdata/hent-person"
+import { hentOppfolgingsstatusPayload } from "~/mock/mockdata/hent-oppfolgingsstatus"
+import { hentVergeOgFullmaktPayload } from "~/mock/mockdata/hent-vergeOgFullmakt"
 
-// const urlBase = "http://http:5173"
-const urlBase = "http://modiacontextholder.personoversikt"
+const contextHolder = "http://modiacontextholder.personoversikt"
+const veilarboppfolging = `http://poao.veilarboppfolging`
+const veilarbperson = `http://obo.veilarbperson`
 
 export const handlers = [
-    http.get(`${urlBase}/api/context/v2/aktivbruker`, () => {
+    http.get(`${contextHolder}/api/context/v2/aktivbruker`, () => {
         return HttpResponse.json({ aktivBruker: "24429106210" })
     }),
-    http.post(`${urlBase}/api/context`, () => {
+    http.post(`${contextHolder}/api/context`, () => {
         return HttpResponse.json({
             aktivBruker: "24429106210",
             aktivEnhet: "0219",
         })
     }),
-    http.get(`${urlBase}/api/decorator`, () => {
-        return HttpResponse.json({
-            saksbehandler: {
-                ident: "Z994381",
-                fornavn: "F_994381",
-                etternavn: "E_994381",
-                navn: "F_994381 E_994381",
-            },
-            enheter: [
-                {
-                    enhetId: "0106",
-                    navn: "Nav Fredrikstad",
-                },
-                {
-                    enhetId: "0219",
-                    navn: "Nav Bærum",
-                },
-                {
-                    enhetId: "0315",
-                    navn: "Nav Grünerløkka",
-                },
-                {
-                    enhetId: "0331",
-                    navn: "Nav Nordre Aker",
-                },
-                {
-                    enhetId: "0501",
-                    navn: "Nav Lillehammer-Gausdal",
-                },
-                {
-                    enhetId: "1101",
-                    navn: "Nav Dalane",
-                },
-                {
-                    enhetId: "1860",
-                    navn: "Nav Lofoten",
-                },
-                {
-                    enhetId: "4154",
-                    navn: "Nasjonal oppfølgingsenhet",
-                },
-                {
-                    enhetId: "4714",
-                    navn: "Nav hjelpemiddelsentral Vestland-Førde",
-                },
-            ],
-            ident: "Z994381",
-            navn: "F_994381 E_994381",
-            fornavn: "F_994381",
-            etternavn: "E_994381",
-        })
+    http.get(`${contextHolder}/api/decorator`, () => {
+        return HttpResponse.json(decoratorPayload)
     }),
+    http.post("http://dab.veilarbdialog/veilarbdialog/graphql", () => {
+        return HttpResponse.json(dialogGraphqlPayload)
+    }),
+    http.post(
+        `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/hent-status`,
+        () => {
+            return HttpResponse.json(hentStatusPayload)
+        },
+    ),
+    http.post(`${veilarbperson}/veilarbperson/api/v3/hent-person`, () => {
+        return HttpResponse.json(hentPersonPayload)
+    }),
+    http.post(
+        `${veilarboppfolging}/veilarboppfolging/api/v2/person/hent-oppfolgingsstatus`,
+        () => {
+            return HttpResponse.json(hentOppfolgingsstatusPayload)
+        },
+    ),
+    http.post(
+        `${veilarbperson}/veilarbperson/api/v3/person/hent-vergeOgFullmakt`,
+        () => {
+            return HttpResponse.json(hentVergeOgFullmaktPayload)
+        },
+    ),
+    http.post(
+        `${veilarbperson}/veilarbperson/api/v3/person/hent-fullmakt`,
+        () => {
+            return new Response(undefined, { status: 204 })
+        },
+    ),
+    http.post(`${veilarbperson}/veilarbperson/api/v3/person/hent-tolk`, () => {
+        return new Response(undefined, { status: 204 })
+    }),
+    http.post(
+        `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/hent-veilederTilgang`,
+        () => {
+            return HttpResponse.json({ tilgangTilBrukersKontor: false })
+        },
+    ),
 ]

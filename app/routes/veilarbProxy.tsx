@@ -8,19 +8,21 @@ const mapTilApp = {
     veilarbdialog: { name: "veilarbdialog", namespace: "dab" },
 }
 
-const getTargetApp = (request: Request) =>
-    mapTilApp[
-        new URL(request.url).pathname.split("/")[1] as keyof typeof mapTilApp
-    ]
+const getTargetApp = (url: URL) =>
+    mapTilApp[new URL(url).pathname.split("/")[1] as keyof typeof mapTilApp]
 
-const toUrl = (targetApp: { name: string; namespace: string }): string => {
-    return `http://${targetApp.namespace}.${targetApp.name}`
+const toUrl = (
+    targetApp: { name: string; namespace: string },
+    url: URL,
+): string => {
+    return `http://${targetApp.namespace}.${targetApp.name}${url.pathname}`
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const targetApp = getTargetApp(request)
+    const fromUrl = new URL(request.url)
+    const targetApp = getTargetApp(fromUrl)
+    const url = toUrl(targetApp, fromUrl)
     try {
-        const url = toUrl(targetApp)
         logger.info(`Videresender veilarb til: ${url}`)
         const newRequest = new Request(url, new Request(request))
         return await fetch(newRequest).then((proxyResponse) => {
@@ -36,11 +38,17 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-    const targetApp = getTargetApp(request)
-    const url = toUrl(targetApp)
-    logger.info(`Videresender veilarbkall til: ${url}`)
-    const newRequest = new Request(url, new Request(request))
-    return await fetch(newRequest)
+    const fromUrl = new URL(request.url)
+    const targetApp = getTargetApp(fromUrl)
+    const url = toUrl(targetApp, fromUrl)
+    try {
+        logger.info(`Videresender veilarbkall til: ${url}`)
+        const newRequest = new Request(url, new Request(request))
+        return await fetch(newRequest)
+    } catch (e) {
+        logger.error(`Veilarb kall feilet ${url}`)
+        return new Response("Internal server error", { status: 500 })
+    }
 }
 
 export function handleError(
