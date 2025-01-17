@@ -1,5 +1,6 @@
 import type { Route } from "./+types/index"
 import {
+    Alert,
     BodyShort,
     Button,
     ErrorSummary,
@@ -86,20 +87,34 @@ export default function Index() {
     const error = fetcher.data?.error
     return (
         <div>
-            <div className="flex flex-col w-[480px] m-8 p-4 space-y-4 mx-auto">
+            <div className="flex flex-col w-[620px] m-8 p-4 space-y-4 mx-auto">
                 <Heading size="large">
                     Registrering for arbeidsrettet oppfølging
                 </Heading>
-                <BodyShort>
-                   Før du kan gjøre en § 14 a vurdering må du registrere innbyggeren for arbeidsrettet oppfølging.
-                </BodyShort>
-                <BodyShort>
-                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet dialog så snart oppfølgingen er startet.
-                </BodyShort>
-                <BodyShort>
-                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet dialog så snart oppfølgingen er startet.
-                </BodyShort>
 
+                <BodyShort>
+                    Før du kan gjøre en § 14 a vurdering må du registrere
+                    innbyggeren for arbeidsrettet oppfølging.
+                </BodyShort>
+                <BodyShort>
+                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
+                    dialog så snart oppfølgingen er startet.
+                </BodyShort>
+                <BodyShort>
+                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
+                    dialog så snart oppfølgingen er startet.
+                </BodyShort>
+                <Alert variant={"info"}>
+                    <Heading size={"medium"}>
+                        Innbyggeren blir ikke registrert som arbeidssøker
+                    </Heading>
+                    <BodyShort>
+                        Når du registrerer en innbygger for arbeidsrettet
+                        oppfølging her, blir ikke innbyggeren registrert som
+                        arbeidssøker. Dersom innbyggeren også er arbeidssøker
+                        bør du benytte arbeidssøkerregistreringen.
+                    </BodyShort>
+                </Alert>
                 <fetcher.Form method="post" className="space-y-4">
                     {error ? <FormError message={error} /> : null}
                     <Button>Start arbeidsoppfølging</Button>
