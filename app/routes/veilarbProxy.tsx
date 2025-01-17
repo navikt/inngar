@@ -46,7 +46,7 @@ export async function action({ request }: Route.ActionArgs) {
         const newRequest = new Request(url, new Request(request))
         return await fetch(newRequest)
     } catch (e) {
-        logger.error(`Veilarb kall feilet ${url}`)
+        logger.error(`Veilarb kall feilet ${url}`, e)
         return new Response("Internal server error", { status: 500 })
     }
 }
