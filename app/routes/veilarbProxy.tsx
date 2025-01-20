@@ -14,7 +14,8 @@ const mapTilApp = {
 }
 
 const cluster = process.env.NAIS_CLUSTER_NAME || "local"
-const scopeFrom = (app: App) => `${cluster}:${app.name}:${app.namespace}`
+const scopeFrom = (app: App) =>
+    `api://${cluster}.${app.namespace}.${app.name}/.default`
 
 const getTargetApp = (url: URL) =>
     mapTilApp[new URL(url).pathname.split("/")[1] as keyof typeof mapTilApp]
