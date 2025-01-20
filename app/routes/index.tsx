@@ -117,6 +117,7 @@ export default function Index() {
                 </Alert>
                 <fetcher.Form method="post" className="space-y-4">
                     {error ? <FormError message={error} /> : null}
+                    <input type="hidden" name="fnr" value={!fnrState.loading ? fnrState.fnr || "" : ""} />
                     <Button>Start arbeidsoppfølging</Button>
                 </fetcher.Form>
             </div>
