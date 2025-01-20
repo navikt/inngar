@@ -30,10 +30,14 @@ const oboExchange = async (request: Request, app: App) => {
     const validation = await validateToken(token)
     if (!validation.ok) return new Response("Forbidden", { status: 403 })
     const oboToken = await requestOboToken(token, scopeFrom(app))
+    if (!oboToken.ok) return new Response("Forbidden", { status: 403 })
     const fromUrl = new URL(request.url)
     return new Request(toUrl(app, fromUrl), {
         ...request,
-        headers: { ...request.headers, Authorization: `Bearer ${oboToken}` },
+        headers: {
+            ...request.headers,
+            Authorization: `Bearer ${oboToken.token}`,
+        },
     })
 }
 
