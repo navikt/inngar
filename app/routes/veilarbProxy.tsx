@@ -21,7 +21,7 @@ const getTargetApp = (url: URL) =>
     mapTilApp[new URL(url).pathname.split("/")[1] as keyof typeof mapTilApp]
 
 const toUrl = (targetApp: App, url: URL): string => {
-    return `http://${targetApp.namespace}.${targetApp.name}${url.pathname}`
+    return `http://${targetApp.name}.${targetApp.namespace}${url.pathname}`
 }
 
 const oboExchange = async (request: Request, app: App) => {

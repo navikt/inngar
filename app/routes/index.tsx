@@ -33,7 +33,7 @@ export function handleError(
     }
 }
 
-const veilarboppfolgingUrl = "http://poao.veilarboppfolging"
+const veilarboppfolgingUrl = "http://veilarboppfolging.poao"
 
 export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
