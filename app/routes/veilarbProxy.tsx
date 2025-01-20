@@ -77,8 +77,8 @@ export async function action({ request }: Route.ActionArgs) {
         } else {
             return responseOrRequest
         }
-    } catch (e) {
-        logger.error(`Veilarb kall feilet ${url}`, e)
+    } catch (e: Error) {
+        logger.error(`Veilarb kall feilet ${url}: ${e.toString()}`)
         return new Response("Internal server error", { status: 500 })
     }
 }
