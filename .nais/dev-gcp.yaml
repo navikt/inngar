@@ -29,6 +29,12 @@ spec:
       rules:
         - application: veilarboppfolging
           namespace: poao
+        - application: veilarbdialog
+          namespace: dab
+        - application: veilarbperson
+          namespace: obo
+        - application: veilarbportefolje
+          namespace: obo
         - application: modiacontextholder
           namespace: personoversikt
       external:
