@@ -1,8 +1,6 @@
 import type { Route } from "../../.react-router/types/app/routes/+types/dekoratorProxy"
 import { logger } from "~/logger"
 import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
-import { getEnv } from "~/util/envUtil"
-import { res } from "pino-std-serializers"
 
 interface App {
     name: string
@@ -15,8 +13,7 @@ const mapTilApp = {
     veilarbdialog: { name: "veilarbdialog", namespace: "dab" },
 }
 
-// TODO: Use env-variables instead
-const cluster = getEnv().type === "prod" ? "dev-gcp" : "prod-gcp"
+const cluster = process.env.NAIS_CLUSTER_NAME || "local"
 const scopeFrom = (app: App) => `${cluster}:${app.name}:${app.namespace}`
 
 const getTargetApp = (url: URL) =>
