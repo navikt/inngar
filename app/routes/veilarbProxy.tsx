@@ -34,6 +34,7 @@ const oboExchange = async (request: Request, app: App) => {
     const fromUrl = new URL(request.url)
     return new Request(toUrl(app, fromUrl), {
         ...request,
+        method: request.method,
         headers: {
             ...request.headers,
             ['Nav-Consumer-Id']: 'inngar',
@@ -70,9 +71,10 @@ export async function action({ request }: Route.ActionArgs) {
     const targetApp = getTargetApp(fromUrl)
     const url = toUrl(targetApp, fromUrl)
     try {
-        logger.info(`Videresender veilarb til: ${url}`)
+        console.log(`Method before ${request.method}`)
         const responseOrRequest = await oboExchange(request, targetApp)
         if ("method" in responseOrRequest) {
+            console.log(`Method after ${responseOrRequest.method}`)
             logger.info(`${responseOrRequest.method} ${responseOrRequest.url}`)
             return await fetch(responseOrRequest).then(async (proxyResponse) => {
                 if (!proxyResponse.ok) {
