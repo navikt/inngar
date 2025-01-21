@@ -20,7 +20,7 @@ import {
     getOboToken,
     mapTilApp,
     oboExchange,
-} from "~/util/tokenExchange"
+} from "~/util/tokenExchange.server"
 import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry"
 
 export async function clientLoader({}) {
