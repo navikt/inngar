@@ -10,6 +10,7 @@ import {
 import { data, useFetcher, useLoaderData } from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
+import { type App, mapTilApp, oboExchange } from "~/util/tokenExchange"
 
 export async function clientLoader({}) {
     if (import.meta.env.DEV) {
@@ -33,7 +34,9 @@ export function handleError(
     }
 }
 
-const veilarboppfolgingUrl = "http://veilarboppfolging.poao"
+const toUrl = (targetApp: App, pathname: string): string => {
+    return `http://${targetApp.name}.${targetApp.namespace}${pathname}`
+}
 
 export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
@@ -54,22 +57,37 @@ export const action = async (args: Route.ActionArgs) => {
         throw data({ message: "Fant ikke fnr" }, { status: 400 })
     }
 
+    const fromUrl = new URL(args.request.url)
+
+    const url = toUrl(mapTilApp.veilarboppfolging, fromUrl.pathname)
+
     try {
         logger.info("Starter oppfølging")
-        let response = await fetch(
-            `${veilarboppfolgingUrl}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`,
-            {
-                method: "POST",
-                body: JSON.stringify({ fnr }),
-            },
+        const responseOrRequest = await oboExchange(
+            args.request,
+            mapTilApp.veilarboppfolging,
         )
-
-        if (!response.ok) {
-            logger.error("Start oppfølging feilet: ", response.status)
-            return { error: await response.text() }
+        if ("method" in responseOrRequest) {
+            logger.info(`${responseOrRequest.method} ${url}`)
+            let response = await fetch(url, responseOrRequest).then(
+                async (proxyResponse) => {
+                    if (!proxyResponse.ok) {
+                        logger.error(
+                            `Dårlig respons ${proxyResponse.status}`,
+                            await proxyResponse.text(),
+                        )
+                    }
+                    return proxyResponse
+                },
+            )
+            if (!response.ok) {
+                logger.error(`Start oppfølging feilet: ${response.status}`)
+                return { error: await response.text() }
+            }
+            logger.info("Oppfølging startet")
+        } else {
+            return responseOrRequest
         }
-
-        logger.info("Oppfølging startet")
     } catch (e) {
         logger.error(
             "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging",
