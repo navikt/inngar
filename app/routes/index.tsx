@@ -161,7 +161,9 @@ export default function Index() {
                         name="fnr"
                         value={!fnrState.loading ? fnrState.fnr || "" : ""}
                     />
-                    <Button>Start arbeidsoppfølging</Button>
+                    <Button loading={fetcher.state == "submitting"}>
+                        Start arbeidsoppfølging
+                    </Button>
                 </fetcher.Form>
             </div>
         </div>

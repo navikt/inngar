@@ -1,5 +1,6 @@
 import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
 import type { App } from "~/util/appConstants"
+import * as process from "node:process"
 
 const scopeFrom = (app: App) =>
     `api://${cluster}.${app.namespace}.${app.name}/.default`
@@ -29,6 +30,10 @@ export const getOboToken = async (
     request: Request,
     app: App,
 ): Promise<OboResult> => {
+    if (process.env.NODE_ENV == "development") {
+        return { ok: true, token: "token" }
+    }
+    console.log("process env", process.env)
     const token = getToken(request)
     if (!token)
         return {

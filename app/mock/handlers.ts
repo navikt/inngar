@@ -7,8 +7,9 @@ import { hentOppfolgingsstatusPayload } from "~/mock/mockdata/hent-oppfolgingsst
 import { hentVergeOgFullmaktPayload } from "~/mock/mockdata/hent-vergeOgFullmakt"
 
 const contextHolder = "http://modiacontextholder.personoversikt"
-const veilarboppfolging = `http://poao.veilarboppfolging`
-const veilarbperson = `http://obo.veilarbperson`
+const veilarboppfolging = `http://veilarboppfolging.poao`
+const veilarbperson = `http://veilarbperson.obo`
+const veilarbportefolje = `http://veilarbportefolje.obo`
 
 export const handlers = [
     http.get(`${contextHolder}/api/context/v2/aktivbruker`, () => {
@@ -23,7 +24,7 @@ export const handlers = [
     http.get(`${contextHolder}/api/decorator`, () => {
         return HttpResponse.json(decoratorPayload)
     }),
-    http.post("http://dab.veilarbdialog/veilarbdialog/graphql", () => {
+    http.post("http://veilarbdialog.dab/veilarbdialog/graphql", () => {
         return HttpResponse.json(dialogGraphqlPayload)
     }),
     http.post(
@@ -60,6 +61,12 @@ export const handlers = [
         `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/hent-veilederTilgang`,
         () => {
             return HttpResponse.json({ tilgangTilBrukersKontor: false })
+        },
+    ),
+    http.post(
+        `${veilarbportefolje}/veilarbportefolje/api/v1/hent-er-bruker-ufordelt`,
+        () => {
+            return HttpResponse.text("false")
         },
     ),
 ]
