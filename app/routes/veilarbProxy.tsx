@@ -31,13 +31,11 @@ const oboExchange = async (request: Request, app: App) => {
     if (!validation.ok) return new Response("Forbidden", { status: 403 })
     const oboToken = await requestOboToken(token, scopeFrom(app))
     if (!oboToken.ok) return new Response("Forbidden", { status: 403 })
-    const fromUrl = new URL(request.url)
-    return new Request(toUrl(app, fromUrl), {
-        ...request,
-        method: request.method,
+
+    return new Request(request, {
         headers: {
             ...request.headers,
-            ['Nav-Consumer-Id']: 'inngar',
+            ["Nav-Consumer-Id"]: "inngar",
             Authorization: `Bearer ${oboToken.token}`,
         },
     })
@@ -50,13 +48,18 @@ export async function loader({ request }: Route.LoaderArgs) {
     try {
         const responseOrRequest = await oboExchange(request, targetApp)
         if ("method" in responseOrRequest) {
-            logger.info(`${responseOrRequest.method} ${responseOrRequest.url}`)
-            return await fetch(responseOrRequest).then(async (proxyResponse) => {
-                if (!proxyResponse.ok) {
-                    logger.error(`Dårlig respons ${proxyResponse.status}`, await proxyResponse.text())
-                }
-                return proxyResponse
-            })
+            logger.info(`${responseOrRequest.method} ${url}`)
+            return await fetch(url, responseOrRequest).then(
+                async (proxyResponse) => {
+                    if (!proxyResponse.ok) {
+                        logger.error(
+                            `Dårlig respons ${proxyResponse.status}`,
+                            await proxyResponse.text(),
+                        )
+                    }
+                    return proxyResponse
+                },
+            )
         } else {
             return responseOrRequest
         }
@@ -71,17 +74,20 @@ export async function action({ request }: Route.ActionArgs) {
     const targetApp = getTargetApp(fromUrl)
     const url = toUrl(targetApp, fromUrl)
     try {
-        console.log(`Method before ${request.method}`)
         const responseOrRequest = await oboExchange(request, targetApp)
         if ("method" in responseOrRequest) {
-            console.log(`Method after ${responseOrRequest.method}`)
-            logger.info(`${responseOrRequest.method} ${responseOrRequest.url}`)
-            return await fetch(responseOrRequest).then(async (proxyResponse) => {
-                if (!proxyResponse.ok) {
-                    logger.error(`Dårlig respons ${proxyResponse.status}`, await proxyResponse.text())
-                }
-                return proxyResponse
-            })
+            logger.info(`${responseOrRequest.method} ${url}`)
+            return await fetch(url, responseOrRequest).then(
+                async (proxyResponse) => {
+                    if (!proxyResponse.ok) {
+                        logger.error(
+                            `Dårlig respons ${proxyResponse.status}`,
+                            await proxyResponse.text(),
+                        )
+                    }
+                    return proxyResponse
+                },
+            )
         } else {
             return responseOrRequest
         }
