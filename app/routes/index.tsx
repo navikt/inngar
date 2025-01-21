@@ -7,10 +7,11 @@ import {
     Heading,
     TextField,
 } from "@navikt/ds-react"
-import { data, useFetcher, useLoaderData } from "react-router"
+import { data, isRouteErrorResponse, useFetcher, useLoaderData } from "react-router";
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
 import { type App, mapTilApp, oboExchange } from "~/util/tokenExchange"
+import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry";
 
 export async function clientLoader({}) {
     if (import.meta.env.DEV) {
@@ -164,3 +165,5 @@ const FormError = ({ message }: { message: string }) => {
         </ErrorSummary>
     )
 }
+
+export const ErrorBoundry = DefaultErrorBoundry

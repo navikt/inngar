@@ -17,6 +17,7 @@ import Decorator from "~/components/decorator"
 import { createContext, useContext, useState } from "react"
 import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
+import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry";
 
 export const loader = async () => {
     if (import.meta.env.DEV) {
@@ -100,37 +101,4 @@ export default function App() {
     )
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-    let message = "Oops!"
-    let details = "An unexpected error occurred."
-    let stack: string | undefined
-
-    if (isRouteErrorResponse(error)) {
-        message = error.status === 404 ? "404" : "Error"
-        details =
-            error.status === 404
-                ? "The requested page could not be found."
-                : error.statusText || details
-    } else if (import.meta.env.DEV && error && error instanceof Error) {
-        details = error?.message
-        stack = error.stack
-    }
-
-    details = error.data?.message
-
-    logger.error("Noe gikk veldig galt i root.tsx")
-
-    return (
-        <main className="pt-16 p-4 container mx-auto">
-            <Alert variant="error">
-                <h1>{message}</h1>
-                <p>{details}</p>
-                {stack && (
-                    <pre className="w-full p-4 overflow-x-auto">
-                        <code>{stack}</code>
-                    </pre>
-                )}
-            </Alert>
-        </main>
-    )
-}
+export const ErrorBoundry = DefaultErrorBoundry
