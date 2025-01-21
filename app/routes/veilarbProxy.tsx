@@ -46,12 +46,12 @@ export async function loader({ request }: Route.LoaderArgs) {
     const targetApp = getTargetApp(fromUrl)
     const url = toUrl(targetApp, fromUrl)
     try {
-        logger.info(`Videresender veilarb til: ${url}`)
         const responseOrRequest = await oboExchange(request, targetApp)
         if ("method" in responseOrRequest) {
-            return await fetch(responseOrRequest).then((proxyResponse) => {
+            logger.info(`${responseOrRequest.method} ${responseOrRequest.url}`)
+            return await fetch(responseOrRequest).then(async (proxyResponse) => {
                 if (!proxyResponse.ok) {
-                    logger.error("Dårlig respons", proxyResponse)
+                    logger.error(`Dårlig respons ${proxyResponse.status}`, await proxyResponse.text())
                 }
                 return proxyResponse
             })
@@ -72,9 +72,10 @@ export async function action({ request }: Route.ActionArgs) {
         logger.info(`Videresender veilarb til: ${url}`)
         const responseOrRequest = await oboExchange(request, targetApp)
         if ("method" in responseOrRequest) {
-            return await fetch(responseOrRequest).then((proxyResponse) => {
+            logger.info(`${responseOrRequest.method} ${responseOrRequest.url}`)
+            return await fetch(responseOrRequest).then(async (proxyResponse) => {
                 if (!proxyResponse.ok) {
-                    logger.error("Dårlig respons", proxyResponse)
+                    logger.error(`Dårlig respons ${proxyResponse.status}`, await proxyResponse.text())
                 }
                 return proxyResponse
             })
