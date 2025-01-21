@@ -36,6 +36,7 @@ const oboExchange = async (request: Request, app: App) => {
         ...request,
         headers: {
             ...request.headers,
+            ['Nav-Consumer-Id']: 'inngar',
             Authorization: `Bearer ${oboToken.token}`,
         },
     })
