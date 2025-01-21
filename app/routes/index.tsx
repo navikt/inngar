@@ -15,13 +15,9 @@ import {
 } from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
-import {
-    type App,
-    getOboToken,
-    mapTilApp,
-    oboExchange,
-} from "~/util/tokenExchange.server"
+import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry"
+import { type App, mapTilApp } from "~/util/appConstants"
 
 export async function clientLoader({}) {
     if (import.meta.env.DEV) {

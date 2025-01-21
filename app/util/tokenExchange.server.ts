@@ -1,16 +1,5 @@
 import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
-
-export interface App {
-    name: string
-    namespace: string
-}
-
-export const mapTilApp = {
-    veilarboppfolging: { name: "veilarboppfolging", namespace: "poao" },
-    veilarbportefolje: { name: "veilarbportefolje", namespace: "obo" },
-    veilarbperson: { name: "veilarbperson", namespace: "obo" },
-    veilarbdialog: { name: "veilarbdialog", namespace: "dab" },
-}
+import type { App } from "~/util/appConstants"
 
 const scopeFrom = (app: App) =>
     `api://${cluster}.${app.namespace}.${app.name}/.default`
@@ -32,7 +21,14 @@ export const oboExchange = async (request: Request, app: App) => {
     })
 }
 
-export const getOboToken = async (request: Request, app: App) => {
+type OboResult =
+    | { ok: true; token: string }
+    | { ok: false; errorResponse: Response }
+
+export const getOboToken = async (
+    request: Request,
+    app: App,
+): Promise<OboResult> => {
     const token = getToken(request)
     if (!token)
         return {

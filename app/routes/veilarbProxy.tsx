@@ -1,7 +1,7 @@
 import type { Route } from "../../.react-router/types/app/routes/+types/dekoratorProxy"
 import { logger } from "~/logger"
-import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
-import { type App, mapTilApp, oboExchange } from "~/util/tokenExchange.server"
+import { oboExchange } from "~/util/tokenExchange.server"
+import { type App, mapTilApp } from "~/util/appConstants"
 
 const getTargetApp = (url: URL) =>
     mapTilApp[new URL(url).pathname.split("/")[1] as keyof typeof mapTilApp]
