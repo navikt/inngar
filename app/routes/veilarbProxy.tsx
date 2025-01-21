@@ -34,7 +34,6 @@ const oboExchange = async (request: Request, app: App) => {
 
     return new Request(request, {
         headers: {
-            ...request.headers,
             ["Nav-Consumer-Id"]: "inngar",
             Authorization: `Bearer ${oboToken.token}`,
             ["Content-Type"]: "application/json",
