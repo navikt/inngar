@@ -7,11 +7,21 @@ import {
     Heading,
     TextField,
 } from "@navikt/ds-react"
-import { data, isRouteErrorResponse, useFetcher, useLoaderData } from "react-router";
+import {
+    data,
+    isRouteErrorResponse,
+    useFetcher,
+    useLoaderData,
+} from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
-import { type App, mapTilApp, oboExchange } from "~/util/tokenExchange"
-import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry";
+import {
+    type App,
+    getOboToken,
+    mapTilApp,
+    oboExchange,
+} from "~/util/tokenExchange"
+import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry"
 
 export async function clientLoader({}) {
     if (import.meta.env.DEV) {
@@ -65,16 +75,20 @@ export const action = async (args: Route.ActionArgs) => {
 
     try {
         logger.info("Starter oppfølging")
-        const responseOrRequest = await oboExchange(
+        const tokenOrResponse = await getOboToken(
             args.request,
             mapTilApp.veilarboppfolging,
         )
-        if ("method" in responseOrRequest) {
-            logger.info(`${responseOrRequest.method} ${startOppfolgingUrl}`)
-            let response = await fetch(
-                startOppfolgingUrl,
-                responseOrRequest,
-            ).then(async (proxyResponse) => {
+        if (tokenOrResponse.ok) {
+            let response = await fetch(startOppfolgingUrl, {
+                headers: {
+                    ["Nav-Consumer-Id"]: "inngar",
+                    Authorization: `Bearer ${tokenOrResponse.token}`,
+                    ["Content-Type"]: "application/json",
+                },
+                body: JSON.stringify({ fnr, henviserSystem: "DEMO" }),
+                method: "POST",
+            }).then(async (proxyResponse) => {
                 if (!proxyResponse.ok) {
                     logger.error(
                         `Dårlig respons ${proxyResponse.status}`,
@@ -89,7 +103,7 @@ export const action = async (args: Route.ActionArgs) => {
             }
             logger.info("Oppfølging startet")
         } else {
-            return responseOrRequest
+            return tokenOrResponse
         }
     } catch (e) {
         logger.error(

@@ -18,18 +18,39 @@ const scopeFrom = (app: App) =>
 const cluster = process.env.NAIS_CLUSTER_NAME || "local"
 
 export const oboExchange = async (request: Request, app: App) => {
-    const token = getToken(request)
-    if (!token) return new Response("Unauthorized", { status: 401 })
-    const validation = await validateToken(token)
-    if (!validation.ok) return new Response("Forbidden", { status: 403 })
-    const oboToken = await requestOboToken(token, scopeFrom(app))
-    if (!oboToken.ok) return new Response("Forbidden", { status: 403 })
+    let tokenResult = await getOboToken(request, app)
+    if (!tokenResult.ok) {
+        return tokenResult.errorResponse
+    }
 
     return new Request(request, {
         headers: {
             ["Nav-Consumer-Id"]: "inngar",
-            Authorization: `Bearer ${oboToken.token}`,
+            Authorization: `Bearer ${tokenResult.token}`,
             ["Content-Type"]: "application/json",
         },
     })
+}
+
+export const getOboToken = async (request: Request, app: App) => {
+    const token = getToken(request)
+    if (!token)
+        return {
+            errorResponse: new Response("Unauthorized", { status: 401 }),
+            ok: false,
+        }
+    const validation = await validateToken(token)
+    if (!validation.ok)
+        return {
+            errorResponse: new Response("Forbidden", { status: 403 }),
+            ok: false,
+        }
+    const oboToken = await requestOboToken(token, scopeFrom(app))
+    if (!oboToken.ok)
+        return {
+            errorResponse: new Response("Forbidden", { status: 403 }),
+            ok: false,
+        }
+
+    return { token: oboToken.token, ok: true }
 }
