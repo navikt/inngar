@@ -55,13 +55,21 @@ export const action = async (args: Route.ActionArgs) => {
     }
 
     try {
-        await fetch(
+        logger.info("Starter oppfølging")
+        let response = await fetch(
             `${veilarboppfolgingUrl}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`,
             {
                 method: "POST",
                 body: JSON.stringify({ fnr }),
             },
         )
+
+        if (!response.ok) {
+            logger.error("Start oppfølging feilet: ", response.status)
+            return { error: await response.text() }
+        }
+
+        logger.info("Oppfølging startet")
     } catch (e) {
         logger.error(
             "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging",
@@ -117,7 +125,11 @@ export default function Index() {
                 </Alert>
                 <fetcher.Form method="post" className="space-y-4">
                     {error ? <FormError message={error} /> : null}
-                    <input type="hidden" name="fnr" value={!fnrState.loading ? fnrState.fnr || "" : ""} />
+                    <input
+                        type="hidden"
+                        name="fnr"
+                        value={!fnrState.loading ? fnrState.fnr || "" : ""}
+                    />
                     <Button>Start arbeidsoppfølging</Button>
                 </fetcher.Form>
             </div>
