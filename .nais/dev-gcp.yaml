@@ -15,6 +15,7 @@ spec:
       cpu: 50m
   ingresses:
     - https://inngar.intern.dev.nav.no
+    - https://start-arbeidsoppfolging.ansatt.dev.nav.no/
 #  prometheus:
 #    enabled: true
 #    path: /metrics
