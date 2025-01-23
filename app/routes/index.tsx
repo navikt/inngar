@@ -30,38 +30,41 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
     // const res = fetch(aktivBrukerUrl, {
     //     headers: headersWithAuth(tokenOrResponse.token),
     // })
+    try {
+        const hentAktivBruker = () =>
+            fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
+        const hentOboForVeilarboppfolging = () =>
+            getOboToken(loaderArgs.request, apps.veilarboppfolging)
 
-    const hentAktivBruker = () =>
-        fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
-    const hentOboForVeilarboppfolging = () =>
-        getOboToken(loaderArgs.request, apps.veilarboppfolging)
-
-    const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
-        hentOboForVeilarboppfolging(),
-        hentAktivBruker(),
-    ])
-    const aktivBruker = (await aktivBrukerResult.json()) as {
-        aktivBruker: null | string
-    }
-
-    if (!tokenOrResponse.ok)
-        throw data({
-            errorMessage:
-                "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
-        })
-
-    if (aktivBruker.aktivBruker === null) {
-        return { erUnderOppfolging: "VET_IKKE" }
-    } else {
-        const oppfolgingsStatus =
-            await VeilarboppfolgingApi.getOppfolgingStatus(
-                aktivBruker.aktivBruker,
-                tokenOrResponse.token,
-            )
-        return {
-            erUnderOppfolging:
-                oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
+        const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
+            hentOboForVeilarboppfolging(),
+            hentAktivBruker(),
+        ])
+        const aktivBruker = (await aktivBrukerResult.json()) as {
+            aktivBruker: null | string
         }
+
+        if (!tokenOrResponse.ok)
+            throw data({
+                errorMessage:
+                    "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
+            })
+
+        if (aktivBruker.aktivBruker === null) {
+            return { erUnderOppfolging: "VET_IKKE" }
+        } else {
+            const oppfolgingsStatus =
+                await VeilarboppfolgingApi.getOppfolgingStatus(
+                    aktivBruker.aktivBruker,
+                    tokenOrResponse.token,
+                )
+            return {
+                erUnderOppfolging:
+                    oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
+            }
+        }
+    } catch (e: Error) {
+        logger.error(`index loader catch error: ${JSON.stringify(e)}`)
     }
 }
 
