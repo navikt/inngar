@@ -17,7 +17,7 @@ import Decorator from "~/components/decorator"
 import { createContext, useContext, useState } from "react"
 import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
-import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundary"
+import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 
 export const loader = async () => {
     if (import.meta.env.DEV) {
@@ -97,4 +97,4 @@ export default function App() {
     return <Outlet />
 }
 
-export const ErrorBoundry = DefaultErrorBoundry
+export const ErrorBoundary = DefaultErrorBoundary
