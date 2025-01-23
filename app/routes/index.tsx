@@ -6,16 +6,13 @@ import {
     ErrorSummary,
     Heading,
 } from "@navikt/ds-react"
-import {
-    data,
-    useFetcher, useLoaderData
-} from "react-router";
+import { data, useFetcher, useLoaderData } from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
-import { getOboToken, headersWithAuth } from "~/util/tokenExchange.server";
+import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry"
-import { type App, apps, toAppUrl } from "~/util/appConstants";
-import { VeilarboppfolgingApi } from "~/api/veilarboppfolging";
+import { type App, apps, toAppUrl } from "~/util/appConstants"
+import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
 
 export async function clientLoader({}) {
     if (import.meta.env.DEV) {
@@ -23,7 +20,10 @@ export async function clientLoader({}) {
     }
 }
 
-const aktivBrukerUrl = toAppUrl(apps.modiacontextholder, "/api/context/v2/aktivbruker")
+const aktivBrukerUrl = toAppUrl(
+    apps.modiacontextholder,
+    "/api/context/v2/aktivbruker",
+)
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
     // if (!tokenOrResponse.ok) return tokenOrResponse
@@ -31,25 +31,39 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
     //     headers: headersWithAuth(tokenOrResponse.token),
     // })
 
-    const hentAktivBruker = () => fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
-    const hentOboForVeilarboppfolging = () => getOboToken(
-      loaderArgs.request,
-      apps.veilarboppfolging,
-    )
+    const hentAktivBruker = () =>
+        fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
+    const hentOboForVeilarboppfolging = () =>
+        getOboToken(loaderArgs.request, apps.veilarboppfolging)
 
-    const [tokenOrResponse, aktivBrukerResult] = await Promise.all([hentOboForVeilarboppfolging(), hentAktivBruker()])
-    const aktivBruker = await aktivBrukerResult.json() as { aktivBruker: null | string }
+    const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
+        hentOboForVeilarboppfolging(),
+        hentAktivBruker(),
+    ])
+    const aktivBruker = (await aktivBrukerResult.json()) as {
+        aktivBruker: null | string
+    }
 
-    if (!tokenOrResponse.ok) throw data({ errorMessage: "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)" })
+    if (!tokenOrResponse.ok)
+        throw data({
+            errorMessage:
+                "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
+        })
 
     if (aktivBruker.aktivBruker === null) {
         return { erUnderOppfolging: "VET_IKKE" }
     } else {
-        const oppfolgingsStatus = await VeilarboppfolgingApi.getOppfolgingStatus(aktivBruker.aktivBruker, tokenOrResponse.token)
-        return { erUnderOppfolging: oppfolgingsStatus.data.oppfolging.erUnderOppfolging }
+        const oppfolgingsStatus =
+            await VeilarboppfolgingApi.getOppfolgingStatus(
+                aktivBruker.aktivBruker,
+                tokenOrResponse.token,
+            )
+        return {
+            erUnderOppfolging:
+                oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
+        }
     }
 }
-
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -80,7 +94,7 @@ export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
     const fnr = formdata.get("fnr")
 
-    if (!fnr || typeof fnr !== 'string') {
+    if (!fnr || typeof fnr !== "string") {
         return { error: `Fødselsnummer er påkrevd` }
     }
 
@@ -91,7 +105,10 @@ export const action = async (args: Route.ActionArgs) => {
             apps.veilarboppfolging,
         )
         if (tokenOrResponse.ok) {
-            return VeilarboppfolgingApi.startOppfolging(fnr, tokenOrResponse.token)
+            return VeilarboppfolgingApi.startOppfolging(
+                fnr,
+                tokenOrResponse.token,
+            )
         } else {
             return tokenOrResponse
         }
@@ -125,7 +142,7 @@ export default function Index() {
                     Registrering for arbeidsrettet oppfølging
                 </Heading>
 
-                <p>{ loaderData.erUnderOppfolging }</p>
+                <p>{loaderData.erUnderOppfolging}</p>
                 <BodyShort>
                     Før du kan gjøre en § 14 a vurdering må du registrere
                     innbyggeren for arbeidsrettet oppfølging.
