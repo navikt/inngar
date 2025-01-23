@@ -71,6 +71,7 @@ const getOppfolgingStatus = (
             Authorization: `Bearer ${token}`,
             ["Content-Type"]: "application/json",
         },
+        method: "POST",
     }).then((response) => {
         if (!response.ok)
             throw Error(
