@@ -142,6 +142,7 @@ export default function Index() {
     const fnrState = useFnrState()
     const fetcher = useFetcher()
     const error = fetcher.data?.error
+    const erIkkeUnderOppfolging = loaderData?.erUnderOppfolging === false
     return (
         <div>
             <div className="flex flex-col w-[620px] m-8 p-4 space-y-4 mx-auto">
@@ -150,40 +151,47 @@ export default function Index() {
                 </Heading>
 
                 <p>{loaderData?.erUnderOppfolging}</p>
-                <BodyShort>
-                    Før du kan gjøre en § 14 a vurdering må du registrere
-                    innbyggeren for arbeidsrettet oppfølging.
-                </BodyShort>
-                <BodyShort>
-                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                    dialog så snart oppfølgingen er startet.
-                </BodyShort>
-                <BodyShort>
-                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                    dialog så snart oppfølgingen er startet.
-                </BodyShort>
-                <Alert variant={"info"}>
-                    <Heading size={"medium"}>
-                        Innbyggeren blir ikke registrert som arbeidssøker
-                    </Heading>
-                    <BodyShort>
-                        Når du registrerer en innbygger for arbeidsrettet
-                        oppfølging her, blir ikke innbyggeren registrert som
-                        arbeidssøker. Dersom innbyggeren også er arbeidssøker
-                        bør du benytte arbeidssøkerregistreringen.
-                    </BodyShort>
-                </Alert>
-                <fetcher.Form method="post" className="space-y-4">
-                    {error ? <FormError message={error} /> : null}
-                    <input
-                        type="hidden"
-                        name="fnr"
-                        value={!fnrState.loading ? fnrState.fnr || "" : ""}
-                    />
-                    <Button loading={fetcher.state == "submitting"}>
-                        Start arbeidsoppfølging
-                    </Button>
-                </fetcher.Form>
+
+                {
+                    erIkkeUnderOppfolging ? <>
+                        <BodyShort>
+                            Før du kan gjøre en § 14 a vurdering må du registrere
+                            innbyggeren for arbeidsrettet oppfølging.
+                        </BodyShort>
+                        <BodyShort>
+                            Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
+                            dialog så snart oppfølgingen er startet.
+                        </BodyShort>
+                        <BodyShort>
+                            Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
+                            dialog så snart oppfølgingen er startet.
+                        </BodyShort>
+                        <Alert variant={"info"}>
+                            <Heading size={"medium"}>
+                                Innbyggeren blir ikke registrert som arbeidssøker
+                            </Heading>
+                            <BodyShort>
+                                Når du registrerer en innbygger for arbeidsrettet
+                                oppfølging her, blir ikke innbyggeren registrert som
+                                arbeidssøker. Dersom innbyggeren også er arbeidssøker
+                                bør du benytte arbeidssøkerregistreringen.
+                            </BodyShort>
+                        </Alert>
+                        <fetcher.Form method="post" className="space-y-4">
+                            {error ? <FormError message={error} /> : null}
+                            <input
+                              type="hidden"
+                              name="fnr"
+                              value={!fnrState.loading ? fnrState.fnr || "" : ""}
+                            />
+                            <Button loading={fetcher.state == "submitting"}>
+                                Start arbeidsoppfølging
+                            </Button>
+                        </fetcher.Form></> : (loaderData?.erUnderOppfolging === true
+                            ? <Alert variant="info">Bruker er allerede under arbeidsoppfølging</Alert>
+                            : <Alert variant="info">Feilet ved henting av oppfølgingsstatus på bruker</Alert>
+                        )
+                }
             </div>
         </div>
     )
