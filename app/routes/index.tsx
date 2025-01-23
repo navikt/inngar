@@ -5,24 +5,29 @@ import {
     Button,
     ErrorSummary,
     Heading,
-    TextField,
 } from "@navikt/ds-react"
 import {
     data,
-    isRouteErrorResponse,
     useFetcher,
-    useLoaderData,
 } from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry"
-import { type App, mapTilApp } from "~/util/appConstants"
+import { type App, apps, toAppUrl } from "~/util/appConstants";
+import { VeilarboppfolgingApi } from "~/api/veilarboppfolging";
 
 export async function clientLoader({}) {
     if (import.meta.env.DEV) {
         import("../mock/setupMockClient.client")
     }
+}
+
+const aktivBrukerUrl = toAppUrl(apps.modiacontextholder, "/api/context/v2/aktivbruker")
+
+export async function loader(loaderArgs: Route.LoaderArgs) {
+    const aktivBrukerResult = await fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
+    return await aktivBrukerResult.json()
 }
 
 export function meta({}: Route.MetaArgs) {
@@ -46,7 +51,7 @@ const toUrl = (targetApp: App, pathname: string): string => {
 }
 
 const startOppfolgingUrl = toUrl(
-    mapTilApp.veilarboppfolging,
+    apps.veilarboppfolging,
     "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
 )
 
@@ -54,57 +59,24 @@ export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
     const fnr = formdata.get("fnr")
 
-    if (!fnr) {
+    if (!fnr || typeof fnr !== 'string') {
         return { error: `Fødselsnummer er påkrevd` }
-    }
-    if (typeof fnr !== "string") {
-        throw data(
-            {
-                message: `fnr må være en string men var ${typeof fnr}`,
-            },
-            { status: 400 },
-        )
-    }
-    if (!fnr) {
-        throw data({ message: "Fant ikke fnr" }, { status: 400 })
     }
 
     try {
         logger.info("Starter oppfølging")
         const tokenOrResponse = await getOboToken(
             args.request,
-            mapTilApp.veilarboppfolging,
+            apps.veilarboppfolging,
         )
         if (tokenOrResponse.ok) {
-            let response = await fetch(startOppfolgingUrl, {
-                headers: {
-                    ["Nav-Consumer-Id"]: "inngar",
-                    Authorization: `Bearer ${tokenOrResponse.token}`,
-                    ["Content-Type"]: "application/json",
-                },
-                body: JSON.stringify({ fnr, henviserSystem: "DEMO" }),
-                method: "POST",
-            }).then(async (proxyResponse) => {
-                if (!proxyResponse.ok) {
-                    logger.error(
-                        `Dårlig respons ${proxyResponse.status}`,
-                        await proxyResponse.text(),
-                    )
-                }
-                return proxyResponse
-            })
-            if (!response.ok) {
-                logger.error(`Start oppfølging feilet: ${response.status}`)
-                return { error: await response.text() }
-            }
-            logger.info("Oppfølging startet")
+            return VeilarboppfolgingApi.startOppfolging(fnr, tokenOrResponse.token)
         } else {
             return tokenOrResponse
         }
     } catch (e) {
         logger.error(
-            "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging",
-            e,
+            `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging ${e.toString()}`,
         )
         throw data(
             {

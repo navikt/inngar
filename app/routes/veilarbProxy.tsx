@@ -1,10 +1,10 @@
 import type { Route } from "../../.react-router/types/app/routes/+types/dekoratorProxy"
 import { logger } from "~/logger"
 import { oboExchange } from "~/util/tokenExchange.server"
-import { type App, mapTilApp } from "~/util/appConstants"
+import { type App, apps } from "~/util/appConstants"
 
 const getTargetApp = (url: URL) =>
-    mapTilApp[new URL(url).pathname.split("/")[1] as keyof typeof mapTilApp]
+    apps[new URL(url).pathname.split("/")[1] as keyof typeof apps]
 
 const toUrl = (targetApp: App, url: URL): string => {
     return `http://${targetApp.name}.${targetApp.namespace}${url.pathname}`

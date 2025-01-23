@@ -3,7 +3,7 @@ import { logger } from "../logger"
 
 const target = "http://modiacontextholder.personoversikt"
 
-const toContextHolderUrl = (urlString: string): string => {
+export const toContextHolderUrl = (urlString: string): string => {
     const url = new URL(urlString)
     return `${target}${url.pathname.replace("/api/modiacontextholder", "")}`
 }
