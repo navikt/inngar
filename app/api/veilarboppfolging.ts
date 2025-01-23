@@ -1,43 +1,40 @@
-import { logger } from "~/logger";
-import { type App, apps } from "~/util/appConstants";
+import { logger } from "~/logger"
+import { type App, apps } from "~/util/appConstants"
 
 const toUrl = (targetApp: App, pathname: string): string => {
-  return `http://${targetApp.name}.${targetApp.namespace}${pathname}`
+    return `http://${targetApp.name}.${targetApp.namespace}${pathname}`
 }
 
 const startOppfolgingUrl = toUrl(
-  apps.veilarboppfolging,
-  "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
+    apps.veilarboppfolging,
+    "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
 )
-const graphqlUrl = toUrl(
-  apps.veilarboppfolging,
-  "/veilarboppfolging/graphql",
-)
+const graphqlUrl = toUrl(apps.veilarboppfolging, "/veilarboppfolging/graphql")
 
 const startOppfolging = async (fnr: string, token: string) => {
-  let response = await fetch(startOppfolgingUrl, {
-    headers: {
-      ["Nav-Consumer-Id"]: "inngar",
-      Authorization: `Bearer ${token}`,
-      ["Content-Type"]: "application/json",
-    },
-    body: JSON.stringify({ fnr, henviserSystem: "DEMO" }),
-    method: "POST",
-  }).then(async (proxyResponse) => {
-    if (!proxyResponse.ok) {
-      logger.error(
-        `Dårlig respons ${proxyResponse.status}`,
-        await proxyResponse.text(),
-      )
+    let response = await fetch(startOppfolgingUrl, {
+        headers: {
+            ["Nav-Consumer-Id"]: "inngar",
+            Authorization: `Bearer ${token}`,
+            ["Content-Type"]: "application/json",
+        },
+        body: JSON.stringify({ fnr, henviserSystem: "DEMO" }),
+        method: "POST",
+    }).then(async (proxyResponse) => {
+        if (!proxyResponse.ok) {
+            logger.error(
+                `Dårlig respons ${proxyResponse.status}`,
+                await proxyResponse.text(),
+            )
+        }
+        return proxyResponse
+    })
+    if (!response.ok) {
+        logger.error(`Start oppfølging feilet: ${response.status}`)
+        return { ok: false as const, error: await response.text() }
     }
-    return proxyResponse
-  })
-  if (!response.ok) {
-    logger.error(`Start oppfølging feilet: ${response.status}`)
-    return { ok: false as const, error: await response.text() }
-  }
-  logger.info("Oppfølging startet")
-  return { ok: true as const }
+    logger.info("Oppfølging startet")
+    return { ok: true as const }
 }
 
 const query = `
@@ -48,36 +45,42 @@ const query = `
   }
 `
 
-const graphqlBody = (fnr: string) =>  ({
-  query,
-  variables: {
-    fnr
-  }
+const graphqlBody = (fnr: string) => ({
+    query,
+    variables: {
+        fnr,
+    },
 })
 
 interface GraphqlResponse {
-  data: {
-    oppfolging: {
-      erUnderOppfolging: boolean
+    data: {
+        oppfolging: {
+            erUnderOppfolging: boolean
+        }
     }
-  }
 }
 
-const getOppfolgingStatus = (fnr: string, token: string): Promise<GraphqlResponse> => {
-  return fetch(graphqlUrl, {
-    body: JSON.stringify(graphqlBody),
-    headers: {
-      ["Nav-Consumer-Id"]: "inngar",
-      Authorization: `Bearer ${token}`,
-      ["Content-Type"]: "application/json",
-    },
-  }).then(response => {
-    if (response.ok) throw Error(`Feilet å hente oppfolgingsstatus fra veilarboppfølging ${response.status}`)
-    return response.json()
-  })
+const getOppfolgingStatus = (
+    fnr: string,
+    token: string,
+): Promise<GraphqlResponse> => {
+    return fetch(graphqlUrl, {
+        body: JSON.stringify(graphqlBody),
+        headers: {
+            ["Nav-Consumer-Id"]: "inngar",
+            Authorization: `Bearer ${token}`,
+            ["Content-Type"]: "application/json",
+        },
+    }).then((response) => {
+        if (!response.ok)
+            throw Error(
+                `Feilet å hente oppfolgingsstatus fra veilarboppfølging ${response.status}`,
+            )
+        return response.json()
+    })
 }
 
 export const VeilarboppfolgingApi = {
-  startOppfolging,
-  getOppfolgingStatus
+    startOppfolging,
+    getOppfolgingStatus,
 }

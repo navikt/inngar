@@ -58,13 +58,17 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                     aktivBruker.aktivBruker,
                     tokenOrResponse.token,
                 )
+            console.log(`oppfolgingsstatus inne: ${oppfolgingsStatus}`)
+            console.log(`oppfolgingsstatus ute: `, oppfolgingsStatus)
             return {
                 erUnderOppfolging:
                     oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
             }
         }
     } catch (e: Error) {
-        logger.error(`index loader catch error: ${JSON.stringify(e)}`)
+        logger.error(
+            `index loader catch error:${e.name} message: ${e.message}  stack: ${e.stack}`,
+        )
     }
 }
 
@@ -145,7 +149,7 @@ export default function Index() {
                     Registrering for arbeidsrettet oppfølging
                 </Heading>
 
-                <p>{loaderData.erUnderOppfolging}</p>
+                <p>{loaderData?.erUnderOppfolging}</p>
                 <BodyShort>
                     Før du kan gjøre en § 14 a vurdering må du registrere
                     innbyggeren for arbeidsrettet oppfølging.
