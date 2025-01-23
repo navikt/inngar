@@ -21,7 +21,7 @@ export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
     details = error.data?.message || error.data?.errorMessage
 
-    logger.error("Noe gikk veldig galt i root.tsx: ", details)
+    logger.error(`Noe gikk veldig galt i root.tsx: ${JSON.stringify(error)}`)
 
     return (
         <main className="pt-16 p-4 container mx-auto">

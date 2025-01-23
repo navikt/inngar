@@ -37,7 +37,6 @@ export const getOboToken = async (
     if (process.env.NODE_ENV == "development") {
         return { ok: true, token: "token" }
     }
-    console.log("process env", process.env)
     const token = getToken(request)
     if (!token)
         return {
