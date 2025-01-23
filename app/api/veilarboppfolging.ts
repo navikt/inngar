@@ -65,7 +65,7 @@ const getOppfolgingStatus = (
     token: string,
 ): Promise<GraphqlResponse> => {
     return fetch(graphqlUrl, {
-        body: JSON.stringify(graphqlBody),
+        body: JSON.stringify(graphqlBody(fnr)),
         headers: {
             ["Nav-Consumer-Id"]: "inngar",
             Authorization: `Bearer ${token}`,
