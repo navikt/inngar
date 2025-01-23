@@ -13,6 +13,7 @@ import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { type App, apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
+import { useEffect } from "react";
 
 export async function clientLoader({}) {
     if (import.meta.env.DEV) {
@@ -26,10 +27,6 @@ const aktivBrukerUrl = toAppUrl(
 )
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-    // if (!tokenOrResponse.ok) return tokenOrResponse
-    // const res = fetch(aktivBrukerUrl, {
-    //     headers: headersWithAuth(tokenOrResponse.token),
-    // })
     try {
         const hentAktivBruker = () =>
             fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
@@ -58,8 +55,6 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                     aktivBruker.aktivBruker,
                     tokenOrResponse.token,
                 )
-            console.log(`oppfolgingsstatus inne: ${oppfolgingsStatus}`)
-            console.log(`oppfolgingsstatus ute: `, oppfolgingsStatus)
             return {
                 erUnderOppfolging:
                     oppfolgingsStatus.data.oppfolging.erUnderOppfolging,

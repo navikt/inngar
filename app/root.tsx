@@ -5,8 +5,8 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
-    useLoaderData,
-} from "react-router"
+    useLoaderData, useNavigate
+} from "react-router";
 import "@navikt/ds-css"
 
 import type { Route } from "./+types/root"
@@ -57,6 +57,7 @@ export const useFnrState = () => useContext(FnrProvider)
 export function Layout({ children }: { children: React.ReactNode }) {
     const { cssUrl, jsUrl } = useLoaderData()
     const [fnrState, setState] = useState<FnrState>({ loading: true })
+    const navigate = useNavigate()
 
     return (
         <html lang="en" className="bg-bg-subtle">
@@ -80,6 +81,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Decorator
                     onFnrChanged={(fnr) => {
                         setState({ loading: false, fnr })
+                        navigate(".", { replace: true })
                     }}
                 />
                 <FnrProvider.Provider value={fnrState}>
