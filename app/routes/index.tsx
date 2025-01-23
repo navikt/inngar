@@ -10,7 +10,10 @@ import { data, useFetcher, useLoaderData } from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
 import { getOboToken } from "~/util/tokenExchange.server"
-import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry"
+import {
+    DefaultErrorBoundary,
+    DefaultErrorBoundry,
+} from "~/components/DefaultErrorBoundary"
 import { type App, apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
 
@@ -192,4 +195,4 @@ const FormError = ({ message }: { message: string }) => {
     )
 }
 
-export const ErrorBoundry = DefaultErrorBoundry
+export const ErrorBoundary = DefaultErrorBoundary

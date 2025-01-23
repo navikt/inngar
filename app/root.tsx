@@ -17,7 +17,7 @@ import Decorator from "~/components/decorator"
 import { createContext, useContext, useState } from "react"
 import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
-import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundry";
+import { DefaultErrorBoundry } from "~/components/DefaultErrorBoundary"
 
 export const loader = async () => {
     if (import.meta.env.DEV) {
@@ -76,7 +76,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     href="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/index.css"
                 />
             </head>
-            <body >
+            <body>
                 <Decorator
                     onFnrChanged={(fnr) => {
                         setState({ loading: false, fnr })
@@ -94,9 +94,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-    return (
-        <Outlet />
-    )
+    return <Outlet />
 }
 
 export const ErrorBoundry = DefaultErrorBoundry
