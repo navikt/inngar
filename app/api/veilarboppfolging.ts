@@ -55,7 +55,15 @@ const graphqlBody = (fnr: string) =>  ({
   }
 })
 
-const getOppfolgingStatus = (fnr: string, token: string) => {
+interface GraphqlResponse {
+  data: {
+    oppfolging: {
+      erUnderOppfolging: boolean
+    }
+  }
+}
+
+const getOppfolgingStatus = (fnr: string, token: string): Promise<GraphqlResponse> => {
   return fetch(graphqlUrl, {
     body: JSON.stringify(graphqlBody),
     headers: {
@@ -63,6 +71,9 @@ const getOppfolgingStatus = (fnr: string, token: string) => {
       Authorization: `Bearer ${token}`,
       ["Content-Type"]: "application/json",
     },
+  }).then(response => {
+    if (response.ok) throw Error(`Feilet å hente oppfolgingsstatus fra veilarboppfølging ${response.status}`)
+    return response.json()
   })
 }
 

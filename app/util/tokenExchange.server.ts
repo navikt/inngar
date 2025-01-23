@@ -7,6 +7,14 @@ const scopeFrom = (app: App) =>
 
 const cluster = process.env.NAIS_CLUSTER_NAME || "local"
 
+export const headersWithAuth = (token: string) => {
+    return {
+        ["Nav-Consumer-Id"]: "inngar",
+        Authorization: `Bearer ${token}`,
+        ["Content-Type"]: "application/json",
+    }
+}
+
 export const oboExchange = async (request: Request, app: App) => {
     let tokenResult = await getOboToken(request, app)
     if (!tokenResult.ok) {
@@ -14,11 +22,7 @@ export const oboExchange = async (request: Request, app: App) => {
     }
 
     return new Request(request, {
-        headers: {
-            ["Nav-Consumer-Id"]: "inngar",
-            Authorization: `Bearer ${tokenResult.token}`,
-            ["Content-Type"]: "application/json",
-        },
+        headers: headersWithAuth(tokenResult.token),
     })
 }
 
