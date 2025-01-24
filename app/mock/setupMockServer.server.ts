@@ -5,8 +5,11 @@ console.log("Setting up msw handlers...")
 
 const server = setupServer(...handlers)
 server.listen({
-    onUnhandledRequest: (err, e) => {
-        console.error("Error in mock server", err)
+    onUnhandledRequest: (req, e) => {
+        if (req.url.includes(".json")) {
+            return
+        }
+        e.warning()
     },
 })
 

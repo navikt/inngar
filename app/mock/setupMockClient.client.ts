@@ -10,6 +10,15 @@ const server = setupWorker(
     }),
 )
 
-server.start()
+const mockedBackends = ["veilarbdialog", "veilarboppfolging", "veilarbperson", "veilarbportefolje", "veilarboppgave"]
+
+server.start({
+  onUnhandledRequest: (request, print) => {
+    if (mockedBackends.some(backendName => request.url.includes(backendName))) {
+      return
+    }
+    print.warning()
+  }
+})
 
 console.log("MSW handlers ready")

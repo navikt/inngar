@@ -6,18 +6,21 @@ import {
     ErrorSummary,
     Heading,
 } from "@navikt/ds-react"
-import { data, useFetcher, useLoaderData } from "react-router"
+import { data, useFetcher } from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { type App, apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
-import { useEffect } from "react";
 
-export async function clientLoader({}) {
+export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
         import("../mock/setupMockClient.client")
+    }
+    const serverData = await serverLoader()
+    return {
+        ...serverData
     }
 }
 
@@ -25,6 +28,12 @@ const aktivBrukerUrl = toAppUrl(
     apps.modiacontextholder,
     "/api/context/v2/aktivbruker",
 )
+
+enum BrukerStatus {
+    INGEN_BRUKER_VALGT = "INGEN_BRUKER_VALGT",
+    IKKE_UNDER_OPPFOLGING = "IKKE_UNDER_OPPFOLGING",
+    ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING"
+}
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
     try {
@@ -48,14 +57,16 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             })
 
         if (aktivBruker.aktivBruker === null) {
-            return { erUnderOppfolging: "VET_IKKE" }
+            return { status: BrukerStatus.INGEN_BRUKER_VALGT }
         } else {
             const oppfolgingsStatus =
                 await VeilarboppfolgingApi.getOppfolgingStatus(
                     aktivBruker.aktivBruker,
                     tokenOrResponse.token,
                 )
+            const erUnderOppfolging = oppfolgingsStatus.data.oppfolging.erUnderOppfolging
             return {
+                status: erUnderOppfolging ? BrukerStatus.ALLEREDE_UNDER_OPPFOLGING : BrukerStatus.IKKE_UNDER_OPPFOLGING,
                 erUnderOppfolging:
                     oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
             }
@@ -132,20 +143,18 @@ export function HydrateFallback() {
     return <p>Loading...</p>
 }
 
-export default function Index() {
-    const loaderData = useLoaderData<Awaited<ReturnType<typeof loader>>>()
+export default function Index({ loaderData }: { loaderData: Awaited<ReturnType<typeof loader>> }) {
     const fnrState = useFnrState()
     const fetcher = useFetcher()
     const error = fetcher.data?.error
     const erIkkeUnderOppfolging = loaderData?.erUnderOppfolging === false
+
     return (
         <div>
             <div className="flex flex-col w-[620px] m-8 p-4 space-y-4 mx-auto">
                 <Heading size="large">
                     Registrering for arbeidsrettet oppfølging
                 </Heading>
-
-                <p>{loaderData?.erUnderOppfolging}</p>
 
                 {
                     erIkkeUnderOppfolging ? <>

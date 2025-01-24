@@ -81,6 +81,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Decorator
                     onFnrChanged={(fnr) => {
                         setState({ loading: false, fnr })
+                        console.log("Navigating because visittkort fnr change")
                         navigate(".", { replace: true })
                     }}
                 />
