@@ -20,7 +20,7 @@ export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     }
     const serverData = await serverLoader()
     return {
-        ...serverData
+        ...serverData,
     }
 }
 
@@ -32,7 +32,7 @@ const aktivBrukerUrl = toAppUrl(
 enum BrukerStatus {
     INGEN_BRUKER_VALGT = "INGEN_BRUKER_VALGT",
     IKKE_UNDER_OPPFOLGING = "IKKE_UNDER_OPPFOLGING",
-    ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING"
+    ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING",
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
@@ -64,9 +64,12 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                     aktivBruker.aktivBruker,
                     tokenOrResponse.token,
                 )
-            const erUnderOppfolging = oppfolgingsStatus.data.oppfolging.erUnderOppfolging
+            const erUnderOppfolging =
+                oppfolgingsStatus.data.oppfolging.erUnderOppfolging
             return {
-                status: erUnderOppfolging ? BrukerStatus.ALLEREDE_UNDER_OPPFOLGING : BrukerStatus.IKKE_UNDER_OPPFOLGING,
+                status: erUnderOppfolging
+                    ? BrukerStatus.ALLEREDE_UNDER_OPPFOLGING
+                    : BrukerStatus.IKKE_UNDER_OPPFOLGING,
                 erUnderOppfolging:
                     oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
             }
@@ -80,8 +83,8 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "New React Router App" },
-        { name: "description", content: "Welcome to React Router!" },
+        { title: "Modia" },
+        { name: "inngar", content: "Start arbeidsoppfølging" },
     ]
 }
 
@@ -143,7 +146,11 @@ export function HydrateFallback() {
     return <p>Loading...</p>
 }
 
-export default function Index({ loaderData }: { loaderData: Awaited<ReturnType<typeof loader>> }) {
+export default function Index({
+    loaderData,
+}: {
+    loaderData: Awaited<ReturnType<typeof loader>>
+}) {
     const fnrState = useFnrState()
     const fetcher = useFetcher()
     const error = fetcher.data?.error
@@ -156,46 +163,58 @@ export default function Index({ loaderData }: { loaderData: Awaited<ReturnType<t
                     Registrering for arbeidsrettet oppfølging
                 </Heading>
 
-                {
-                    erIkkeUnderOppfolging ? <>
+                {erIkkeUnderOppfolging ? (
+                    <>
                         <BodyShort>
-                            Før du kan gjøre en § 14 a vurdering må du registrere
-                            innbyggeren for arbeidsrettet oppfølging.
+                            Før du kan gjøre en § 14 a vurdering må du
+                            registrere innbyggeren for arbeidsrettet oppfølging.
                         </BodyShort>
                         <BodyShort>
-                            Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                            dialog så snart oppfølgingen er startet.
+                            Innbyggeren får tilgang til aktivitetsplan og
+                            arbeidsrettet dialog så snart oppfølgingen er
+                            startet.
                         </BodyShort>
                         <BodyShort>
-                            Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                            dialog så snart oppfølgingen er startet.
+                            Innbyggeren får tilgang til aktivitetsplan og
+                            arbeidsrettet dialog så snart oppfølgingen er
+                            startet.
                         </BodyShort>
                         <Alert variant={"info"}>
                             <Heading size={"medium"}>
-                                Innbyggeren blir ikke registrert som arbeidssøker
+                                Innbyggeren blir ikke registrert som
+                                arbeidssøker
                             </Heading>
                             <BodyShort>
-                                Når du registrerer en innbygger for arbeidsrettet
-                                oppfølging her, blir ikke innbyggeren registrert som
-                                arbeidssøker. Dersom innbyggeren også er arbeidssøker
-                                bør du benytte arbeidssøkerregistreringen.
+                                Når du registrerer en innbygger for
+                                arbeidsrettet oppfølging her, blir ikke
+                                innbyggeren registrert som arbeidssøker. Dersom
+                                innbyggeren også er arbeidssøker bør du benytte
+                                arbeidssøkerregistreringen.
                             </BodyShort>
                         </Alert>
                         <fetcher.Form method="post" className="space-y-4">
                             {error ? <FormError message={error} /> : null}
                             <input
-                              type="hidden"
-                              name="fnr"
-                              value={!fnrState.loading ? fnrState.fnr || "" : ""}
+                                type="hidden"
+                                name="fnr"
+                                value={
+                                    !fnrState.loading ? fnrState.fnr || "" : ""
+                                }
                             />
                             <Button loading={fetcher.state == "submitting"}>
                                 Start arbeidsoppfølging
                             </Button>
-                        </fetcher.Form></> : (loaderData?.erUnderOppfolging === true
-                            ? <Alert variant="info">Bruker er allerede under arbeidsoppfølging</Alert>
-                            : <Alert variant="info">Feilet ved henting av oppfølgingsstatus på bruker</Alert>
-                        )
-                }
+                        </fetcher.Form>
+                    </>
+                ) : loaderData?.erUnderOppfolging === true ? (
+                    <Alert variant="info">
+                        Bruker er allerede under arbeidsoppfølging
+                    </Alert>
+                ) : (
+                    <Alert variant="info">
+                        Feilet ved henting av oppfølgingsstatus på bruker
+                    </Alert>
+                )}
             </div>
         </div>
     )
