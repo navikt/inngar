@@ -40,7 +40,10 @@ const startOppfolging = async (fnr: string, token: string) => {
 const query = `
   query($fnr: String!) {
     oppfolgingsEnhet(fnr: $fnr) {
-        enhet,
+        enhet {
+            navn,
+            id
+        },
         kilde
     }
     oppfolging(fnr: $fnr) {
