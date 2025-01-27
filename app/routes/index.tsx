@@ -4,8 +4,8 @@ import {
     BodyShort,
     Button,
     ErrorSummary,
-    Heading,
-} from "@navikt/ds-react"
+    Heading, List, TextField
+} from "@navikt/ds-react";
 import { data, useFetcher } from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
@@ -33,6 +33,12 @@ enum BrukerStatus {
     INGEN_BRUKER_VALGT = "INGEN_BRUKER_VALGT",
     IKKE_UNDER_OPPFOLGING = "IKKE_UNDER_OPPFOLGING",
     ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING",
+}
+
+interface Enhet {
+    navn: string,
+    id: string,
+    kilde: string,
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
@@ -67,12 +73,16 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             aktivBruker.aktivBruker,
             tokenOrResponse.token,
           )
-        const erUnderOppfolging =
-          oppfolgingsStatus.data.oppfolging.erUnderOppfolging
+        const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
         return {
-            status: erUnderOppfolging
+            status: oppfolging.erUnderOppfolging
               ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
               : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
+            enhet: {
+                kilde: oppfolgingsEnhet.kilde,
+                navn: oppfolgingsEnhet.enhet.navn,
+                id: oppfolgingsEnhet.enhet.id,
+            } as Enhet,
             erUnderOppfolging:
             oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
         }
@@ -149,13 +159,13 @@ export default function Index({
 }: {
     loaderData: Awaited<ReturnType<typeof loader>>
 }) {
-    const { status } = loaderData
+    const { status, enhet } = loaderData
     return <div className="flex flex-col w-[620px] p-4 mx-auto" >
-        <IndexPage status={status} />
+        <IndexPage enhet={enhet!!} status={status} />
     </div>
 }
 
-const IndexPage = ({ status }: { status: BrukerStatus }) => {
+const IndexPage = ({ status, enhet }: { status: BrukerStatus, enhet: Enhet }) => {
     switch (status) {
         case BrukerStatus.INGEN_BRUKER_VALGT:
             return <Alert variant="info">Ingen bruker valgt</Alert>
@@ -166,11 +176,11 @@ const IndexPage = ({ status }: { status: BrukerStatus }) => {
                 </Alert>
             )
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
-            return <StartOppfolgingForm />
+            return <StartOppfolgingForm enhet={enhet} />
     }
 }
 
-const StartOppfolgingForm = () => {
+const StartOppfolgingForm = ({ enhet }:{ enhet: Enhet }) => {
     const fnrState = useFnrState()
     const fetcher = useFetcher()
     const error = fetcher.data?.error
@@ -180,20 +190,18 @@ const StartOppfolgingForm = () => {
             <Heading size="large">
                 Registrering for arbeidsrettet oppfølging
             </Heading>
-            <BodyShort>
-                Før du kan gjøre en § 14 a vurdering må du
-                registrere innbyggeren for arbeidsrettet oppfølging.
-            </BodyShort>
-            <BodyShort>
-                Innbyggeren får tilgang til aktivitetsplan og
-                arbeidsrettet dialog så snart oppfølgingen er
-                startet.
-            </BodyShort>
-            <BodyShort>
-                Innbyggeren får tilgang til aktivitetsplan og
-                arbeidsrettet dialog så snart oppfølgingen er
-                startet.
-            </BodyShort>
+            <EnhetsInfo enhet={enhet} />
+            <List>
+                <List.Item>
+                    Før du kan gjøre en § 14 a vurdering må du
+                    registrere innbyggeren for arbeidsrettet oppfølging.
+                </List.Item>
+                <List.Item>
+                    Innbyggeren får tilgang til aktivitetsplan og
+                    arbeidsrettet dialog så snart oppfølgingen er
+                    startet.
+                </List.Item>
+            </List>
             <Alert variant={"info"}>
                 <Heading size={"medium"}>
                     Innbyggeren blir ikke registrert som arbeidssøker
@@ -228,6 +236,20 @@ const FormError = ({ message }: { message: string }) => {
             </ErrorSummary.Item>
         </ErrorSummary>
     )
+}
+
+const EnhetsInfo = ({ enhet }: { enhet: Enhet }) => {
+    const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geograftisk tilknytning"
+    const beskrivelseTekst = enhet.kilde === "ARENA" ? "Bruker er registrert på følgende enhet i Arena:" : "Bruker blir tildelt følgende enhet etter gegrafisk tilhørighet:"
+    return <>
+        <TextField
+          label="Oppfolgingsenhet"
+          description={beskrivelseTekst}
+          value={`${ enhet.navn } (${ enhet.id }) - ${kilde}`}
+          readOnly
+        />
+        <BodyShort>Bruker kommer til å bli lagt til i porteføljen til enheten.</BodyShort>
+    </>
 }
 
 export const ErrorBoundary = DefaultErrorBoundary

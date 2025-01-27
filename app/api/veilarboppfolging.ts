@@ -39,6 +39,10 @@ const startOppfolging = async (fnr: string, token: string) => {
 
 const query = `
   query($fnr: String!) {
+    oppfolgingsEnhet(fnr: $fnr) {
+        enhet,
+        kilde
+    }
     oppfolging(fnr: $fnr) {
         erUnderOppfolging 
     }
@@ -56,6 +60,13 @@ interface GraphqlResponse {
     data: {
         oppfolging: {
             erUnderOppfolging: boolean
+        },
+        oppfolgingsEnhet: {
+            enhet: {
+                id: string,
+                navn: string,
+            },
+            kilde: string,
         }
     }
 }
