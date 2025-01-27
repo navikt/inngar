@@ -73,6 +73,7 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             aktivBruker.aktivBruker,
             tokenOrResponse.token,
           )
+        logger.info("oppfolgingsStatus", oppfolgingsStatus)
         const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
         return {
             status: oppfolging.erUnderOppfolging
