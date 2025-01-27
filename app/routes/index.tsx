@@ -63,26 +63,26 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
         return { status: BrukerStatus.INGEN_BRUKER_VALGT as const }
     } else {
         const oppfolgingsStatus =
-            await VeilarboppfolgingApi.getOppfolgingStatus(
-                aktivBruker.aktivBruker,
-                tokenOrResponse.token,
-            )
+          await VeilarboppfolgingApi.getOppfolgingStatus(
+            aktivBruker.aktivBruker,
+            tokenOrResponse.token,
+          )
         const erUnderOppfolging =
-            oppfolgingsStatus.data.oppfolging.erUnderOppfolging
+          oppfolgingsStatus.data.oppfolging.erUnderOppfolging
         return {
             status: erUnderOppfolging
-                ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
-                : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
+              ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
+              : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
             erUnderOppfolging:
-                oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
+            oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
         }
     }
 }
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "New React Router App" },
-        { name: "description", content: "Welcome to React Router!" },
+        { title: "Modia" },
+        { name: "inngar", content: "Start arbeidsoppfølging" },
     ]
 }
 
@@ -180,18 +180,19 @@ const StartOppfolgingForm = () => {
             <Heading size="large">
                 Registrering for arbeidsrettet oppfølging
             </Heading>
-
             <BodyShort>
-                Før du kan gjøre en § 14 a vurdering må du registrere
-                innbyggeren for arbeidsrettet oppfølging.
+                Før du kan gjøre en § 14 a vurdering må du
+                registrere innbyggeren for arbeidsrettet oppfølging.
             </BodyShort>
             <BodyShort>
-                Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                dialog så snart oppfølgingen er startet.
+                Innbyggeren får tilgang til aktivitetsplan og
+                arbeidsrettet dialog så snart oppfølgingen er
+                startet.
             </BodyShort>
             <BodyShort>
-                Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                dialog så snart oppfølgingen er startet.
+                Innbyggeren får tilgang til aktivitetsplan og
+                arbeidsrettet dialog så snart oppfølgingen er
+                startet.
             </BodyShort>
             <Alert variant={"info"}>
                 <Heading size={"medium"}>
