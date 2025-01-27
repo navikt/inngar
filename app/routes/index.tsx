@@ -20,7 +20,7 @@ export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     }
     const serverData = await serverLoader()
     return {
-        ...serverData
+        ...serverData,
     }
 }
 
@@ -32,49 +32,50 @@ const aktivBrukerUrl = toAppUrl(
 enum BrukerStatus {
     INGEN_BRUKER_VALGT = "INGEN_BRUKER_VALGT",
     IKKE_UNDER_OPPFOLGING = "IKKE_UNDER_OPPFOLGING",
-    ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING"
+    ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING",
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-    try {
-        const hentAktivBruker = () =>
-            fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
-        const hentOboForVeilarboppfolging = () =>
-            getOboToken(loaderArgs.request, apps.veilarboppfolging)
+    const hentAktivBruker = () =>
+        fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
+    const hentOboForVeilarboppfolging = () =>
+        getOboToken(loaderArgs.request, apps.veilarboppfolging)
 
-        const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
-            hentOboForVeilarboppfolging(),
-            hentAktivBruker(),
-        ])
-        const aktivBruker = (await aktivBrukerResult.json()) as {
-            aktivBruker: null | string
+    const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
+        hentOboForVeilarboppfolging(),
+        hentAktivBruker(),
+    ])
+
+    if (!aktivBrukerResult.ok) {
+        throw data({ errorMessage: "Kunne ikke hente bruker i kontekst" })
+    }
+    if (!tokenOrResponse.ok)
+        throw data({
+            errorMessage:
+                "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
+        })
+
+    const aktivBruker = (await aktivBrukerResult.json()) as {
+        aktivBruker: null | string
+    }
+
+    if (aktivBruker.aktivBruker === null) {
+        return { status: BrukerStatus.INGEN_BRUKER_VALGT as const }
+    } else {
+        const oppfolgingsStatus =
+            await VeilarboppfolgingApi.getOppfolgingStatus(
+                aktivBruker.aktivBruker,
+                tokenOrResponse.token,
+            )
+        const erUnderOppfolging =
+            oppfolgingsStatus.data.oppfolging.erUnderOppfolging
+        return {
+            status: erUnderOppfolging
+                ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
+                : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
+            erUnderOppfolging:
+                oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
         }
-
-        if (!tokenOrResponse.ok)
-            throw data({
-                errorMessage:
-                    "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
-            })
-
-        if (aktivBruker.aktivBruker === null) {
-            return { status: BrukerStatus.INGEN_BRUKER_VALGT }
-        } else {
-            const oppfolgingsStatus =
-                await VeilarboppfolgingApi.getOppfolgingStatus(
-                    aktivBruker.aktivBruker,
-                    tokenOrResponse.token,
-                )
-            const erUnderOppfolging = oppfolgingsStatus.data.oppfolging.erUnderOppfolging
-            return {
-                status: erUnderOppfolging ? BrukerStatus.ALLEREDE_UNDER_OPPFOLGING : BrukerStatus.IKKE_UNDER_OPPFOLGING,
-                erUnderOppfolging:
-                    oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
-            }
-        }
-    } catch (e: Error) {
-        logger.error(
-            `index loader catch error:${e.name} message: ${e.message}  stack: ${e.stack}`,
-        )
     }
 }
 
@@ -143,60 +144,77 @@ export function HydrateFallback() {
     return <p>Loading...</p>
 }
 
-export default function Index({ loaderData }: { loaderData: Awaited<ReturnType<typeof loader>> }) {
+export default function Index({
+    loaderData,
+}: {
+    loaderData: Awaited<ReturnType<typeof loader>>
+}) {
+    const { status } = loaderData
+    return <div className="flex flex-col w-[620px] p-4 mx-auto" >
+        <IndexPage status={status} />
+    </div>
+}
+
+const IndexPage = ({ status }: { status: BrukerStatus }) => {
+    switch (status) {
+        case BrukerStatus.INGEN_BRUKER_VALGT:
+            return <Alert variant="info">Ingen bruker valgt</Alert>
+        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING:
+            return (
+                <Alert variant="info">
+                    Bruker er allerede under arbeidsoppfølging
+                </Alert>
+            )
+        case BrukerStatus.IKKE_UNDER_OPPFOLGING:
+            return <StartOppfolgingForm />
+    }
+}
+
+const StartOppfolgingForm = () => {
     const fnrState = useFnrState()
     const fetcher = useFetcher()
     const error = fetcher.data?.error
-    const erIkkeUnderOppfolging = loaderData?.erUnderOppfolging === false
 
     return (
-        <div>
-            <div className="flex flex-col w-[620px] m-8 p-4 space-y-4 mx-auto">
-                <Heading size="large">
-                    Registrering for arbeidsrettet oppfølging
-                </Heading>
+        <div className="flex flex-col space-y-4 mx-auto">
+            <Heading size="large">
+                Registrering for arbeidsrettet oppfølging
+            </Heading>
 
-                {
-                    erIkkeUnderOppfolging ? <>
-                        <BodyShort>
-                            Før du kan gjøre en § 14 a vurdering må du registrere
-                            innbyggeren for arbeidsrettet oppfølging.
-                        </BodyShort>
-                        <BodyShort>
-                            Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                            dialog så snart oppfølgingen er startet.
-                        </BodyShort>
-                        <BodyShort>
-                            Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                            dialog så snart oppfølgingen er startet.
-                        </BodyShort>
-                        <Alert variant={"info"}>
-                            <Heading size={"medium"}>
-                                Innbyggeren blir ikke registrert som arbeidssøker
-                            </Heading>
-                            <BodyShort>
-                                Når du registrerer en innbygger for arbeidsrettet
-                                oppfølging her, blir ikke innbyggeren registrert som
-                                arbeidssøker. Dersom innbyggeren også er arbeidssøker
-                                bør du benytte arbeidssøkerregistreringen.
-                            </BodyShort>
-                        </Alert>
-                        <fetcher.Form method="post" className="space-y-4">
-                            {error ? <FormError message={error} /> : null}
-                            <input
-                              type="hidden"
-                              name="fnr"
-                              value={!fnrState.loading ? fnrState.fnr || "" : ""}
-                            />
-                            <Button loading={fetcher.state == "submitting"}>
-                                Start arbeidsoppfølging
-                            </Button>
-                        </fetcher.Form></> : (loaderData?.erUnderOppfolging === true
-                            ? <Alert variant="info">Bruker er allerede under arbeidsoppfølging</Alert>
-                            : <Alert variant="info">Feilet ved henting av oppfølgingsstatus på bruker</Alert>
-                        )
-                }
-            </div>
+            <BodyShort>
+                Før du kan gjøre en § 14 a vurdering må du registrere
+                innbyggeren for arbeidsrettet oppfølging.
+            </BodyShort>
+            <BodyShort>
+                Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
+                dialog så snart oppfølgingen er startet.
+            </BodyShort>
+            <BodyShort>
+                Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
+                dialog så snart oppfølgingen er startet.
+            </BodyShort>
+            <Alert variant={"info"}>
+                <Heading size={"medium"}>
+                    Innbyggeren blir ikke registrert som arbeidssøker
+                </Heading>
+                <BodyShort>
+                    Når du registrerer en innbygger for arbeidsrettet oppfølging
+                    her, blir ikke innbyggeren registrert som arbeidssøker.
+                    Dersom innbyggeren også er arbeidssøker bør du benytte
+                    arbeidssøkerregistreringen.
+                </BodyShort>
+            </Alert>
+            <fetcher.Form method="post" className="space-y-4">
+                {error ? <FormError message={error} /> : null}
+                <input
+                    type="hidden"
+                    name="fnr"
+                    value={!fnrState.loading ? fnrState.fnr || "" : ""}
+                />
+                <Button loading={fetcher.state == "submitting"}>
+                    Start arbeidsoppfølging
+                </Button>
+            </fetcher.Form>
         </div>
     )
 }
