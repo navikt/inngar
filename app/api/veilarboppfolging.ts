@@ -9,7 +9,7 @@ const startOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
     "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
 )
-const graphqlUrl = toUrl(apps.veilarboppfolging, "/veilarboppfolging/graphql")
+const graphqlUrl = toUrl(apps.veilarboppfolging, "/veilarboppfolging/api/graphql")
 
 const startOppfolging = async (fnr: string, token: string) => {
     let response = await fetch(startOppfolgingUrl, {

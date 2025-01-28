@@ -69,7 +69,7 @@ export const handlers = [
             return HttpResponse.text("false")
         },
     ),
-    http.post(`${veilarboppfolging}/veilarboppfolging/graphql`, () => {
+    http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, () => {
         return HttpResponse.json({
             data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
             error: null,
