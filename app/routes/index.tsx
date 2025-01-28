@@ -75,15 +75,16 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
           )
         logger.info("oppfolgingsStatus", oppfolgingsStatus)
         const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
+        const enhet = oppfolgingsEnhet.enhet ? {
+            kilde: oppfolgingsEnhet.enhet.kilde,
+            navn: oppfolgingsEnhet.enhet.navn,
+            id: oppfolgingsEnhet.enhet.id,
+        } as Enhet : null
         return {
             status: oppfolging.erUnderOppfolging
               ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
               : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
-            enhet: {
-                kilde: oppfolgingsEnhet.kilde,
-                navn: oppfolgingsEnhet.enhet.navn,
-                id: oppfolgingsEnhet.enhet.id,
-            } as Enhet,
+            enhet,
             erUnderOppfolging:
             oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
         }
@@ -162,11 +163,11 @@ export default function Index({
 }) {
     const { status, enhet } = loaderData
     return <div className="flex flex-col w-[620px] p-4 mx-auto" >
-        <IndexPage enhet={enhet!!} status={status} />
+        <IndexPage enhet={enhet} status={status} />
     </div>
 }
 
-const IndexPage = ({ status, enhet }: { status: BrukerStatus, enhet: Enhet }) => {
+const IndexPage = ({ status, enhet }: { status: BrukerStatus, enhet: Enhet | null | undefined }) => {
     switch (status) {
         case BrukerStatus.INGEN_BRUKER_VALGT:
             return <Alert variant="info">Ingen bruker valgt</Alert>
@@ -181,7 +182,7 @@ const IndexPage = ({ status, enhet }: { status: BrukerStatus, enhet: Enhet }) =>
     }
 }
 
-const StartOppfolgingForm = ({ enhet }:{ enhet: Enhet }) => {
+const StartOppfolgingForm = ({ enhet }:{ enhet: Enhet | null | undefined }) => {
     const fnrState = useFnrState()
     const fetcher = useFetcher()
     const error = fetcher.data?.error
@@ -221,7 +222,7 @@ const StartOppfolgingForm = ({ enhet }:{ enhet: Enhet }) => {
                     name="fnr"
                     value={!fnrState.loading ? fnrState.fnr || "" : ""}
                 />
-                <Button loading={fetcher.state == "submitting"}>
+                <Button disabled={!enhet} loading={fetcher.state == "submitting"}>
                     Start arbeidsoppfølging
                 </Button>
             </fetcher.Form>
@@ -239,9 +240,14 @@ const FormError = ({ message }: { message: string }) => {
     )
 }
 
-const EnhetsInfo = ({ enhet }: { enhet: Enhet }) => {
+const EnhetsInfo = ({ enhet }: { enhet: Enhet | null | undefined }) => {
+    if (enhet === null || enhet === undefined) {
+        return <Alert variant="warning">Fant ikke enhet</Alert>
+    }
+
     const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geograftisk tilknytning"
     const beskrivelseTekst = enhet.kilde === "ARENA" ? "Bruker er registrert på følgende enhet i Arena:" : "Bruker blir tildelt følgende enhet etter gegrafisk tilhørighet:"
+
     return <>
         <TextField
           label="Oppfolgingsenhet"

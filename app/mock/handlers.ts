@@ -71,7 +71,7 @@ export const handlers = [
     ),
     http.post(`${veilarboppfolging}/veilarboppfolging/graphql`, () => {
         return HttpResponse.json({
-            data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { kilde: "ARENA", enhet: { navn: "NAV Øst", id: "0412" } } },
+            data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
             error: null,
         })
     }),

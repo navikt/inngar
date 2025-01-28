@@ -59,17 +59,20 @@ const graphqlBody = (fnr: string) => ({
     },
 })
 
+interface Enhet  {
+    id: string,
+    navn: string,
+    kilde: string,
+}
+
 interface GraphqlResponse {
+    errors?: any[],
     data: {
         oppfolging: {
             erUnderOppfolging: boolean
         },
         oppfolgingsEnhet: {
-            enhet: {
-                id: string,
-                navn: string,
-            },
-            kilde: string,
+            enhet?: Enhet
         }
     }
 }
