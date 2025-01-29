@@ -70,14 +70,11 @@ export const handlers = [
         },
     ),
     http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, ({ cookies }) => {
-        if (asfasd) {
-            return HttpResponse.text("Not found", { status: 404 })
-        } else {
-            return HttpResponse.json({
-                data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
-                error: null,
-            })
-        }
+        // return HttpResponse.text("Not found", { status: 404 })
+        return HttpResponse.json({
+            data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
+            error: null,
+        })
 
 
     }),
