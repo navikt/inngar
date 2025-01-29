@@ -42,52 +42,56 @@ interface Enhet {
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-    const hentAktivBruker = () =>
-        fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
-    const hentOboForVeilarboppfolging = () =>
-        getOboToken(loaderArgs.request, apps.veilarboppfolging)
+    try {
+        const hentAktivBruker = () =>
+          fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
+        const hentOboForVeilarboppfolging = () =>
+          getOboToken(loaderArgs.request, apps.veilarboppfolging)
 
-    const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
-        hentOboForVeilarboppfolging(),
-        hentAktivBruker(),
-    ])
+        const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
+            hentOboForVeilarboppfolging(),
+            hentAktivBruker(),
+        ])
 
-    if (!aktivBrukerResult.ok) {
-        throw data({ errorMessage: "Kunne ikke hente bruker i kontekst" })
-    }
-    if (!tokenOrResponse.ok)
-        throw data({
-            errorMessage:
-                "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
-        })
-
-    const aktivBruker = (await aktivBrukerResult.json()) as {
-        aktivBruker: null | string
-    }
-
-    if (aktivBruker.aktivBruker === null) {
-        return { status: BrukerStatus.INGEN_BRUKER_VALGT as const }
-    } else {
-        const oppfolgingsStatus =
-          await VeilarboppfolgingApi.getOppfolgingStatus(
-            aktivBruker.aktivBruker,
-            tokenOrResponse.token,
-          )
-        logger.info("oppfolgingsStatus", oppfolgingsStatus)
-        const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
-        const enhet = oppfolgingsEnhet.enhet ? {
-            kilde: oppfolgingsEnhet.enhet.kilde,
-            navn: oppfolgingsEnhet.enhet.navn,
-            id: oppfolgingsEnhet.enhet.id,
-        } as Enhet : null
-        return {
-            status: oppfolging.erUnderOppfolging
-              ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
-              : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
-            enhet,
-            erUnderOppfolging:
-            oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
+        if (!aktivBrukerResult.ok) {
+            throw data({ errorMessage: `Kunne ikke hente bruker i kontekst: ${aktivBrukerResult.status}` })
         }
+        if (!tokenOrResponse.ok)
+            throw data({
+                errorMessage:
+                  "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
+            })
+
+        const aktivBruker = (await aktivBrukerResult.json()) as {
+            aktivBruker: null | string
+        }
+
+        if (aktivBruker.aktivBruker === null) {
+            return { status: BrukerStatus.INGEN_BRUKER_VALGT as const }
+        } else {
+            const oppfolgingsStatus =
+              await VeilarboppfolgingApi.getOppfolgingStatus(
+                aktivBruker.aktivBruker,
+                tokenOrResponse.token,
+              )
+            logger.info("oppfolgingsStatus", oppfolgingsStatus)
+            const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
+            const enhet = oppfolgingsEnhet.enhet ? {
+                kilde: oppfolgingsEnhet.enhet.kilde,
+                navn: oppfolgingsEnhet.enhet.navn,
+                id: oppfolgingsEnhet.enhet.id,
+            } as Enhet : null
+            return {
+                status: oppfolging.erUnderOppfolging
+                  ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
+                  : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
+                enhet,
+                erUnderOppfolging:
+                oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
+            }
+        }
+    } catch (e) {
+        throw data({ errorMessage: e.toString() }, { status: 500 })
     }
 }
 

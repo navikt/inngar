@@ -69,10 +69,16 @@ export const handlers = [
             return HttpResponse.text("false")
         },
     ),
-    http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, () => {
-        return HttpResponse.json({
-            data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
-            error: null,
-        })
+    http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, ({ cookies }) => {
+        if (asfasd) {
+            return HttpResponse.text("Not found", { status: 404 })
+        } else {
+            return HttpResponse.json({
+                data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
+                error: null,
+            })
+        }
+
+
     }),
 ]

@@ -10,7 +10,7 @@ const server = setupWorker(
     }),
 )
 
-const mockedBackends = ["veilarbdialog", "veilarboppfolging", "veilarbperson", "veilarbportefolje", "veilarboppgave"]
+const mockedBackends = ["veilarbdialog", "veilarboppfolging", "veilarbperson", "veilarbportefolje", "veilarboppgave", "app", "root", "mock-settings", ".woff"]
 
 server.start({
   onUnhandledRequest: (request, print) => {

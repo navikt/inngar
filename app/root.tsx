@@ -1,5 +1,4 @@
 import {
-    isRouteErrorResponse,
     Links,
     Meta,
     Outlet,
@@ -11,22 +10,32 @@ import "@navikt/ds-css"
 
 import type { Route } from "./+types/root"
 import stylesheet from "./app.css?url"
-import { Alert } from "@navikt/ds-react"
-import { logger } from "~/logger"
 import Decorator from "~/components/decorator"
 import { createContext, useContext, useState } from "react"
 import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
+import { MockSettingsForm } from "~/mock/MockSettingsForm";
+import { getSession } from "~/mock/mockSession";
+import type { MockSettings } from "~/routes/mocksSettings";
 
-export const loader = async () => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
+    let other = {}
     if (import.meta.env.DEV) {
         import("./mock/setupMockServer.server")
+        const cookieHeader = request.headers.get("Cookie");
+        const session = await getSession(
+          request.headers.get("Cookie")
+        );
+        console.log("session data", session.data)
+        console.log("session data - enhet", session.get("oppfolgingsEnhet"))
+        const mockSettings: Partial<MockSettings> = { oppfolgingsEnhet: session.get("oppfolgingsEnhet") }
+        other = { mockSettings }
     }
     const { cssUrl, jsUrl } = await importSubApp(
         "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
     )
-    return { cssUrl, jsUrl }
+    return { cssUrl, jsUrl, ...other }
 }
 
 export const links: Route.LinksFunction = () => [
@@ -96,8 +105,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
     )
 }
 
-export default function App() {
-    return <Outlet />
+export default function App({ loaderData }) {
+    if (import.meta.env.DEV) {
+        return <>
+            <MockSettingsForm mockSettings={loaderData.mockSettings} />
+            <Outlet />
+        </>
+    } else {
+        return <Outlet />
+    }
+
 }
 
 export const ErrorBoundary = DefaultErrorBoundary

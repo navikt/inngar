@@ -9,7 +9,7 @@ const startOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
     "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
 )
-const graphqlUrl = toUrl(apps.veilarboppfolging, "/api/graphql")
+const graphqlUrl = toUrl(apps.veilarboppfolging, "/veilarboppfolging/api/graphql")
 
 const startOppfolging = async (fnr: string, token: string) => {
     let response = await fetch(startOppfolgingUrl, {
@@ -91,8 +91,8 @@ const getOppfolgingStatus = (
         method: "POST",
     }).then((response) => {
         if (!response.ok)
-            throw Error(
-                `Feilet å hente oppfolgingsstatus fra veilarboppfølging ${response.status}`,
+            throw new Error(
+                `Feilet å hente oppfolgings-data fra veilarboppfølging url:(${graphqlUrl}) status:${response.status}`,
             )
         return response.json()
     })

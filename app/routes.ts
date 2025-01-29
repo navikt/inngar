@@ -1,5 +1,9 @@
 import { type RouteConfig, index, route } from "@react-router/dev/routes"
 
+const devRoutes = import.meta.env.DEV
+  ? [route("/mock-settings", "routes/mocksSettings.ts")] :
+  []
+
 export default [
     index("routes/index.tsx"),
     route("/api/modiacontextholder/*", "routes/dekoratorProxy.tsx"),
@@ -18,5 +22,6 @@ export default [
     route("/veilarbdialog/*", "routes/veilarbProxy.tsx", {
         id: "veilarbdialog",
     }),
+    ...devRoutes,
     route("*", "routes/redirectToIndex.tsx"),
 ] satisfies RouteConfig
