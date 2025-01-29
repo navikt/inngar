@@ -15,6 +15,7 @@ import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { type App, apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
+import { err } from "pino-std-serializers"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -79,6 +80,10 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                 tokenOrResponse.token,
               )
             logger.info(`oppfolgingsStatus ${JSON.stringify(oppfolgingsStatus)}`, )
+            if ("errors" in oppfolgingsStatus) {
+                const errorMessage = oppfolgingsStatus.errors?.map(it => it.message).join(",")
+                throw new Error(errorMessage)
+            }
             const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
             const enhet = oppfolgingsEnhet.enhet
                 ? ({

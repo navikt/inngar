@@ -42,9 +42,9 @@ const query = `
     oppfolgingsEnhet(fnr: $fnr) {
         enhet {
             navn,
-            id
-        },
-        kilde
+            id,
+            kilde
+        }
     }
     oppfolging(fnr: $fnr) {
         erUnderOppfolging 
@@ -65,8 +65,7 @@ interface Enhet {
     kilde: string
 }
 
-interface GraphqlResponse {
-    errors?: any[]
+type GraphqlResponse = { errors: { message: string }[] } | {
     data: {
         oppfolging: {
             erUnderOppfolging: boolean
