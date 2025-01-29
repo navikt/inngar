@@ -4,8 +4,10 @@ import {
     BodyShort,
     Button,
     ErrorSummary,
-    Heading, List, TextField
-} from "@navikt/ds-react";
+    Heading,
+    List,
+    TextField,
+} from "@navikt/ds-react"
 import { data, useFetcher } from "react-router"
 import { logger } from "~/logger"
 import { useFnrState } from "~/root"
@@ -36,17 +38,17 @@ enum BrukerStatus {
 }
 
 interface Enhet {
-    navn: string,
-    id: string,
-    kilde: string,
+    navn: string
+    id: string
+    kilde: string
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
     try {
         const hentAktivBruker = () =>
-          fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
+            fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
         const hentOboForVeilarboppfolging = () =>
-          getOboToken(loaderArgs.request, apps.veilarboppfolging)
+            getOboToken(loaderArgs.request, apps.veilarboppfolging)
 
         const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
             hentOboForVeilarboppfolging(),
@@ -54,12 +56,14 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
         ])
 
         if (!aktivBrukerResult.ok) {
-            throw data({ errorMessage: `Kunne ikke hente bruker i kontekst: ${aktivBrukerResult.status}` })
+            throw data({
+                errorMessage: `Kunne ikke hente bruker i kontekst: ${aktivBrukerResult.status}`,
+            })
         }
         if (!tokenOrResponse.ok)
             throw data({
                 errorMessage:
-                  "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
+                    "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
             })
 
         const aktivBruker = (await aktivBrukerResult.json()) as {
@@ -70,24 +74,26 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             return { status: BrukerStatus.INGEN_BRUKER_VALGT as const }
         } else {
             const oppfolgingsStatus =
-              await VeilarboppfolgingApi.getOppfolgingStatus(
-                aktivBruker.aktivBruker,
-                tokenOrResponse.token,
-              )
+                await VeilarboppfolgingApi.getOppfolgingStatus(
+                    aktivBruker.aktivBruker,
+                    tokenOrResponse.token,
+                )
             logger.info("oppfolgingsStatus", oppfolgingsStatus)
             const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
-            const enhet = oppfolgingsEnhet.enhet ? {
-                kilde: oppfolgingsEnhet.enhet.kilde,
-                navn: oppfolgingsEnhet.enhet.navn,
-                id: oppfolgingsEnhet.enhet.id,
-            } as Enhet : null
+            const enhet = oppfolgingsEnhet.enhet
+                ? ({
+                      kilde: oppfolgingsEnhet.enhet.kilde,
+                      navn: oppfolgingsEnhet.enhet.navn,
+                      id: oppfolgingsEnhet.enhet.id,
+                  } as Enhet)
+                : null
             return {
                 status: oppfolging.erUnderOppfolging
-                  ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
-                  : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
+                    ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
+                    : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
                 enhet,
                 erUnderOppfolging:
-                oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
+                    oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
             }
         }
     } catch (e) {
@@ -166,12 +172,20 @@ export default function Index({
     loaderData: Awaited<ReturnType<typeof loader>>
 }) {
     const { status, enhet } = loaderData
-    return <div className="flex flex-col w-[620px] p-4 mx-auto" >
-        <IndexPage enhet={enhet} status={status} />
-    </div>
+    return (
+        <div className="flex flex-col w-[620px] p-4 mx-auto">
+            <IndexPage enhet={enhet} status={status} />
+        </div>
+    )
 }
 
-const IndexPage = ({ status, enhet }: { status: BrukerStatus, enhet: Enhet | null | undefined }) => {
+const IndexPage = ({
+    status,
+    enhet,
+}: {
+    status: BrukerStatus
+    enhet: Enhet | null | undefined
+}) => {
     switch (status) {
         case BrukerStatus.INGEN_BRUKER_VALGT:
             return <Alert variant="info">Ingen bruker valgt</Alert>
@@ -186,7 +200,11 @@ const IndexPage = ({ status, enhet }: { status: BrukerStatus, enhet: Enhet | nul
     }
 }
 
-const StartOppfolgingForm = ({ enhet }:{ enhet: Enhet | null | undefined }) => {
+const StartOppfolgingForm = ({
+    enhet,
+}: {
+    enhet: Enhet | null | undefined
+}) => {
     const fnrState = useFnrState()
     const fetcher = useFetcher()
     const error = fetcher.data?.error
@@ -199,13 +217,12 @@ const StartOppfolgingForm = ({ enhet }:{ enhet: Enhet | null | undefined }) => {
             <EnhetsInfo enhet={enhet} />
             <List>
                 <List.Item>
-                    Før du kan gjøre en § 14 a vurdering må du
-                    registrere innbyggeren for arbeidsrettet oppfølging.
+                    Før du kan gjøre en § 14 a vurdering må du registrere
+                    innbyggeren for arbeidsrettet oppfølging.
                 </List.Item>
                 <List.Item>
-                    Innbyggeren får tilgang til aktivitetsplan og
-                    arbeidsrettet dialog så snart oppfølgingen er
-                    startet.
+                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
+                    dialog så snart oppfølgingen er startet.
                 </List.Item>
             </List>
             <Alert variant={"info"}>
@@ -226,7 +243,10 @@ const StartOppfolgingForm = ({ enhet }:{ enhet: Enhet | null | undefined }) => {
                     name="fnr"
                     value={!fnrState.loading ? fnrState.fnr || "" : ""}
                 />
-                <Button disabled={!enhet} loading={fetcher.state == "submitting"}>
+                <Button
+                    disabled={!enhet}
+                    loading={fetcher.state == "submitting"}
+                >
                     Start arbeidsoppfølging
                 </Button>
             </fetcher.Form>
@@ -249,18 +269,25 @@ const EnhetsInfo = ({ enhet }: { enhet: Enhet | null | undefined }) => {
         return <Alert variant="warning">Fant ikke enhet</Alert>
     }
 
-    const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geograftisk tilknytning"
-    const beskrivelseTekst = enhet.kilde === "ARENA" ? "Bruker er registrert på følgende enhet i Arena:" : "Bruker blir tildelt følgende enhet etter gegrafisk tilhørighet:"
+    const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geografisk tilknytning"
+    const beskrivelseTekst =
+        enhet.kilde === "ARENA"
+            ? "Bruker er registrert på følgende enhet i Arena:"
+            : "Bruker blir tildelt følgende enhet etter gegrafisk tilhørighet:"
 
-    return <>
-        <TextField
-          label="Oppfolgingsenhet"
-          description={beskrivelseTekst}
-          value={`${ enhet.navn } (${ enhet.id }) - ${kilde}`}
-          readOnly
-        />
-        <BodyShort>Bruker kommer til å bli lagt til i porteføljen til enheten.</BodyShort>
-    </>
+    return (
+        <>
+            <TextField
+                label="Oppfolgingsenhet"
+                description={beskrivelseTekst}
+                value={`${enhet.navn} (${enhet.id}) - ${kilde}`}
+                readOnly
+            />
+            <BodyShort>
+                Bruker kommer til å bli lagt til i porteføljen til enheten.
+            </BodyShort>
+        </>
+    )
 }
 
 export const ErrorBoundary = DefaultErrorBoundary
