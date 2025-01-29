@@ -9,7 +9,7 @@ const startOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
     "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
 )
-const graphqlUrl = toUrl(apps.veilarboppfolging, "/veilarboppfolging/api/graphql")
+const graphqlUrl = toUrl(apps.veilarboppfolging, "/api/graphql")
 
 const startOppfolging = async (fnr: string, token: string) => {
     let response = await fetch(startOppfolgingUrl, {
@@ -59,18 +59,18 @@ const graphqlBody = (fnr: string) => ({
     },
 })
 
-interface Enhet  {
-    id: string,
-    navn: string,
-    kilde: string,
+interface Enhet {
+    id: string
+    navn: string
+    kilde: string
 }
 
 interface GraphqlResponse {
-    errors?: any[],
+    errors?: any[]
     data: {
         oppfolging: {
             erUnderOppfolging: boolean
-        },
+        }
         oppfolgingsEnhet: {
             enhet?: Enhet
         }
