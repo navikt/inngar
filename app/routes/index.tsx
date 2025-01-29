@@ -273,7 +273,7 @@ const EnhetsInfo = ({ enhet }: { enhet: Enhet | null | undefined }) => {
     const beskrivelseTekst =
         enhet.kilde === "ARENA"
             ? "Bruker er registrert på følgende enhet i Arena:"
-            : "Bruker blir tildelt følgende enhet etter gegrafisk tilhørighet:"
+            : "Bruker blir tildelt følgende enhet etter geografisk tilknytning:"
 
     return (
         <>
