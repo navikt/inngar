@@ -74,7 +74,7 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                 aktivBruker.aktivBruker,
                 tokenOrResponse.token,
               )
-            logger.info("oppfolgingsStatus", oppfolgingsStatus)
+            logger.info(`oppfolgingsStatus ${JSON.stringify(oppfolgingsStatus)}`, )
             const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
             const enhet = oppfolgingsEnhet.enhet ? {
                 kilde: oppfolgingsEnhet.enhet.kilde,
@@ -91,7 +91,7 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             }
         }
     } catch (e) {
-        throw data({ errorMessage: e.toString() }, { status: 500 })
+        throw data({ errorMessage: e.toString(), stack: e.stack }, { status: 500 })
     }
 }
 
