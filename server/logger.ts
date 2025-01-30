@@ -9,8 +9,8 @@ export const logger = pino({
             if (!getSpan || !context) return {};
             const span = getSpan(context.active());
             if (span) {
-                const { traceId, spanId } = span.spanContext();
-                return { 'trace_id': traceId, 'span_id': spanId };
+                const { traceId, spanId, traceFlags } = span.spanContext();
+                return { 'trace_id': traceId, 'span_id': spanId, 'trace_flags': traceFlags };
             }
             return {};
         },
