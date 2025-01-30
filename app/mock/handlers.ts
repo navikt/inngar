@@ -5,6 +5,7 @@ import { dialogGraphqlPayload } from "~/mock/mockdata/dialogGraphql"
 import { hentPersonPayload } from "~/mock/mockdata/hent-person"
 import { hentOppfolgingsstatusPayload } from "~/mock/mockdata/hent-oppfolgingsstatus"
 import { hentVergeOgFullmaktPayload } from "~/mock/mockdata/hent-vergeOgFullmakt"
+import { mockSettings } from "~/mock/mockSettings"
 
 const contextHolder = "http://modiacontextholder.personoversikt"
 const veilarboppfolging = `http://veilarboppfolging.poao`
@@ -70,12 +71,28 @@ export const handlers = [
         },
     ),
     http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, ({ cookies }) => {
-        // return HttpResponse.text("Not found", { status: 404 })
-        return HttpResponse.json({
-            data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
-            error: null,
-        })
-
-
+        const enhetMocking = mockSettings.oppfolgingsEnhet
+        switch (enhetMocking) {
+            case ("UnderOppfolging"):
+                return HttpResponse.json({
+                    data: { oppfolging: { erUnderOppfolging: true}, oppfolgingsEnhet: { enhet: { kilde: "ARENA", navn: "NAV Vest", id: "0420" } } },
+                })
+            case ("Arena"):
+                return HttpResponse.json({
+                    data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "ARENA", navn: "NAV Vest", id: "0420" } } },
+                })
+            case ("Ingen"):
+                return HttpResponse.json({
+                    data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: undefined } },
+                })
+            case ("GT_PDL"):
+                return HttpResponse.json({
+                    data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
+                })
+            case ("Error"):
+                return HttpResponse.json({
+                    errors: [{ message: "noe gikk galt inni graphql" }],
+                })
+        }
     }),
 ]

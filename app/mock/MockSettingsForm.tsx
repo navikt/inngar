@@ -13,9 +13,11 @@ export const MockSettingsForm = ({ mockSettings }: { mockSettings?: MockSettings
       <ToggleGroup defaultValue={oppfolgingsEnhet} onChange={(value) => {
         fetcher.submit({ oppfolgingsEnhet: value }, { action: "/mock-settings", method: "POST" })
       }}>
+        <ToggleGroup.Item value="UnderOppfolging">Under oppfølging</ToggleGroup.Item>
         <ToggleGroup.Item value="Arena">Arena</ToggleGroup.Item>
         <ToggleGroup.Item value="GT_PDL">GT PDL</ToggleGroup.Item>
         <ToggleGroup.Item value="Ingen">Ingen</ToggleGroup.Item>
+        <ToggleGroup.Item value="Error">Error</ToggleGroup.Item>
       </ToggleGroup>
     </div>
   </div>
