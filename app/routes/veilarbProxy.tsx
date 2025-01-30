@@ -21,11 +21,13 @@ export async function loader({ request }: Route.LoaderArgs) {
             return await fetch(url, responseOrRequest).then(
                 async (proxyResponse) => {
                     if (!proxyResponse.ok) {
-                        logger.error(
-                            `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`
-                        )
+                        const body = !proxyResponse.bodyUsed ? await proxyResponse.text() : ""
+                        logger.error(`Dårlig respons ${proxyResponse.status} - ${body}`)
+                        return new Response(body, { status: proxyResponse.status, headers: proxyResponse.headers })
+                    } else {
+                        return proxyResponse
                     }
-                    return proxyResponse
+
                 },
             )
         } else {
@@ -48,11 +50,12 @@ export async function action({ request }: Route.ActionArgs) {
             return await fetch(url, responseOrRequest).then(
                 async (proxyResponse) => {
                     if (!proxyResponse.ok) {
-                        logger.error(
-                            `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`
-                        )
+                        const body = !proxyResponse.bodyUsed ? await proxyResponse.text() : ""
+                        logger.error(`Dårlig respons ${proxyResponse.status} - ${body}`)
+                        return new Response(body, { status: proxyResponse.status, headers: proxyResponse.headers })
+                    } else {
+                        return proxyResponse
                     }
-                    return proxyResponse
                 },
             )
         } else {
