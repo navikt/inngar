@@ -1,7 +1,7 @@
 import type { Route } from "../../.react-router/types/app/routes/+types/dekoratorProxy"
-import { logger } from "~/logger"
 import { oboExchange } from "~/util/tokenExchange.server"
 import { type App, apps } from "~/util/appConstants"
+import { logger } from "../../server/logger"
 
 const getTargetApp = (url: URL) =>
     apps[new URL(url).pathname.split("/")[1] as keyof typeof apps]

@@ -1,8 +1,7 @@
 import type { Route } from "../../.react-router/types/app/routes/+types"
 import { isRouteErrorResponse } from "react-router"
-import { logger } from "~/logger"
 import { Alert } from "@navikt/ds-react"
-import { err } from "pino-std-serializers";
+import { logger } from "../../server/logger"
 
 export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     let errorTitle = "Oops!"

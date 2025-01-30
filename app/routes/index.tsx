@@ -9,13 +9,12 @@ import {
     TextField,
 } from "@navikt/ds-react"
 import { data, useFetcher } from "react-router"
-import { logger } from "~/logger"
 import { useFnrState } from "~/root"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { type App, apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
-import { err } from "pino-std-serializers"
+import { logger } from "../../server/logger"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {

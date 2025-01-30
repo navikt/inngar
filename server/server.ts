@@ -9,11 +9,11 @@ import express from "express"
 import morgan from "morgan"
 import sourceMapSupport from "source-map-support"
 import getPort from "get-port"
-import { logger as logger } from "./app/logger"
 import * as process from "node:process"
+import { logger } from "./logger"
 
 process.on("unhandledRejection", (e) => {
-    logger.error(`unhandledRejection: ${e.toString()}`)
+    logger.error(`unhandledRejection: ${e?.toString()}`)
 })
 
 sourceMapSupport.install({

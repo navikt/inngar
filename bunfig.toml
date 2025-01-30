@@ -1,4 +1,4 @@
-preload = ["./app/instrumentation.ts"]
+preload = ["./server/instrumentation.ts"]
 
 [install]
 registry = "https://registry.npmjs.org"

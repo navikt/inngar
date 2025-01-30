@@ -7,8 +7,10 @@ COPY ./node_modules /app/node_modules
 COPY ./package.json /app/package.json
 COPY ./bun.lockb /app/bun.lockb
 COPY ./build /app/build
-COPY app/logger.ts /app/app/logger.ts
-COPY ./server.ts /app/server.ts
+COPY ./server /app/server
+# COPY server/onlyServerOtelUtils.ts /app/app/util/onlyServerOtelUtils.ts
+# COPY app/loggerOld.ts /app/app/loggerOld.ts
+# COPY server/server.ts /app/server.ts
 
 WORKDIR /app
 

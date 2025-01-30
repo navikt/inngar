@@ -1,8 +1,8 @@
 import type { Route } from "../../.react-router/types/app/routes/+types"
-import { logger } from "~/logger"
 import { useEffect, useRef } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { useFnrState } from "~/root"
+import { logger } from "../../server/logger"
 
 const exportName = "veilarbvisittkortfs"
 

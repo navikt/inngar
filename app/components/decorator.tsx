@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import type { Route } from "../../.react-router/types/app/routes/+types"
-import { logger } from "~/logger"
 import { getEnv } from "~/util/envUtil.client"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import type { DecoratorProps } from "~/components/decoratorProps"
+import { logger } from "../../server/logger"
 
 const exportName = "internarbeidsflate-decorator-v3"
 

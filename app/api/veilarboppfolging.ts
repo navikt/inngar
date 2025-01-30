@@ -1,5 +1,5 @@
-import { logger } from "~/logger"
 import { type App, apps } from "~/util/appConstants"
+import { logger } from "../../server/logger"
 
 const toUrl = (targetApp: App, pathname: string): string => {
     return `http://${targetApp.name}.${targetApp.namespace}${pathname}`
