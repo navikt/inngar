@@ -10,7 +10,7 @@ export const logger = pino({
             const span = getSpan(context.active());
             if (span) {
                 const { traceId, spanId } = span.spanContext();
-                return { traceId, spanId };
+                return { 'trace_id': traceId, 'span_id': spanId };
             }
             return {};
         },
