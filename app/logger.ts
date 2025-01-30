@@ -1,8 +1,17 @@
 import pino from 'pino'
-
+import { getSpan, context } from "~/util/onlyServerOtelUtils"
 // https://github.com/navikt/frontend/blob/205b1be8944105663571eef0e5627052358ab05a/nextjs/pino-logging/utils/backendLogger.ts
 export const logger = pino({
         timestamp: false,
+        mixin: () => {
+            if (!getSpan || !context) return {};
+            const span = getSpan(context.active());
+            if (span) {
+                const { traceId, spanId } = span.spanContext();
+                return { traceId, spanId };
+            }
+            return {};
+        },
         formatters: {
             level: (label) => {
                 return { level: label };
