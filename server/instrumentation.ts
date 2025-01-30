@@ -1,13 +1,11 @@
 import * as api from "@opentelemetry/api"
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http"
 import { ExpressInstrumentation } from "@opentelemetry/instrumentation-express"
-// import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino"
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node"
 import { NodeSDK } from "@opentelemetry/sdk-node"
-import { ConsoleSpanExporter } from "@opentelemetry/sdk-trace-base"
 
 const sdk = new NodeSDK({
-    traceExporter: new ConsoleSpanExporter(),
+    // traceExporter: new ConsoleSpanExporter(),
     instrumentations: [
         getNodeAutoInstrumentations({
             "@opentelemetry/instrumentation-fs": { enabled: false },
