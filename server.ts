@@ -13,7 +13,7 @@ import { logger as logger } from "./app/logger"
 import * as process from "node:process"
 
 process.on("unhandledRejection", (e) => {
-    logger.error("unhandledRejection:", e)
+    logger.error(`unhandledRejection: ${e.toString()}`)
 })
 
 sourceMapSupport.install({
@@ -48,7 +48,7 @@ async function run() {
     let buildPathArg = process.argv[2]
 
     if (!buildPathArg) {
-        console.error(`
+        logger.error(`
   Usage: react-router-serve <server-build-path> - e.g. react-router-serve build/server/index.js`)
         process.exit(1)
     }
@@ -107,6 +107,6 @@ async function run() {
         : app.listen(port, onListen)
 
     ;["SIGTERM", "SIGINT"].forEach((signal) => {
-        process.once(signal, () => server?.close(console.error))
+        process.once(signal, () => server?.close(logger.error))
     })
 }

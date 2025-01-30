@@ -22,8 +22,7 @@ export async function loader({ request }: Route.LoaderArgs) {
                 async (proxyResponse) => {
                     if (!proxyResponse.ok) {
                         logger.error(
-                            `Dårlig respons ${proxyResponse.status}`,
-                            await proxyResponse.text(),
+                            `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`
                         )
                     }
                     return proxyResponse
@@ -50,8 +49,7 @@ export async function action({ request }: Route.ActionArgs) {
                 async (proxyResponse) => {
                     if (!proxyResponse.ok) {
                         logger.error(
-                            `Dårlig respons ${proxyResponse.status}`,
-                            await proxyResponse.text(),
+                            `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`
                         )
                     }
                     return proxyResponse

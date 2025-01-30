@@ -23,8 +23,7 @@ const startOppfolging = async (fnr: string, token: string) => {
     }).then(async (proxyResponse) => {
         if (!proxyResponse.ok) {
             logger.error(
-                `Dårlig respons ${proxyResponse.status}`,
-                await proxyResponse.text(),
+                `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`
             )
         }
         return proxyResponse
