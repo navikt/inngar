@@ -14,7 +14,6 @@ import Decorator from "~/components/decorator"
 import { createContext, useContext, useState } from "react"
 import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
-import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { MockSettingsForm } from "~/mock/MockSettingsForm";
 import { mockSettings } from "~/mock/mockSettings"
 
@@ -108,5 +107,3 @@ export default function App({ loaderData }) {
     }
 
 }
-
-// export const ErrorBoundary = DefaultErrorBoundary

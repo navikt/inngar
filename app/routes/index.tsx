@@ -15,6 +15,7 @@ import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { type App, apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
+import { dataWithTraceId } from "~/util/errorUtil"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -56,12 +57,12 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
         ])
 
         if (!aktivBrukerResult.ok) {
-            throw data({
+            throw dataWithTraceId({
                 errorMessage: `Kunne ikke hente bruker i kontekst: ${aktivBrukerResult.status}`,
             })
         }
         if (!tokenOrResponse.ok)
-            throw data({
+            throw dataWithTraceId({
                 errorMessage:
                     "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
             })
@@ -101,7 +102,7 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             }
         }
     } catch (e) {
-        throw data({ errorMessage: e.toString(), stack: e.stack }, { status: 500 })
+        throw dataWithTraceId({ errorMessage: e.toString(), stack: e.stack }, { status: 500 })
     }
 }
 
@@ -156,7 +157,7 @@ export const action = async (args: Route.ActionArgs) => {
         logger.error(
             `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging ${e.toString()}`,
         )
-        throw data(
+        throw dataWithTraceId(
             {
                 message:
                     "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging",
