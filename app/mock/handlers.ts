@@ -70,6 +70,9 @@ export const handlers = [
             return HttpResponse.text("false")
         },
     ),
+    http.post(`${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`, () => {
+        return HttpResponse.json({ resultat: "Bruker registrert", kode: "OK_REGISTRERT_I_ARENA" }, { status: 200 })
+    }),
     http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, ({ cookies }) => {
         const enhetMocking = mockSettings.oppfolgingsEnhet
         switch (enhetMocking) {

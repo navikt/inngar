@@ -21,7 +21,7 @@ const startOppfolging = async (fnr: string, token: string) => {
         body: JSON.stringify({ fnr, henviserSystem: "DEMO" }),
         method: "POST",
     }).then(async (proxyResponse) => {
-        if (!proxyResponse.ok) {
+        if (!proxyResponse.ok && !(proxyResponse.status === 409)) {
             logger.error(
                 `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`
             )
@@ -33,7 +33,7 @@ const startOppfolging = async (fnr: string, token: string) => {
         return { ok: false as const, error: await response.text() }
     }
     logger.info("Oppfølging startet")
-    return { ok: true as const }
+    return { ok: true as const, body: await response.json() }
 }
 
 const query = `

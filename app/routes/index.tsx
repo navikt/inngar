@@ -72,14 +72,13 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
         }
 
         if (aktivBruker.aktivBruker === null) {
-            return { status: BrukerStatus.INGEN_BRUKER_VALGT as const }
+            return { status: BrukerStatus.INGEN_BRUKER_VALGT as const } as const
         } else {
             const oppfolgingsStatus =
               await VeilarboppfolgingApi.getOppfolgingStatus(
                 aktivBruker.aktivBruker,
                 tokenOrResponse.token,
               )
-            logger.info(`oppfolgingsStatus ${JSON.stringify(oppfolgingsStatus)}`, )
             if ("errors" in oppfolgingsStatus) {
                 const errorMessage = oppfolgingsStatus.errors?.map(it => it.message).join(",")
                 throw new Error(errorMessage)
@@ -92,11 +91,13 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                       id: oppfolgingsEnhet.enhet.id,
                   } as Enhet)
                 : null
+            console.log("Aktiv bruker", aktivBruker.aktivBruker)
             return {
                 status: oppfolging.erUnderOppfolging
                     ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
                     : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
                 enhet,
+                fnr: aktivBruker.aktivBruker,
                 erUnderOppfolging:
                     oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
             }
@@ -136,7 +137,7 @@ export const action = async (args: Route.ActionArgs) => {
     const fnr = formdata.get("fnr")
 
     if (!fnr || typeof fnr !== "string") {
-        return { error: `Fødselsnummer er påkrevd` }
+        return { error: `Fødselsnummer er påkrevd men var:${fnr === null ? "null": fnr}` }
     }
 
     try {
@@ -146,10 +147,16 @@ export const action = async (args: Route.ActionArgs) => {
             apps.veilarboppfolging,
         )
         if (tokenOrResponse.ok) {
-            return VeilarboppfolgingApi.startOppfolging(
+            const startOppfolgingResponse = await VeilarboppfolgingApi.startOppfolging(
                 fnr,
                 tokenOrResponse.token,
             )
+            if (startOppfolgingResponse.ok) {
+                return startOppfolgingResponse.body
+            }
+            else {
+                throw Error("Start oppfølging feilet", { cause: startOppfolgingResponse.error })
+            }
         } else {
             return tokenOrResponse
         }
@@ -160,7 +167,7 @@ export const action = async (args: Route.ActionArgs) => {
         throw dataWithTraceId(
             {
                 message:
-                    "Kunne ikke opprette oppfolgingsperiode i veilarboppfolging",
+                    `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging: ${(e as Error).cause}`,
             },
             { status: 500 },
         )
@@ -176,22 +183,15 @@ export default function Index({
 }: {
     loaderData: Awaited<ReturnType<typeof loader>>
 }) {
-    const { status, enhet } = loaderData
     return (
         <div className="flex flex-col w-[620px] p-4 mx-auto">
-            <IndexPage enhet={enhet} status={status} />
+            <IndexPage {...loaderData} />
         </div>
     )
 }
 
-const IndexPage = ({
-    status,
-    enhet,
-}: {
-    status: BrukerStatus
-    enhet: Enhet | null | undefined
-}) => {
-    switch (status) {
+const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
+    switch (props.status) {
         case BrukerStatus.INGEN_BRUKER_VALGT:
             return <Alert variant="info">Ingen bruker valgt</Alert>
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING:
@@ -201,18 +201,20 @@ const IndexPage = ({
                 </Alert>
             )
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
-            return <StartOppfolgingForm enhet={enhet} />
+            return <StartOppfolgingForm fnr={props.fnr} enhet={props.enhet} />
     }
 }
 
 const StartOppfolgingForm = ({
     enhet,
+    fnr,
 }: {
-    enhet: Enhet | null | undefined
+    enhet: Enhet | null | undefined,
+    fnr: string
 }) => {
-    const fnrState = useFnrState()
     const fetcher = useFetcher()
-    const error = fetcher.data?.error
+    const error = ("error" in (fetcher?.data || {})) ? fetcher.data.error : null
+    const result = ("resultat" in (fetcher?.data || {})) ? fetcher.data as { kode: string, resultat: string } : null
 
     return (
         <div className="flex flex-col space-y-4 mx-auto">
@@ -246,7 +248,7 @@ const StartOppfolgingForm = ({
                 <input
                     type="hidden"
                     name="fnr"
-                    value={!fnrState.loading ? fnrState.fnr || "" : ""}
+                    value={fnr}
                 />
                 <Button
                     disabled={!enhet}
@@ -255,6 +257,16 @@ const StartOppfolgingForm = ({
                     Start arbeidsoppfølging
                 </Button>
             </fetcher.Form>
+            {result ? (
+                <Alert variant="success">
+                    <Heading size="small">
+                        {result.kode}
+                    </Heading>
+                    <BodyShort>
+                        {result.resultat}
+                    </BodyShort>
+                </Alert>
+            ) : null}
         </div>
     )
 }

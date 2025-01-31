@@ -2,6 +2,7 @@ import type { Route } from "../../.react-router/types/app/routes/+types"
 import { isRouteErrorResponse } from "react-router"
 import { logger } from "../../server/logger"
 import { XMarkOctagonIcon } from "@navikt/aksel-icons"
+import { err } from "pino-std-serializers"
 
 export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     let errorTitle = "Oops!"
@@ -26,6 +27,7 @@ export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         }
     }
 
+    logger.error(JSON.stringify(error))
     const traceId = error?.data?.traceId
 
     return (
