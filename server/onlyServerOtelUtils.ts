@@ -1,10 +1,10 @@
-import { type Context, type ContextAPI, type Span, type SpanContext, type Tracer } from "@opentelemetry/api"
+import { type Context, type ContextAPI, type Span, type SpanContext, type Tracer, type SpanKind } from "@opentelemetry/api"
 
 interface OtelWrapper {
     getSpan: ((context: Context) => Span | undefined) | undefined,
     context: ContextAPI | undefined,
     tracer: Tracer | undefined
-    SpanKind:
+    SpanKind: SpanKind
 }
 
 let otelWrapper: OtelWrapper =  { getSpan: undefined, context: undefined, tracer: undefined };
