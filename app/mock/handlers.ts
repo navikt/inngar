@@ -14,11 +14,11 @@ const veilarbportefolje = `http://veilarbportefolje.obo`
 
 export const handlers = [
     http.get(`${contextHolder}/api/context/v2/aktivbruker`, () => {
-        return HttpResponse.json({ aktivBruker: "18850798458" })
+        return HttpResponse.json({ aktivBruker: "24429106210" })
     }),
     http.post(`${contextHolder}/api/context`, () => {
         return HttpResponse.json({
-            aktivBruker: "18850798458",
+            aktivBruker: "24429106210",
             aktivEnhet: "0219",
         })
     }),

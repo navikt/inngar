@@ -16,8 +16,9 @@ import { type App, apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
-import { isUnder18 } from "~/util/fødselsnummerHelper"
+import { isUnder18 } from "~/util/erUnder18Helper"
 import RegistreringUnder18 from "~/components/RegistreringUnder18"
+import { useState } from "react"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -95,8 +96,6 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                       id: oppfolgingsEnhet.enhet.id,
                   } as Enhet)
                 : null
-            console.log("Aktiv bruker", aktivBruker.aktivBruker)
-            console.log("Er under 18?,", isUnder18(aktivBruker.aktivBruker))
             return {
                 status: oppfolging.erUnderOppfolging
                     ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
@@ -230,6 +229,7 @@ const StartOppfolgingForm = ({
             ? (fetcher.data as { kode: string; resultat: string })
             : null
     const brukerErUnder18 = isUnder18(fnr)
+    const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
 
     return (
         <div className="flex flex-col space-y-4 mx-auto">
@@ -237,7 +237,7 @@ const StartOppfolgingForm = ({
                 Registrering for arbeidsrettet oppfølging
             </Heading>
             {brukerErUnder18 ? (
-                <RegistreringUnder18></RegistreringUnder18>
+                <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}
             <EnhetsInfo enhet={enhet} />
             <List>
@@ -265,7 +265,9 @@ const StartOppfolgingForm = ({
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <Button
-                    disabled={!enhet}
+                    disabled={
+                        !enhet || (brukerErUnder18 && !erSamtykkeBekreftet)
+                    }
                     loading={fetcher.state == "submitting"}
                 >
                     Start arbeidsoppfølging

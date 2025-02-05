@@ -10,7 +10,11 @@ import {
 } from "@navikt/ds-react"
 import { ListItem } from "@navikt/ds-react/List"
 
-const RegistreringUnder18 = () => {
+const RegistreringUnder18 = ({
+    bekreftSamtykke,
+}: {
+    bekreftSamtykke: (checked: boolean) => void
+}) => {
     return (
         <div>
             <Alert variant="warning" className="mb-5">
@@ -60,6 +64,7 @@ const RegistreringUnder18 = () => {
             <ConfirmationPanel
                 label="Jeg bekrefter at de nødvendige vurderingene er gjort og
                 dokumentert"
+                onChange={(e) => bekreftSamtykke(e.target.checked)}
             />
         </div>
     )
