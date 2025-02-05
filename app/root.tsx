@@ -1,86 +1,116 @@
 import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
+    Links,
+    Meta,
+    Outlet,
+    Scripts,
+    ScrollRestoration,
+    useLoaderData, useNavigate
 } from "react-router";
-import "@navikt/ds-css";
+import "@navikt/ds-css"
 
-import type { Route } from "./+types/root";
-import stylesheet from "./app.css?url";
-import {Alert} from "@navikt/ds-react";
-import {logger} from "~/logger";
+import type { Route } from "./+types/root"
+import stylesheet from "./app.css?url"
+import Decorator from "~/components/decorator"
+import { createContext, useContext, useEffect, useState } from "react"
+import { importSubApp } from "~/util/importUtil"
+import Visittkort from "~/components/visittkort"
+import { MockSettingsForm } from "~/mock/MockSettingsForm";
+import { mockSettings } from "~/mock/mockSettings"
+import { startActiveSpan } from "../server/onlyServerOtelUtils"
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+    let other = {}
+    if (import.meta.env.DEV) {
+        import("./mock/setupMockServer.server")
+        other = { mockSettings }
+    }
+    return startActiveSpan(`loader - root`, async () => {
+        // TODO: Dont use dev url
+        const { cssUrl, jsUrl } = await importSubApp(
+            "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
+        )
+        return { cssUrl, jsUrl, ...other }
+    })
+}
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
-  { rel: "stylesheet", href: stylesheet },
-];
+    { rel: "preconnect", href: "https://fonts.googleapis.com" },
+    {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+    },
+    {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    },
+    { rel: "stylesheet", href: stylesheet },
+]
+
+// export const clientLoader = () => {
+// importSubApp("https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build")
+// }
+
+type FnrState =
+    | { loading: true }
+    | { loading: false; fnr?: string | undefined | null }
+
+const FnrProvider = createContext<FnrState>({ loading: true })
+export const useFnrState = () => useContext(FnrProvider)
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
+    const { cssUrl, jsUrl } = useLoaderData()
+    const [fnrState, setState] = useState<FnrState>({ loading: true })
+    useEffect(() => {
+        console.log("useEffect fnrState", fnrState)
+    }, [fnrState])
+    const navigate = useNavigate()
+
+    return (
+        <html lang="en" className="bg-bg-subtle">
+            <head>
+                <meta charSet="utf-8" />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                />
+                <Meta />
+                <Links />
+                <link rel="stylesheet" href={cssUrl} />
+                <script src={jsUrl} type="module" />
+                <script src="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/bundle.js"></script>
+                <link
+                    rel="stylesheet"
+                    href="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/index.css"
+                />
+            </head>
+            <body>
+                <Decorator
+                    onFnrChanged={(fnr) => {
+                        setState({ loading: false, fnr })
+                        console.log("Navigating because visittkort fnr change")
+                        navigate(".", { replace: true })
+                    }}
+                />
+                <FnrProvider.Provider value={fnrState}>
+                    <Visittkort />
+                    {children}
+                </FnrProvider.Provider>
+                <ScrollRestoration />
+                <Scripts />
+            </body>
+        </html>
+    )
 }
 
-export default function App() {
-  return <Outlet />;
-}
+export default function App({ loaderData }) {
+    if (import.meta.env.DEV) {
+        return <>
+            <MockSettingsForm mockSettings={loaderData.mockSettings} />
+            <Outlet />
+        </>
+    } else {
+        return <Outlet />
+    }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error?.message;
-    stack = error.stack;
-  }
-
-  details = error.data?.message
-
-  logger.error("Noe gikk veldig galt")
-
-  return (
-    <main className="pt-16 p-4 container mx-auto">
-      <Alert variant="error">
-        <h1>{message}</h1>
-        <p>{details}</p>
-        {stack && (
-            <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-        )}
-      </Alert>
-
-    </main>
-  );
 }

@@ -1,5 +1,6 @@
 name: Build and deploy
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -21,6 +22,8 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies (bun)
         run: bun install
+        env:
+          BUN_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name : bun run build
         run: bun run build
       - name: Build and push image and SBOM to OCI registry
@@ -28,8 +31,6 @@ jobs:
         id: docker-build-push
         with:
           team: dab
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # Provided as Organization Secret
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # Provided as Organization Variable
       - name: Deploy to NAIS
         uses: nais/deploy/actions/deploy@v2
         env:

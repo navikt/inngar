@@ -1,0 +1,7 @@
+preload = ["./server/instrumentation.ts"]
+
+[install]
+registry = "https://registry.npmjs.org"
+
+[install.scopes]
+"@navikt" = { token = "$BUN_AUTH_TOKEN", url = "https://npm.pkg.github.com/" }
