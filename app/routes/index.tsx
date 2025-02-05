@@ -15,6 +15,9 @@ import { type App, apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
+import { isUnder18 } from "~/util/erUnder18Helper"
+import RegistreringUnder18 from "~/components/RegistreringUnder18"
+import { useState } from "react"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -74,12 +77,14 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             return { status: BrukerStatus.INGEN_BRUKER_VALGT as const } as const
         } else {
             const oppfolgingsStatus =
-              await VeilarboppfolgingApi.getOppfolgingStatus(
-                aktivBruker.aktivBruker,
-                tokenOrResponse.token,
-              )
+                await VeilarboppfolgingApi.getOppfolgingStatus(
+                    aktivBruker.aktivBruker,
+                    tokenOrResponse.token,
+                )
             if ("errors" in oppfolgingsStatus) {
-                const errorMessage = oppfolgingsStatus.errors?.map(it => it.message).join(",")
+                const errorMessage = oppfolgingsStatus.errors
+                    ?.map((it) => it.message)
+                    .join(",")
                 throw new Error(errorMessage)
             }
             const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
@@ -90,7 +95,6 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                       id: oppfolgingsEnhet.enhet.id,
                   } as Enhet)
                 : null
-            console.log("Aktiv bruker", aktivBruker.aktivBruker)
             return {
                 status: oppfolging.erUnderOppfolging
                     ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
@@ -102,7 +106,10 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             }
         }
     } catch (e) {
-        throw dataWithTraceId({ errorMessage: e.toString(), stack: e.stack }, { status: 500 })
+        throw dataWithTraceId(
+            { errorMessage: e.toString(), stack: e.stack },
+            { status: 500 },
+        )
     }
 }
 
@@ -136,7 +143,9 @@ export const action = async (args: Route.ActionArgs) => {
     const fnr = formdata.get("fnr")
 
     if (!fnr || typeof fnr !== "string") {
-        return { error: `Fødselsnummer er påkrevd men var:${fnr === null ? "null": fnr}` }
+        return {
+            error: `Fødselsnummer er påkrevd men var:${fnr === null ? "null" : fnr}`,
+        }
     }
 
     try {
@@ -146,15 +155,17 @@ export const action = async (args: Route.ActionArgs) => {
             apps.veilarboppfolging,
         )
         if (tokenOrResponse.ok) {
-            const startOppfolgingResponse = await VeilarboppfolgingApi.startOppfolging(
-                fnr,
-                tokenOrResponse.token,
-            )
+            const startOppfolgingResponse =
+                await VeilarboppfolgingApi.startOppfolging(
+                    fnr,
+                    tokenOrResponse.token,
+                )
             if (startOppfolgingResponse.ok) {
                 return startOppfolgingResponse.body
-            }
-            else {
-                throw Error("Start oppfølging feilet", { cause: startOppfolgingResponse.error })
+            } else {
+                throw Error("Start oppfølging feilet", {
+                    cause: startOppfolgingResponse.error,
+                })
             }
         } else {
             return tokenOrResponse
@@ -165,8 +176,7 @@ export const action = async (args: Route.ActionArgs) => {
         )
         throw dataWithTraceId(
             {
-                message:
-                    `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging: ${(e as Error).cause}`,
+                message: `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging: ${(e as Error).cause}`,
             },
             { status: 500 },
         )
@@ -208,18 +218,26 @@ const StartOppfolgingForm = ({
     enhet,
     fnr,
 }: {
-    enhet: Enhet | null | undefined,
+    enhet: Enhet | null | undefined
     fnr: string
 }) => {
     const fetcher = useFetcher()
-    const error = ("error" in (fetcher?.data || {})) ? fetcher.data.error : null
-    const result = ("resultat" in (fetcher?.data || {})) ? fetcher.data as { kode: string, resultat: string } : null
+    const error = "error" in (fetcher?.data || {}) ? fetcher.data.error : null
+    const result =
+        "resultat" in (fetcher?.data || {})
+            ? (fetcher.data as { kode: string; resultat: string })
+            : null
+    const brukerErUnder18 = isUnder18(fnr)
+    const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
 
     return (
         <div className="flex flex-col space-y-4 mx-auto">
             <Heading size="large">
                 Registrering for arbeidsrettet oppfølging
             </Heading>
+            {brukerErUnder18 ? (
+                <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
+            ) : null}
             <EnhetsInfo enhet={enhet} />
             <List>
                 <List.Item>
@@ -244,13 +262,11 @@ const StartOppfolgingForm = ({
             </Alert>
             <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
-                <input
-                    type="hidden"
-                    name="fnr"
-                    value={fnr}
-                />
+                <input type="hidden" name="fnr" value={fnr} />
                 <Button
-                    disabled={!enhet}
+                    disabled={
+                        !enhet || (brukerErUnder18 && !erSamtykkeBekreftet)
+                    }
                     loading={fetcher.state == "submitting"}
                 >
                     Start arbeidsoppfølging
@@ -258,12 +274,8 @@ const StartOppfolgingForm = ({
             </fetcher.Form>
             {result ? (
                 <Alert variant="success">
-                    <Heading size="small">
-                        {result.kode}
-                    </Heading>
-                    <BodyShort>
-                        {result.resultat}
-                    </BodyShort>
+                    <Heading size="small">{result.kode}</Heading>
+                    <BodyShort>{result.resultat}</BodyShort>
                 </Alert>
             ) : null}
         </div>

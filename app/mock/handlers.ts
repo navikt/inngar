@@ -70,32 +70,74 @@ export const handlers = [
             return HttpResponse.text("false")
         },
     ),
-    http.post(`${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`, () => {
-        return HttpResponse.json({ resultat: "Bruker registrert", kode: "OK_REGISTRERT_I_ARENA" }, { status: 200 })
-    }),
-    http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, ({ cookies }) => {
-        const enhetMocking = mockSettings.oppfolgingsEnhet
-        switch (enhetMocking) {
-            case ("UnderOppfolging"):
-                return HttpResponse.json({
-                    data: { oppfolging: { erUnderOppfolging: true}, oppfolgingsEnhet: { enhet: { kilde: "ARENA", navn: "NAV Vest", id: "0420" } } },
-                })
-            case ("Arena"):
-                return HttpResponse.json({
-                    data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "ARENA", navn: "NAV Vest", id: "0420" } } },
-                })
-            case ("Ingen"):
-                return HttpResponse.json({
-                    data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: undefined } },
-                })
-            case ("GT_PDL"):
-                return HttpResponse.json({
-                    data: { oppfolging: { erUnderOppfolging: false}, oppfolgingsEnhet: { enhet: { kilde: "NORG", navn: "NAV Øst", id: "0412" } } },
-                })
-            case ("Error"):
-                return HttpResponse.json({
-                    errors: [{ message: "noe gikk galt inni graphql" }],
-                })
-        }
-    }),
+    http.post(
+        `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`,
+        () => {
+            return HttpResponse.json(
+                {
+                    resultat: "Bruker registrert",
+                    kode: "OK_REGISTRERT_I_ARENA",
+                },
+                { status: 200 },
+            )
+        },
+    ),
+    http.post(
+        `${veilarboppfolging}/veilarboppfolging/api/graphql`,
+        ({ cookies }) => {
+            const enhetMocking = mockSettings.oppfolgingsEnhet
+            switch (enhetMocking) {
+                case "UnderOppfolging":
+                    return HttpResponse.json({
+                        data: {
+                            oppfolging: { erUnderOppfolging: true },
+                            oppfolgingsEnhet: {
+                                enhet: {
+                                    kilde: "ARENA",
+                                    navn: "NAV Vest",
+                                    id: "0420",
+                                },
+                            },
+                        },
+                    })
+                case "Arena":
+                    return HttpResponse.json({
+                        data: {
+                            oppfolging: { erUnderOppfolging: false },
+                            oppfolgingsEnhet: {
+                                enhet: {
+                                    kilde: "ARENA",
+                                    navn: "NAV Vest",
+                                    id: "0420",
+                                },
+                            },
+                        },
+                    })
+                case "Ingen":
+                    return HttpResponse.json({
+                        data: {
+                            oppfolging: { erUnderOppfolging: false },
+                            oppfolgingsEnhet: { enhet: undefined },
+                        },
+                    })
+                case "GT_PDL":
+                    return HttpResponse.json({
+                        data: {
+                            oppfolging: { erUnderOppfolging: false },
+                            oppfolgingsEnhet: {
+                                enhet: {
+                                    kilde: "NORG",
+                                    navn: "NAV Øst",
+                                    id: "0412",
+                                },
+                            },
+                        },
+                    })
+                case "Error":
+                    return HttpResponse.json({
+                        errors: [{ message: "noe gikk galt inni graphql" }],
+                    })
+            }
+        },
+    ),
 ]
