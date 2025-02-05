@@ -16,6 +16,7 @@ import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
 import { MockSettingsForm } from "~/mock/MockSettingsForm";
 import { mockSettings } from "~/mock/mockSettings"
+import { startActiveSpan } from "../server/onlyServerOtelUtils"
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
     let other = {}
@@ -23,10 +24,13 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         import("./mock/setupMockServer.server")
         other = { mockSettings }
     }
-    const { cssUrl, jsUrl } = await importSubApp(
-        "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
-    )
-    return { cssUrl, jsUrl, ...other }
+    return startActiveSpan(`loader - root`, async () => {
+        // TODO: Dont use dev url
+        const { cssUrl, jsUrl } = await importSubApp(
+            "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
+        )
+        return { cssUrl, jsUrl, ...other }
+    })
 }
 
 export const links: Route.LinksFunction = () => [

@@ -8,8 +8,7 @@ import {
     List,
     TextField,
 } from "@navikt/ds-react"
-import { data, useFetcher } from "react-router"
-import { useFnrState } from "~/root"
+import { useFetcher } from "react-router"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { type App, apps, toAppUrl } from "~/util/appConstants"
