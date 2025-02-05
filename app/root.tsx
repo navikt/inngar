@@ -11,7 +11,7 @@ import "@navikt/ds-css"
 import type { Route } from "./+types/root"
 import stylesheet from "./app.css?url"
 import Decorator from "~/components/decorator"
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useState } from "react"
 import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
 import { MockSettingsForm } from "~/mock/MockSettingsForm";
@@ -61,9 +61,6 @@ export const useFnrState = () => useContext(FnrProvider)
 export function Layout({ children }: { children: React.ReactNode }) {
     const { cssUrl, jsUrl } = useLoaderData()
     const [fnrState, setState] = useState<FnrState>({ loading: true })
-    useEffect(() => {
-        console.log("useEffect fnrState", fnrState)
-    }, [fnrState])
     const navigate = useNavigate()
 
     return (

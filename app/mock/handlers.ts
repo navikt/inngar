@@ -14,7 +14,12 @@ const veilarbportefolje = `http://veilarbportefolje.obo`
 
 export const handlers = [
     http.get(`${contextHolder}/api/context/v2/aktivbruker`, () => {
-        return HttpResponse.json({ aktivBruker: "24429106210" })
+        const over18Mocking = mockSettings.over18
+        if (over18Mocking === "Over18") {
+            return HttpResponse.json({ aktivBruker: "24429106210" })
+        } else {
+            return HttpResponse.json({ aktivBruker: "01011110523" })
+        }
     }),
     http.post(`${contextHolder}/api/context`, () => {
         return HttpResponse.json({
