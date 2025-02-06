@@ -11,7 +11,7 @@ import {
 import { useFetcher } from "react-router"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
-import { type App, apps, toAppUrl } from "~/util/appConstants"
+import { apps, toAppUrl } from "~/util/appConstants"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
@@ -124,15 +124,6 @@ export function handleError(
         logger.error(error)
     }
 }
-
-const toUrl = (targetApp: App, pathname: string): string => {
-    return `http://${targetApp.name}.${targetApp.namespace}${pathname}`
-}
-
-const startOppfolgingUrl = toUrl(
-    apps.veilarboppfolging,
-    "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
-)
 
 export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()

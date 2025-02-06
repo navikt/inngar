@@ -22,7 +22,6 @@ import { startActiveSpan } from "../server/onlyServerOtelUtils"
 let isLoaded = false
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-    console.log("ROOT LOADER")
     let other = {}
     let setupAction
     if (import.meta.env.DEV) {
@@ -30,6 +29,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
             setupAction = Promise.resolve()
         } else {
             setupAction = import("./mock/setupMockServer.server")
+            isLoaded = true
         }
         other = { mockSettings }
     } else {
