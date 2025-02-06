@@ -14,7 +14,7 @@ export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         errorTitle = error.data?.errorTitle || "Oops!"
         details = error.data?.errorMessage
         traceId = error?.data?.traceId
-        stack = error?.data?.data?.stack
+        stack = error?.data?.stack
     } else if (import.meta.env.DEV && error && error instanceof Error) {
         details = error?.message
         stack = error?.stack
@@ -27,7 +27,7 @@ export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
             if (stack) {
                 logger.error(stack)
             } else {
-                logger.error(error)
+                logger.error("Error (no stack found):", error)
             }
         }
     } else {

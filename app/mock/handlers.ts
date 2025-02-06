@@ -15,17 +15,29 @@ const veilarbportefolje = `http://veilarbportefolje.obo`
 export const handlers = [
     http.get(`${contextHolder}/api/context/v2/aktivbruker`, () => {
         const over18Mocking = mockSettings.over18
-        if (over18Mocking === "Over18") {
-            return HttpResponse.json({ aktivBruker: "24429106210" })
+        const aktiveBrukerMocking = mockSettings.aktivBruker
+        if (aktiveBrukerMocking === "ja") {
+            if (over18Mocking === "Over18") {
+                return HttpResponse.json({ aktivBruker: "24429106210" })
+            } else {
+                return HttpResponse.json({ aktivBruker: "01011110523" })
+            }
         } else {
-            return HttpResponse.json({ aktivBruker: "01011110523" })
+            return HttpResponse.json({ aktivBruker: null })
         }
     }),
     http.post(`${contextHolder}/api/context`, () => {
-        return HttpResponse.json({
-            aktivBruker: "24429106210",
-            aktivEnhet: "0219",
-        })
+        if (mockSettings.aktivBruker === "ja") {
+            return HttpResponse.json({
+                aktivBruker: "24429106210",
+                aktivEnhet: "0219",
+            })
+        } else {
+            return HttpResponse.json({
+                aktivBruker: null,
+                aktivEnhet: "0219",
+            })
+        }
     }),
     http.get(`${contextHolder}/api/decorator`, () => {
         return HttpResponse.json(decoratorPayload)
@@ -78,10 +90,11 @@ export const handlers = [
     http.post(
         `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`,
         () => {
+            const arenaSvar = mockSettings.registrerArenaSvar
             return HttpResponse.json(
                 {
                     resultat: "Bruker registrert",
-                    kode: "OK_REGISTRERT_I_ARENA",
+                    kode: arenaSvar,
                 },
                 { status: 200 },
             )
