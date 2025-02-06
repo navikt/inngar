@@ -50,7 +50,7 @@ interface Enhet {
 export async function loader(loaderArgs: Route.LoaderArgs) {
     try {
         const hentAktivBruker = () =>
-            resilientFetch<{ aktivBruker: string }>(
+            resilientFetch<{ aktivBruker: string | null }>(
                 new Request(aktivBrukerUrl, new Request(loaderArgs.request)),
             )
         const hentOboForVeilarboppfolging = () =>
@@ -72,7 +72,7 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                     "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
             })
 
-        if (aktivBrukerResult.data === null) {
+        if (aktivBrukerResult.data.aktivBruker === null) {
             return { status: BrukerStatus.INGEN_BRUKER_VALGT as const } as const
         } else {
             const aktivBruker = aktivBrukerResult.data.aktivBruker
