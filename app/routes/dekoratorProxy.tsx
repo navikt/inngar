@@ -37,6 +37,6 @@ export function handleError(
     { request }: Route.ActionArgs | Route.LoaderArgs,
 ) {
     if (!request.signal.aborted) {
-        logger.error(error)
+        logger.error("Aborted:", error)
     }
 }

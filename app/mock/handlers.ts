@@ -1,4 +1,4 @@
-import { http, HttpResponse, ws } from "msw"
+import { http, HttpResponse } from "msw"
 import { hentStatusPayload } from "~/mock/mockdata/hent-status"
 import { decoratorPayload } from "~/mock/mockdata/decorator"
 import { dialogGraphqlPayload } from "~/mock/mockdata/dialogGraphql"
@@ -140,7 +140,12 @@ export const handlers = [
                     })
                 case "Error":
                     return HttpResponse.json({
-                        errors: [{ message: "noe gikk galt inni graphql" }],
+                        errors: [
+                            {
+                                message:
+                                    "Dette er en mock-feilmelding i graphql reponsen",
+                            },
+                        ],
                     })
             }
         },

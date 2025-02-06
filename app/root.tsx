@@ -4,8 +4,9 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
-    useLoaderData, useNavigate
-} from "react-router";
+    useLoaderData,
+    useNavigate,
+} from "react-router"
 import "@navikt/ds-css"
 
 import type { Route } from "./+types/root"
@@ -14,22 +15,34 @@ import Decorator from "~/components/decorator"
 import { createContext, useContext, useState } from "react"
 import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
-import { MockSettingsForm } from "~/mock/MockSettingsForm";
+import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
 
+let isLoaded = false
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
+    console.log("ROOT LOADER")
     let other = {}
+    let setupAction
     if (import.meta.env.DEV) {
-        import("./mock/setupMockServer.server")
+        if (isLoaded) {
+            setupAction = Promise.resolve()
+        } else {
+            setupAction = import("./mock/setupMockServer.server")
+        }
         other = { mockSettings }
+    } else {
+        setupAction = Promise.resolve()
     }
-    return startActiveSpan(`loader - root`, async () => {
-        // TODO: Dont use dev url
-        const { cssUrl, jsUrl } = await importSubApp(
-            "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
-        )
-        return { cssUrl, jsUrl, ...other }
+    return setupAction.then(() => {
+        return startActiveSpan(`loader - root`, async () => {
+            // TODO: Dont use dev url
+            const { cssUrl, jsUrl } = await importSubApp(
+                "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
+            )
+            return { cssUrl, jsUrl, ...other }
+        })
     })
 }
 
@@ -102,12 +115,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App({ loaderData }) {
     if (import.meta.env.DEV) {
-        return <>
-            <MockSettingsForm mockSettings={loaderData.mockSettings} />
-            <Outlet />
-        </>
+        return (
+            <>
+                <MockSettingsForm mockSettings={loaderData.mockSettings} />
+                <Outlet />
+            </>
+        )
     } else {
         return <Outlet />
     }
-
 }

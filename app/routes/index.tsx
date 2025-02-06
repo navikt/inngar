@@ -18,6 +18,7 @@ import { dataWithTraceId } from "~/util/errorUtil"
 import { isUnder18 } from "~/util/erUnder18Helper"
 import RegistreringUnder18 from "~/components/RegistreringUnder18"
 import { useState } from "react"
+import { resilientFetch } from "~/util/resilientFetch"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -49,7 +50,9 @@ interface Enhet {
 export async function loader(loaderArgs: Route.LoaderArgs) {
     try {
         const hentAktivBruker = () =>
-            fetch(new Request(aktivBrukerUrl, new Request(loaderArgs.request)))
+            resilientFetch<{ aktivBruker: string }>(
+                new Request(aktivBrukerUrl, new Request(loaderArgs.request)),
+            )
         const hentOboForVeilarboppfolging = () =>
             getOboToken(loaderArgs.request, apps.veilarboppfolging)
 
@@ -59,9 +62,9 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
         ])
 
         if (!aktivBrukerResult.ok) {
-            throw dataWithTraceId({
-                errorMessage: `Kunne ikke hente bruker i kontekst: ${aktivBrukerResult.status}`,
-            })
+            logger.warn(aktivBrukerResult.error.message)
+            logger.warn(aktivBrukerResult.type)
+            throw aktivBrukerResult.error
         }
         if (!tokenOrResponse.ok)
             throw dataWithTraceId({
@@ -69,25 +72,19 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                     "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
             })
 
-        const aktivBruker = (await aktivBrukerResult.json()) as {
-            aktivBruker: null | string
-        }
-
-        if (aktivBruker.aktivBruker === null) {
+        if (aktivBrukerResult.data === null) {
             return { status: BrukerStatus.INGEN_BRUKER_VALGT as const } as const
         } else {
+            const aktivBruker = aktivBrukerResult.data.aktivBruker
             const oppfolgingsStatus =
                 await VeilarboppfolgingApi.getOppfolgingStatus(
-                    aktivBruker.aktivBruker,
+                    aktivBruker,
                     tokenOrResponse.token,
                 )
-            if ("errors" in oppfolgingsStatus) {
-                const errorMessage = oppfolgingsStatus.errors
-                    ?.map((it) => it.message)
-                    .join(",")
-                throw new Error(errorMessage)
+            if (!oppfolgingsStatus.ok) {
+                throw oppfolgingsStatus.error
             }
-            const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data
+            const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
             const enhet = oppfolgingsEnhet.enhet
                 ? ({
                       kilde: oppfolgingsEnhet.enhet.kilde,
@@ -100,14 +97,13 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                     ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
                     : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
                 enhet,
-                fnr: aktivBruker.aktivBruker,
-                erUnderOppfolging:
-                    oppfolgingsStatus.data.oppfolging.erUnderOppfolging,
+                fnr: aktivBruker,
+                erUnderOppfolging: oppfolging.erUnderOppfolging,
             }
         }
     } catch (e) {
         throw dataWithTraceId(
-            { errorMessage: e.toString(), stack: e.stack },
+            { errorMessage: e.message, stack: e.stack },
             { status: 500 },
         )
     }

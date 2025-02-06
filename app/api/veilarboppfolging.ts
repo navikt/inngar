@@ -1,5 +1,11 @@
 import { type App, apps } from "~/util/appConstants"
 import { logger } from "../../server/logger"
+import {
+    type FetchError,
+    type HttpError,
+    resilientFetch,
+    type Success,
+} from "~/util/resilientFetch"
 
 const toUrl = (targetApp: App, pathname: string): string => {
     return `http://${targetApp.name}.${targetApp.namespace}${pathname}`
@@ -9,7 +15,10 @@ const startOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
     "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
 )
-const graphqlUrl = toUrl(apps.veilarboppfolging, "/veilarboppfolging/api/graphql")
+const graphqlUrl = toUrl(
+    apps.veilarboppfolging,
+    "/veilarboppfolging/api/graphql",
+)
 
 const startOppfolging = async (fnr: string, token: string) => {
     let response = await fetch(startOppfolgingUrl, {
@@ -23,7 +32,7 @@ const startOppfolging = async (fnr: string, token: string) => {
     }).then(async (proxyResponse) => {
         if (!proxyResponse.ok && !(proxyResponse.status === 409)) {
             logger.error(
-                `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`
+                `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`,
             )
         }
         return proxyResponse
@@ -64,7 +73,7 @@ interface Enhet {
     kilde: string
 }
 
-type GraphqlResponse = { errors: { message: string }[] } | {
+interface GraphqlSuccessResponse {
     data: {
         oppfolging: {
             erUnderOppfolging: boolean
@@ -75,11 +84,18 @@ type GraphqlResponse = { errors: { message: string }[] } | {
     }
 }
 
-const getOppfolgingStatus = (
-    fnr: string,
-    token: string,
-): Promise<GraphqlResponse> => {
-    return fetch(graphqlUrl, {
+interface GraphqlErrorResponse {
+    ok: false
+    type: "GraphqlError"
+    error: Error
+}
+
+type GraphqlResponse =
+    | { errors: { message: string }[] }
+    | GraphqlSuccessResponse
+
+const getOppfolgingStatus = async (fnr: string, token: string) => {
+    const response = await resilientFetch<GraphqlResponse>(graphqlUrl, {
         body: JSON.stringify(graphqlBody(fnr)),
         headers: {
             ["Nav-Consumer-Id"]: "inngar",
@@ -87,13 +103,20 @@ const getOppfolgingStatus = (
             ["Content-Type"]: "application/json",
         },
         method: "POST",
-    }).then((response) => {
-        if (!response.ok)
-            throw new Error(
-                `Feilet å hente oppfolgings-data fra veilarboppfølging url:(${graphqlUrl}) status:${response.status}`,
-            )
-        return response.json()
     })
+    if (response.ok) {
+        if ("errors" in response.data) {
+            const errorMessage = response.data.errors
+                ?.map((it) => it.message)
+                .join(",")
+            return {
+                ok: false as const,
+                type: "GraphqlError" as const,
+                error: new Error(`GraphqlError: ${errorMessage}`),
+            } as GraphqlErrorResponse
+        }
+    }
+    return response as Success<GraphqlSuccessResponse> | HttpError | FetchError
 }
 
 export const VeilarboppfolgingApi = {
