@@ -1,7 +1,7 @@
-import { handlers } from "~/mock/handlers"
+import { handlers } from "./handlers"
 import { setupServer } from "msw/node"
 
-console.log("Setting up msw handlers...")
+console.log("Setting up msw handlers for serverside mocking...")
 
 const server = setupServer(...handlers)
 server.listen({
@@ -12,5 +12,7 @@ server.listen({
         e.warning()
     },
 })
+
+export default { server }
 
 console.log("MSW handlers ready")

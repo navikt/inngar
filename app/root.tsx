@@ -19,30 +19,17 @@ import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
 
-let isLoaded = false
-
 export const loader = async ({ request }: Route.LoaderArgs) => {
     let other = {}
-    let setupAction
     if (import.meta.env.DEV) {
-        if (isLoaded) {
-            setupAction = Promise.resolve()
-        } else {
-            setupAction = import("./mock/setupMockServer.server")
-            isLoaded = true
-        }
         other = { mockSettings }
-    } else {
-        setupAction = Promise.resolve()
     }
-    return setupAction.then(() => {
-        return startActiveSpan(`loader - root`, async () => {
-            // TODO: Dont use dev url
-            const { cssUrl, jsUrl } = await importSubApp(
-                "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
-            )
-            return { cssUrl, jsUrl, ...other }
-        })
+    return startActiveSpan(`loader - root`, async () => {
+        // TODO: Dont use dev url
+        const { cssUrl, jsUrl } = await importSubApp(
+            "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
+        )
+        return { cssUrl, jsUrl, ...other }
     })
 }
 
@@ -97,9 +84,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <body>
                 <Decorator
                     onFnrChanged={(fnr) => {
-                        setState({ loading: false, fnr })
-                        console.log("Navigating because visittkort fnr change")
-                        navigate(".", { replace: true })
+                        if (fnr) {
+                            setState({ loading: false, fnr })
+                            console.log(
+                                "Navigating because visittkort fnr change",
+                            )
+                            navigate(".", { replace: true })
+                        } else {
+                            setState({ loading: true })
+                        }
                     }}
                 />
                 <FnrProvider.Provider value={fnrState}>

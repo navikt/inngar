@@ -1,5 +1,5 @@
 import type { Route } from "./+types/mocksSettings"
-import { mockSettings } from "~/mock/mockSettings"
+import { mockSettings } from "../mock/mockSettings"
 
 export interface MockSettings {
     oppfolgingsEnhet: "Arena" | "Ingen" | "GT_PDL" | "Error" | "UnderOppfolging"

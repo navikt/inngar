@@ -148,7 +148,12 @@ export const action = async (args: Route.ActionArgs) => {
                     tokenOrResponse.token,
                 )
             if (startOppfolgingResponse.ok) {
-                return startOppfolgingResponse.body
+                return new Response(null, {
+                    status: 302,
+                    headers: {
+                        Location: `/registrert?result=${startOppfolgingResponse.body.kode}`,
+                    },
+                })
             } else {
                 throw Error("Start oppfølging feilet", {
                     cause: startOppfolgingResponse.error,

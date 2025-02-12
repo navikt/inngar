@@ -1,11 +1,11 @@
 import { http, HttpResponse } from "msw"
-import { hentStatusPayload } from "~/mock/mockdata/hent-status"
-import { decoratorPayload } from "~/mock/mockdata/decorator"
-import { dialogGraphqlPayload } from "~/mock/mockdata/dialogGraphql"
-import { hentPersonPayload } from "~/mock/mockdata/hent-person"
-import { hentOppfolgingsstatusPayload } from "~/mock/mockdata/hent-oppfolgingsstatus"
-import { hentVergeOgFullmaktPayload } from "~/mock/mockdata/hent-vergeOgFullmakt"
-import { mockSettings } from "~/mock/mockSettings"
+import { hentStatusPayload } from "./mockdata/hent-status"
+import { decoratorPayload } from "./mockdata/decorator"
+import { dialogGraphqlPayload } from "./mockdata/dialogGraphql"
+import { hentPersonPayload } from "./mockdata/hent-person"
+import { hentOppfolgingsstatusPayload } from "./mockdata/hent-oppfolgingsstatus"
+import { hentVergeOgFullmaktPayload } from "./mockdata/hent-vergeOgFullmakt"
+import { mockSettings } from "./mockSettings"
 
 const contextHolder = "http://modiacontextholder.personoversikt"
 const veilarboppfolging = `http://veilarboppfolging.poao`

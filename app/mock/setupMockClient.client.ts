@@ -1,7 +1,7 @@
 import { ws } from "msw"
 import { setupWorker } from "msw/browser"
 
-console.log("Setting up msw handlers...")
+console.log("Setting up msw handlers for clientside mocking...")
 
 const server = setupWorker(
     // Denne må mockes client-side, ikke serverside
