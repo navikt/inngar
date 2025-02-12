@@ -185,7 +185,8 @@ export default function Index({
     loaderData: Awaited<ReturnType<typeof loader>>
 }) {
     return (
-        <div className="flex flex-col w-[620px] p-4 mx-auto">
+        <div className="flex flex-col w-[620px] p-4 mx-auto space-y-4">
+            <Heading size="large">Registrer arbeidsrettet oppfølging</Heading>
             <IndexPage {...loaderData} />
         </div>
     )
@@ -224,9 +225,6 @@ const StartOppfolgingForm = ({
 
     return (
         <div className="flex flex-col space-y-4 mx-auto">
-            <Heading size="large">
-                Registrering for arbeidsrettet oppfølging
-            </Heading>
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}
