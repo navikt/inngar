@@ -1,11 +1,12 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes"
+import { index, route, type RouteConfig } from "@react-router/dev/routes"
 
 const devRoutes = import.meta.env.DEV
-  ? [route("/mock-settings", "routes/mocksSettings.ts")] :
-  []
+    ? [route("/mock-settings", "routes/mocksSettings.ts")]
+    : []
 
 export default [
     index("routes/index.tsx"),
+    route("/registrert", "routes/registrert.tsx"),
     route("/api/modiacontextholder/*", "routes/dekoratorProxy.tsx"),
     route("/metrics", "routes/metrics.tsx"),
     route("/internal/isAlive", "routes/isAlive.tsx"),

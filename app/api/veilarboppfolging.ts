@@ -20,7 +20,26 @@ const graphqlUrl = toUrl(
     "/veilarboppfolging/api/graphql",
 )
 
-const startOppfolging = async (fnr: string, token: string) => {
+export type ArenaReponseKoder = "OK_REGISTRERT_I_ARENA" | "FNR_FINNES_IKKE" | "KAN_REAKTIVERES_FORENKLET" | "BRUKER_ALLEREDE_ARBS" | "BRUKER_ALLEREDE_IARBS" | "UKJENT_FEIL"
+
+interface StartOppfolgingSuccessResponse {
+    kode: ArenaReponseKoder
+}
+
+interface StartOppfolgingErrorResponse {
+    ok: false
+    error: string
+}
+
+interface StartOppfolgingSuccess {
+    ok: true
+    body: StartOppfolgingSuccessResponse
+}
+
+const startOppfolging = async (
+    fnr: string,
+    token: string
+): Promise<StartOppfolgingSuccess | StartOppfolgingErrorResponse> => {
     let response = await fetch(startOppfolgingUrl, {
         headers: {
             ["Nav-Consumer-Id"]: "inngar",
