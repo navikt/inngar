@@ -47,10 +47,6 @@ export const links: Route.LinksFunction = () => [
     { rel: "stylesheet", href: stylesheet },
 ]
 
-// export const clientLoader = () => {
-// importSubApp("https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build")
-// }
-
 type FnrState =
     | { loading: true }
     | { loading: false; fnr?: string | undefined | null }
@@ -84,10 +80,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <body>
                 <Decorator
                     onFnrChanged={(fnr) => {
-                        if (fnr) {
+                        if (fnr && !fnrState.loading && fnrState.fnr !== fnr) {
                             setState({ loading: false, fnr })
                             console.log(
                                 "Navigating because visittkort fnr change",
+                                "Old fnr",
+                                fnrState.fnr,
+                                "New fnr:",
+                                fnr,
                             )
                             navigate(".", { replace: true })
                         } else {

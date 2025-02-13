@@ -11,6 +11,16 @@ const registrerArenaSvarVerdier = [
     "UKJENT_FEIL",
 ]
 
+const kanStarteOppfolgingOptions: MockSettings["kanStarteOppfolging"][] = [
+    "JA",
+    "ALLEREDE_UNDER_OPPFOLGING",
+    "IKKE_TILGANG_FORTROLIG_ADRESSE",
+    "IKKE_TILGANG_STRENGT_FORTROLIG_ADRESSE",
+    "IKKE_TILGANG_EGNE_ANSATTE",
+    "IKKE_TILGANG_ENHET",
+    "IKKE_TILGANG_MODIA",
+]
+
 export const MockSettingsForm = ({
     mockSettings,
 }: {
@@ -23,6 +33,7 @@ export const MockSettingsForm = ({
     const aktivBruker = mockSettings?.aktivBruker || "ja"
     const registrerArenaSvar =
         mockSettings?.registrerArenaSvar || "OK_REGISTRERT_I_ARENA"
+    const kanStarteOppfolging = mockSettings?.kanStarteOppfolging || "JA"
 
     return (
         <div className="bg-white border rounded-lg drop-shadow-2xl p-2 absolute bottom-6 right-6">
@@ -81,9 +92,6 @@ export const MockSettingsForm = ({
                             )
                         }}
                     >
-                        <ToggleGroup.Item value="UnderOppfolging">
-                            Under oppfølging
-                        </ToggleGroup.Item>
                         <ToggleGroup.Item value="Arena">Arena</ToggleGroup.Item>
                         <ToggleGroup.Item value="GT_PDL">
                             GT PDL
@@ -93,7 +101,6 @@ export const MockSettingsForm = ({
                     </ToggleGroup>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <p>Arena respons:</p>
                     <Select
                         label="Arena respons"
                         defaultValue={registrerArenaSvar}
@@ -108,6 +115,27 @@ export const MockSettingsForm = ({
                         }}
                     >
                         {registrerArenaSvarVerdier.map((svar) => (
+                            <option value={svar} key={svar}>
+                                {svar}
+                            </option>
+                        ))}
+                    </Select>
+                </div>
+                <div>
+                    <Select
+                        label="Kan starte oppfolging?"
+                        defaultValue={kanStarteOppfolging}
+                        onChange={(event) => {
+                            fetcher.submit(
+                                {
+                                    ...mockSettings,
+                                    kanStarteOppfolging: event.target.value,
+                                },
+                                { action: "/mock-settings", method: "POST" },
+                            )
+                        }}
+                    >
+                        {kanStarteOppfolgingOptions.map((svar) => (
                             <option value={svar} key={svar}>
                                 {svar}
                             </option>

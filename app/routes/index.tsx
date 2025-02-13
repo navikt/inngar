@@ -13,7 +13,11 @@ import { useFetcher } from "react-router"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { apps, toAppUrl } from "~/util/appConstants"
-import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
+import {
+    type KanIkkeStarteOppfolgingPgaIkkeTilgang,
+    type KanStarteOppfolging,
+    VeilarboppfolgingApi,
+} from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
 import { isUnder18 } from "~/util/erUnder18Helper"
@@ -43,6 +47,18 @@ enum BrukerStatus {
     INGEN_BRUKER_VALGT = "INGEN_BRUKER_VALGT",
     IKKE_UNDER_OPPFOLGING = "IKKE_UNDER_OPPFOLGING",
     ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING",
+    IKKE_TILGANG = "IKKE_TILGANG",
+}
+
+const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
+    switch (kanStarteOppfolging) {
+        case "JA":
+            return BrukerStatus.IKKE_UNDER_OPPFOLGING
+        case "ALLEREDE_UNDER_OPPFOLGING":
+            return BrukerStatus.ALLEREDE_UNDER_OPPFOLGING
+        default:
+            return BrukerStatus.IKKE_TILGANG
+    }
 }
 
 interface Enhet {
@@ -97,12 +113,10 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                   } as Enhet)
                 : null
             return {
-                status: oppfolging.erUnderOppfolging
-                    ? (BrukerStatus.ALLEREDE_UNDER_OPPFOLGING as const)
-                    : (BrukerStatus.IKKE_UNDER_OPPFOLGING as const),
+                status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
                 enhet,
                 fnr: aktivBruker,
-                erUnderOppfolging: oppfolging.erUnderOppfolging,
+                kanStarteOppfolging: oppfolging.kanStarteOppfolging,
             }
         }
     } catch (e) {
@@ -208,6 +222,14 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
             )
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
             return <StartOppfolgingForm fnr={props.fnr} enhet={props.enhet} />
+        case BrukerStatus.IKKE_TILGANG:
+            return (
+                <IkkeTilgangWarning
+                    kanStarteOppfolging={
+                        props.kanStarteOppfolging as KanIkkeStarteOppfolgingPgaIkkeTilgang
+                    }
+                />
+            )
     }
 }
 
@@ -330,6 +352,46 @@ const EnhetsInfo = ({ enhet }: { enhet: Enhet | null | undefined }) => {
                 Bruker kommer til å bli lagt til i porteføljen til enheten.
             </BodyShort>
         </>
+    )
+}
+
+const ikkeTilgangTekst: Record<
+    KanIkkeStarteOppfolgingPgaIkkeTilgang,
+    { tittel: string; tekst: string }
+> = {
+    IKKE_TILGANG_EGNE_ANSATTE: {
+        tittel: "Bruker er ansatt i NAV",
+        tekst: "Du har ikke tilgang til egne ansatte",
+    },
+    IKKE_TILGANG_FORTROLIG_ADRESSE: {
+        tittel: "Bruker har fortrolig adresse",
+        tekst: "Du har ikke tilgang til brukere med fortrolig adresse",
+    },
+    IKKE_TILGANG_MODIA: {
+        tittel: "Ikke tilgang til Modia",
+        tekst: "Du har ikke tilgang til Modia",
+    },
+    IKKE_TILGANG_STRENGT_FORTROLIG_ADRESSE: {
+        tittel: "",
+        tekst: "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+    },
+    IKKE_TILGANG_ENHET: {
+        tittel: "Ikke til",
+        tekst: "Du har ikke tilgang til brukerens enhet",
+    },
+}
+
+const IkkeTilgangWarning = ({
+    kanStarteOppfolging,
+}: {
+    kanStarteOppfolging: KanIkkeStarteOppfolgingPgaIkkeTilgang
+}) => {
+    const tekster = ikkeTilgangTekst[kanStarteOppfolging]
+    return (
+        <Alert variant={"error"}>
+            <Heading size="small">{tekster.tittel}</Heading>
+            <BodyShort>{tekster.tekst}</BodyShort>
+        </Alert>
     )
 }
 

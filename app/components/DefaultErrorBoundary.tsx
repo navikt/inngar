@@ -35,7 +35,7 @@ export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     }
 
     return (
-        <main className="pt-16 p-4 container mx-auto">
+        <main className="flex flex-col w-[620px] p-4 mx-auto space-y-4">
             <div className="flex items-center space-x-4">
                 <XMarkOctagonIcon fontSize="36" className="text-red-600" />
                 <h1>{errorTitle}</h1>

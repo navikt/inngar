@@ -6,6 +6,7 @@ import { hentPersonPayload } from "./mockdata/hent-person"
 import { hentOppfolgingsstatusPayload } from "./mockdata/hent-oppfolgingsstatus"
 import { hentVergeOgFullmaktPayload } from "./mockdata/hent-vergeOgFullmakt"
 import { mockSettings } from "./mockSettings"
+import { graphqlMock } from "~/mock/mockdata/graphqlMock"
 
 const contextHolder = "http://modiacontextholder.personoversikt"
 const veilarboppfolging = `http://veilarboppfolging.poao`
@@ -100,67 +101,7 @@ export const handlers = [
             )
         },
     ),
-    http.post(
-        `${veilarboppfolging}/veilarboppfolging/api/graphql`,
-        ({ cookies }) => {
-            const enhetMocking = mockSettings.oppfolgingsEnhet
-            switch (enhetMocking) {
-                case "UnderOppfolging":
-                    return HttpResponse.json({
-                        data: {
-                            oppfolging: { erUnderOppfolging: true },
-                            oppfolgingsEnhet: {
-                                enhet: {
-                                    kilde: "ARENA",
-                                    navn: "NAV Vest",
-                                    id: "0420",
-                                },
-                            },
-                        },
-                    })
-                case "Arena":
-                    return HttpResponse.json({
-                        data: {
-                            oppfolging: { erUnderOppfolging: false },
-                            oppfolgingsEnhet: {
-                                enhet: {
-                                    kilde: "ARENA",
-                                    navn: "NAV Vest",
-                                    id: "0420",
-                                },
-                            },
-                        },
-                    })
-                case "Ingen":
-                    return HttpResponse.json({
-                        data: {
-                            oppfolging: { erUnderOppfolging: false },
-                            oppfolgingsEnhet: { enhet: undefined },
-                        },
-                    })
-                case "GT_PDL":
-                    return HttpResponse.json({
-                        data: {
-                            oppfolging: { erUnderOppfolging: false },
-                            oppfolgingsEnhet: {
-                                enhet: {
-                                    kilde: "NORG",
-                                    navn: "NAV Øst",
-                                    id: "0412",
-                                },
-                            },
-                        },
-                    })
-                case "Error":
-                    return HttpResponse.json({
-                        errors: [
-                            {
-                                message:
-                                    "Dette er en mock-feilmelding i graphql reponsen",
-                            },
-                        ],
-                    })
-            }
-        },
-    ),
+    http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, () => {
+        return graphqlMock(mockSettings)
+    }),
 ]
