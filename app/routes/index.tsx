@@ -5,6 +5,7 @@ import {
     Button,
     ErrorSummary,
     Heading,
+    Link,
     List,
     TextField,
 } from "@navikt/ds-react"
@@ -19,6 +20,9 @@ import { isUnder18 } from "~/util/erUnder18Helper"
 import RegistreringUnder18 from "~/components/RegistreringUnder18"
 import { useState } from "react"
 import { resilientFetch } from "~/util/resilientFetch"
+
+const arbeidssokerRegistreringUrl =
+    "https://arbeidssokerregistrering-for-veileder.intern.dev.nav.no/" // import.meta.env.ARBEIDSSOKERREGISTRERING_URL
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -225,6 +229,24 @@ const StartOppfolgingForm = ({
 
     return (
         <div className="flex flex-col space-y-4 mx-auto">
+            <Alert inline variant={"info"}>
+                <Heading size={"medium"}>
+                    Innbyggeren blir ikke registrert som arbeidssøker
+                </Heading>
+                <div className="space-y-4">
+                    <BodyShort>
+                        Dersom innbyggeren også søker arbeid bør du benytte
+                        arbeidssøkerregistreringen.
+                    </BodyShort>
+                    <Link href={arbeidssokerRegistreringUrl}>
+                        Gå til Arbeidssøkerregistrering
+                    </Link>
+                    <BodyShort>
+                        Arbeidsrettet oppfølging utløser <b>ikke</b> meldeplikt
+                        for brukeren.
+                    </BodyShort>
+                </div>
+            </Alert>
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}
@@ -239,24 +261,12 @@ const StartOppfolgingForm = ({
                     dialog så snart oppfølgingen er startet.
                 </List.Item>
             </List>
-            <Alert variant={"info"}>
-                <Heading size={"medium"}>
-                    Innbyggeren blir ikke registrert som arbeidssøker
-                </Heading>
-                <BodyShort>
-                    Når du registrerer en innbygger for arbeidsrettet oppfølging
-                    her, blir ikke innbyggeren registrert som arbeidssøker.
-                    Dersom innbyggeren også er arbeidssøker bør du benytte
-                    arbeidssøkerregistreringen.
-                </BodyShort>
-            </Alert>
+
             <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <Button
-                    disabled={
-                        !enhet || (brukerErUnder18 && !erSamtykkeBekreftet)
-                    }
+                    disabled={brukerErUnder18 && !erSamtykkeBekreftet}
                     loading={fetcher.state == "submitting"}
                 >
                     Start arbeidsoppfølging
@@ -284,7 +294,22 @@ const FormError = ({ message }: { message: string }) => {
 
 const EnhetsInfo = ({ enhet }: { enhet: Enhet | null | undefined }) => {
     if (enhet === null || enhet === undefined) {
-        return <Alert variant="warning">Fant ikke enhet</Alert>
+        return (
+            <Alert variant="warning">
+                Fant ikke enhet - brukeren har mest sannsynlig ikke registrert
+                bostedsaddresse i Norge.
+                <List>
+                    <List.Item>
+                        Hvis bruker har tidligere arbeidsgiver og kommer enhet
+                        til å bli utledet av forrige arbeidsgivers addresse
+                    </List.Item>
+                    <List.Item>
+                        Hvis ingen annen passende enhet er funnet kommer bruker
+                        til å bli tilordnet enhet 2990 (IT-avdelingen)
+                    </List.Item>
+                </List>
+            </Alert>
+        )
     }
 
     const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geografisk tilknytning"
