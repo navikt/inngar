@@ -62,7 +62,7 @@ const startOppfolging = async (
         }
         return proxyResponse
     })
-    if (!response.ok) {
+    if (!response.ok && response.status !== 409) {
         logger.error(`Start oppfølging feilet: ${response.status}`)
         return { ok: false as const, error: await response.text() }
     }

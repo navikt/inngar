@@ -113,13 +113,14 @@ export const handlers = [
     http.post(
         `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`,
         () => {
-            const arenaSvar = mockSettings.registrerArenaSvar
+            const feilSvar = ["FNR_FINNES_IKKE", "UKJENT_FEIL"]
+            const arenaSvar = mockSettings.registrerArenaSvar!!
             return HttpResponse.json(
                 {
                     resultat: "Bruker registrert",
                     kode: arenaSvar,
                 },
-                { status: 200 },
+                { status:  feilSvar.includes(arenaSvar) ? 409 :200 },
             )
         },
     ),
