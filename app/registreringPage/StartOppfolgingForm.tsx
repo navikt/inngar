@@ -12,10 +12,16 @@ import {
     TextField,
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/components/RegistreringUnder18"
-import type { Enhet } from "~/components/decoratorProps"
+import type { IndexActionIntent } from "~/routes/index"
 
 const arbeidssokerRegistreringUrl =
     "https://arbeidssokerregistrering-for-veileder.intern.dev.nav.no/" // import.meta.env.ARBEIDSSOKERREGISTRERING_URL
+
+interface Enhet {
+    navn: string
+    id: string
+    kilde: string
+}
 
 export const StartOppfolgingForm = ({
     enhet,
@@ -71,6 +77,11 @@ export const StartOppfolgingForm = ({
             <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
+                <input
+                    type="hidden"
+                    name="intent"
+                    value={"registrer" as IndexActionIntent}
+                />
                 <Button
                     disabled={brukerErUnder18 && !erSamtykkeBekreftet}
                     loading={fetcher.state == "submitting"}

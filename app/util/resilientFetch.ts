@@ -1,3 +1,5 @@
+import { logger } from "../../server/logger"
+
 const getBodyTypeFromHeaders = (headers: Headers) => {
     const contentType = headers.get("content-type")
     if (contentType?.includes("application/json")) {
@@ -47,6 +49,9 @@ export const resilientFetch = async <T>(
         const result = await fetch(request, config)
         const bodyType = getBodyTypeFromHeaders(result.headers)
         if (result.ok) {
+            logger.info(
+                `${typeof request === "string" ? "GET" : (config?.method ?? "GET")} ${result.status} ${getUrlString(request)}`,
+            )
             return {
                 ok: true as const,
                 result,
@@ -56,6 +61,9 @@ export const resilientFetch = async <T>(
                         : await result.text(),
             } as Success<T>
         } else {
+            logger.info(
+                `${config?.method} ${result.status} ${getUrlString(request)}`,
+            )
             const body =
                 (await result.text()) ||
                 `Http error: ${result.url} ${result.status}`

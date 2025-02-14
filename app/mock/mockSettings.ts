@@ -6,4 +6,5 @@ export const mockSettings: Partial<MockSettings> = {
     registrerArenaSvar: "OK_REGISTRERT_I_ARENA",
     oppfolgingsEnhet: "Arena",
     kanStarteOppfolging: "JA",
+    fnr: null,
 }

@@ -11,6 +11,7 @@ export interface MockSettings {
     over18: "Over18" | "Under18"
     aktivBruker: "nei" | "ja"
     registrerArenaSvar: ArenaReponseKoder
+    fnr: string | null
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {

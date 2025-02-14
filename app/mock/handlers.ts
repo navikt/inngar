@@ -13,24 +13,46 @@ const veilarboppfolging = `http://veilarboppfolging.poao`
 const veilarbperson = `http://veilarbperson.obo`
 const veilarbportefolje = `http://veilarbportefolje.obo`
 
+const getAktivBrukerMock = () => {
+    const over18Mocking = mockSettings.over18
+    const aktiveBrukerMocking = mockSettings.aktivBruker
+    if (aktiveBrukerMocking === "ja") {
+        if (over18Mocking === "Over18") {
+            console.log("SVARER PÅ AKTIVBRUKER", mockSettings.fnr)
+            return HttpResponse.json({ aktivBruker: mockSettings.fnr })
+        } else {
+            return HttpResponse.json({ aktivBruker: "01011110523" })
+        }
+    } else {
+        return HttpResponse.json({ aktivBruker: null })
+    }
+}
+
 export const handlers = [
     http.get(`${contextHolder}/api/context/v2/aktivbruker`, () => {
-        const over18Mocking = mockSettings.over18
-        const aktiveBrukerMocking = mockSettings.aktivBruker
-        if (aktiveBrukerMocking === "ja") {
-            if (over18Mocking === "Over18") {
-                return HttpResponse.json({ aktivBruker: "24429106210" })
-            } else {
-                return HttpResponse.json({ aktivBruker: "01011110523" })
-            }
-        } else {
-            return HttpResponse.json({ aktivBruker: null })
-        }
+        return getAktivBrukerMock()
     }),
-    http.post(`${contextHolder}/api/context`, () => {
+    http.get(`${contextHolder}/api/context/aktivbruker`, () => {
+        return getAktivBrukerMock()
+    }),
+    http.delete(`${contextHolder}/api/context/aktivbruker`, () => {
+        mockSettings.fnr = null
+        return HttpResponse.json({
+            aktivBruker: "24429106210",
+            aktivEnhet: "0219",
+        })
+    }),
+    http.post(`${contextHolder}/api/context`, async ({ request }) => {
+        const fnr = (
+            (await request.json()) as {
+                eventType: "NY_AKTIV_BRUKER" | "??"
+                verdi: string
+            }
+        ).verdi
+        mockSettings.fnr = fnr
         if (mockSettings.aktivBruker === "ja") {
             return HttpResponse.json({
-                aktivBruker: "24429106210",
+                aktivBruker: fnr,
                 aktivEnhet: "0219",
             })
         } else {

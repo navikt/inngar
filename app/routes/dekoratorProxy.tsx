@@ -11,7 +11,9 @@ export const toContextHolderUrl = (urlString: string): string => {
 export async function loader({ request }: Route.LoaderArgs) {
     try {
         const decoratorUrl = toContextHolderUrl(request.url)
-        logger.info(`Videresender contextholderkall til: ${decoratorUrl}`)
+        logger.info(
+            `Videresender contextholderkall til: ${request.method} ${decoratorUrl}`,
+        )
         const newRequest = new Request(decoratorUrl, new Request(request))
         return await fetch(newRequest).then((proxyResponse) => {
             if (!proxyResponse.ok) {
@@ -27,7 +29,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export async function action({ request }: Route.ActionArgs) {
     const decoratorUrl = toContextHolderUrl(request.url)
-    logger.info(`Videresender contextholderkall til: ${decoratorUrl}`)
+    logger.info(
+        `Videresender contextholderkall til: ${request.method} ${decoratorUrl}`,
+    )
     const newRequest = new Request(decoratorUrl, new Request(request))
     return await fetch(newRequest)
 }

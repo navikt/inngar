@@ -4,22 +4,22 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
+    useFetcher,
     useLoaderData,
-    useNavigate,
 } from "react-router"
 import "@navikt/ds-css"
 
 import type { Route } from "./+types/root"
 import stylesheet from "./app.css?url"
 import Decorator from "~/components/decorator"
-import { createContext, useContext, useState } from "react"
+import { useState } from "react"
 import { importSubApp } from "~/util/importUtil"
 import Visittkort from "~/components/visittkort"
 import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
+export const loader = async ({}: Route.LoaderArgs) => {
     let other = {}
     if (import.meta.env.DEV) {
         other = { mockSettings }
@@ -47,17 +47,18 @@ export const links: Route.LinksFunction = () => [
     { rel: "stylesheet", href: stylesheet },
 ]
 
-type FnrState =
+export type FnrState =
     | { loading: true }
     | { loading: false; fnr?: string | undefined | null }
-
-const FnrProvider = createContext<FnrState>({ loading: true })
-export const useFnrState = () => useContext(FnrProvider)
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const { cssUrl, jsUrl } = useLoaderData()
     const [fnrState, setState] = useState<FnrState>({ loading: true })
-    const navigate = useNavigate()
+    const fetcher = useFetcher()
+    const reloadIndexPage = () => {
+        const formData = new FormData()
+        fetcher.submit(formData, { method: "POST", action: "/" })
+    }
 
     return (
         <html lang="en" className="bg-bg-subtle">
@@ -81,30 +82,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Decorator
                     onFnrChanged={(fnr) => {
                         console.log("onFnrChanged", fnr)
-                        if (fnr && !fnrState.loading && fnrState.fnr !== fnr) {
-                            setState({ loading: false, fnr })
-                            console.log(
-                                "Navigating because visittkort fnr change",
-                                "Old fnr",
-                                fnrState.fnr,
-                                "New fnr:",
-                                fnr,
-                            )
-                            navigate(".", { replace: true })
-                        } else if (!fnr) {
-                            setState({ loading: false, fnr: null })
-                        }
+                        if (!fnr) return
+
+                        setState({ loading: false, fnr })
+                        reloadIndexPage()
                     }}
                 />
-                <FnrProvider.Provider value={fnrState}>
-                    <Visittkort />
-                    {children}
-                </FnrProvider.Provider>
+                <Visittkort fnrState={fnrState} />
+                {children}
                 <ScrollRestoration />
                 <Scripts />
             </body>
         </html>
     )
+}
+
+export const action = () => {
+    return new Response(undefined, { status: 201 })
 }
 
 export default function App({ loaderData }) {
