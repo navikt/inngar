@@ -8,7 +8,12 @@ export const apps = {
     veilarbportefolje: { name: "veilarbportefolje", namespace: "obo" },
     veilarbperson: { name: "veilarbperson", namespace: "obo" },
     veilarbdialog: { name: "veilarbdialog", namespace: "dab" },
-    modiacontextholder: { name: "modiacontextholder", namespace: "personoversikt" },
+    veilarbveileder: { name: "veilarbveileder", namespace: "obo" },
+    "obo-unleash": { name: "obo-unleash", namespace: "obo" },
+    modiacontextholder: {
+        name: "modiacontextholder",
+        namespace: "personoversikt",
+    },
 }
 
 export const toAppUrl = (targetApp: App, url: URL | string): string => {

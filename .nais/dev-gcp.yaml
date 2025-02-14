@@ -6,7 +6,7 @@ metadata:
   labels:
     team: dab
 spec:
-  image: {{ image }}
+  image: { { image } }
   port: 3000
   replicas:
     min: 1
@@ -16,9 +16,9 @@ spec:
   ingresses:
     - https://inngar.intern.dev.nav.no
     - https://start-arbeidsoppfolging.ansatt.dev.nav.no
-#  prometheus:
-#    enabled: true
-#    path: /metrics
+  #  prometheus:
+  #    enabled: true
+  #    path: /metrics
   liveness:
     initialDelay: 20
     path: /internal/isAlive
@@ -35,6 +35,10 @@ spec:
         - application: veilarbperson
           namespace: obo
         - application: veilarbportefolje
+          namespace: obo
+        - application: veilarbveileder
+          namespace: obo
+        - application: obo-unleash
           namespace: obo
         - application: modiacontextholder
           namespace: personoversikt
@@ -57,4 +61,4 @@ spec:
           - "NAVident"
     sidecar:
       enabled: true
-      autoLogin : true
+      autoLogin: true

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import type { Route } from "../../.react-router/types/app/routes/+types"
 import { getEnv } from "~/util/envUtil.client"
 import { ClientOnlyChild } from "~/util/remoteUtil"
-import type { DecoratorProps } from "~/components/decoratorProps"
+import type { DecoratorProps } from "~/components/DecoratorProps"
 import { logger } from "../../server/logger"
 
 const exportName = "internarbeidsflate-decorator-v3"
@@ -53,7 +53,7 @@ const InternarbeidsflateDecorator = ({
         }
     })
 
-    return <div ref={rootMountRef}> </div>
+    return <div ref={rootMountRef}></div>
 }
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {

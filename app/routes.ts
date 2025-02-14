@@ -23,6 +23,12 @@ export default [
     route("/veilarbdialog/*", "routes/veilarbProxy.tsx", {
         id: "veilarbdialog",
     }),
+    route("/veilarbveileder/*", "routes/veilarbProxy.tsx", {
+        id: "veilarbveileder",
+    }),
+    route("/obo-unleash/*", "routes/veilarbProxy.tsx", {
+        id: "obo-unleash",
+    }),
     ...devRoutes,
     route("*", "routes/redirectToIndex.tsx"),
 ] satisfies RouteConfig
