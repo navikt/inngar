@@ -39,9 +39,6 @@ const getIncrementedKey = () => {
 }
 const VisittkortInner = ({ fnrState }: { fnrState: FnrState }) => {
     const rootMountRef = useRef(null)
-    console.log("visittkort inner fnr", fnrState)
-
-    // const key = key + 1
 
     useEffect(() => {
         if (!rootMountRef.current) return

@@ -18,11 +18,11 @@ const ikkeTilgangTekst: Record<
         tekst: "Du har ikke tilgang til Modia",
     },
     IKKE_TILGANG_STRENGT_FORTROLIG_ADRESSE: {
-        tittel: "",
+        tittel: "Ikke tilgang - strengt fortrolig adresse",
         tekst: "Du har ikke tilgang til brukere med strengt fortrolig adresse",
     },
     IKKE_TILGANG_ENHET: {
-        tittel: "Ikke til",
+        tittel: "Ikke tilgang til enhet",
         tekst: "Du har ikke tilgang til brukerens enhet",
     },
 }

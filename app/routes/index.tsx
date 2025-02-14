@@ -73,7 +73,6 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
                     "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
             })
 
-        console.log("Aktiv bruker", aktivBrukerResult.data)
         if (!aktivBrukerResult.data.aktivBruker) {
             return { status: BrukerStatus.INGEN_BRUKER_VALGT as const } as const
         } else {
@@ -119,16 +118,8 @@ export function handleError(
     }
 }
 
-export type IndexActionIntent = "registrer" | "ny-bruker"
-
 export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
-
-    const intent = formdata.get("intent") as IndexActionIntent | null
-    console.log("Intent", intent)
-    if (intent === null) throw new Error("Mangler intent")
-    if (intent === "ny-bruker") return new Response()
-
     const fnr = formdata.get("fnr")
 
     if (!fnr || typeof fnr !== "string") {
