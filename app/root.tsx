@@ -91,6 +91,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                                 fnr,
                             )
                             navigate(".", { replace: true })
+                        } else if (!fnr) {
+                            setState({ loading: false, fnr: null })
                         }
                     }}
                 />
