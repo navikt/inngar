@@ -80,6 +80,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <body>
                 <Decorator
                     onFnrChanged={(fnr) => {
+                        console.log("onFnrChanged", fnr)
                         if (fnr && !fnrState.loading && fnrState.fnr !== fnr) {
                             setState({ loading: false, fnr })
                             console.log(
@@ -90,8 +91,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                                 fnr,
                             )
                             navigate(".", { replace: true })
-                        } else {
-                            setState({ loading: true })
                         }
                     }}
                 />
