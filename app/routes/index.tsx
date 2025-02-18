@@ -147,10 +147,6 @@ export const action = async (args: Route.ActionArgs) => {
                         Location: `/registrert?result=${startOppfolgingResponse.body.kode}`,
                     },
                 })
-            } else {
-                throw Error("Start oppfølging feilet", {
-                    cause: startOppfolgingResponse.error,
-                })
             }
         } else {
             return tokenOrResponse
