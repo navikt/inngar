@@ -121,10 +121,15 @@ export type KanIkkeStarteOppfolgingPgaIkkeTilgang =
     | "IKKE_TILGANG_EGNE_ANSATTE"
     | "IKKE_TILGANG_ENHET"
     | "IKKE_TILGANG_MODIA"
+export type KanIkkeStartePgaFolkeregisterStatus =
+    | "DOD"
+    | "IKKE_LOVLIG_OPPHOLD"
+    | "UKJENT_STATUS_FOLKEREGISTERET"
 export type KanStarteOppfolging =
     | "JA"
     | "ALLEREDE_UNDER_OPPFOLGING"
     | KanIkkeStarteOppfolgingPgaIkkeTilgang
+    | KanIkkeStartePgaFolkeregisterStatus
 
 interface GraphqlSuccessResponse {
     data: {

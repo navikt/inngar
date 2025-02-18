@@ -5,6 +5,7 @@ import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { apps, toAppUrl } from "~/util/appConstants"
 import {
     type KanIkkeStarteOppfolgingPgaIkkeTilgang,
+    type KanIkkeStartePgaFolkeregisterStatus,
     type KanStarteOppfolging,
     VeilarboppfolgingApi,
 } from "~/api/veilarboppfolging"
@@ -13,6 +14,7 @@ import { dataWithTraceId } from "~/util/errorUtil"
 import { resilientFetch } from "~/util/resilientFetch"
 import { IkkeTilgangWarning } from "~/registreringPage/IkkeTilgangWarning"
 import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"
+import { UgyldigFregStatusWarning } from "~/registreringPage/UgyldigFregStatusWarning"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -34,6 +36,7 @@ enum BrukerStatus {
     IKKE_UNDER_OPPFOLGING = "IKKE_UNDER_OPPFOLGING",
     ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING",
     IKKE_TILGANG = "IKKE_TILGANG",
+    UGYLDIG_BRUKER_FREG_STATUS = "UGYLDIG_BRUKER_FREG_STATUS",
 }
 
 const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
@@ -42,6 +45,10 @@ const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
             return BrukerStatus.IKKE_UNDER_OPPFOLGING
         case "ALLEREDE_UNDER_OPPFOLGING":
             return BrukerStatus.ALLEREDE_UNDER_OPPFOLGING
+        case "DOD":
+        case "UKJENT_STATUS_FOLKEREGISTERET":
+        case "IKKE_LOVLIG_OPPHOLD":
+            return BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS
         default:
             return BrukerStatus.IKKE_TILGANG
     }
@@ -193,6 +200,14 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
             )
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
             return <StartOppfolgingForm fnr={props.fnr} enhet={props.enhet} />
+        case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
+            return (
+                <UgyldigFregStatusWarning
+                    kanStarteOppfolging={
+                        props.kanStarteOppfolging as KanIkkeStartePgaFolkeregisterStatus
+                    }
+                />
+            )
         case BrukerStatus.IKKE_TILGANG:
             return (
                 <IkkeTilgangWarning
