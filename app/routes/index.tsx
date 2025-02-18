@@ -182,7 +182,7 @@ export default function Index({
 }) {
     return (
         <div className="flex flex-col w-[620px] p-4 mx-auto space-y-4">
-            <Heading size="large">Registrer arbeidsrettet oppfølging</Heading>
+            <Heading size="large">Start arbeidsrettet oppfølging</Heading>
             <IndexPage {...loaderData} />
         </div>
     )
