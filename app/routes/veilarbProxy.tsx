@@ -40,6 +40,7 @@ export async function loader({ request }: Route.LoaderArgs) {
                 },
             )
         } else {
+            logger.info(`Failed OBO exchange for ${targetApp.name}`)
             return responseOrRequest
         }
     } catch (e) {
@@ -75,6 +76,7 @@ export async function action({ request }: Route.ActionArgs) {
                 },
             )
         } else {
+            logger.info(`Failed OBO exchange for ${targetApp.name}`)
             return responseOrRequest
         }
     } catch (e: Error) {
