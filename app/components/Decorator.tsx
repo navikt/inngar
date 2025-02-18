@@ -43,7 +43,7 @@ const InternarbeidsflateDecorator = ({
                 onFnrChanged: onFnrChanged,
                 showSearchArea: true,
                 showEnheter: false,
-                appName: "Arbeidsoppfolging registrering",
+                appName: "Arbeidsrettet oppfølging",
                 environment: "q2",
                 urlFormat:
                     getEnv().ingressType === "ansatt" ? "ANSATT" : "NAV_NO",
