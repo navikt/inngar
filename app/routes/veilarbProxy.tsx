@@ -7,7 +7,10 @@ const getTargetApp = (url: URL) =>
     apps[new URL(url).pathname.split("/")[1] as keyof typeof apps]
 
 const toUrl = (targetApp: App, url: URL): string => {
-    return `http://${targetApp.name}.${targetApp.namespace}${url.pathname}`
+    const path = targetApp.preserveContextPath
+        ? url.pathname // "/obo-unleash/api/lol
+        : url.pathname.replace(`/${targetApp.name}`, "") // "</obo-unleash>/api/lol -> /api/lol
+    return `http://${targetApp.name}.${targetApp.namespace}${path}`
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -21,13 +24,19 @@ export async function loader({ request }: Route.LoaderArgs) {
             return await fetch(url, responseOrRequest).then(
                 async (proxyResponse) => {
                     if (!proxyResponse.ok) {
-                        const body = !proxyResponse.bodyUsed ? await proxyResponse.text() : ""
-                        logger.error(`Dårlig respons ${proxyResponse.status} - ${body}`)
-                        return new Response(body, { status: proxyResponse.status, headers: proxyResponse.headers })
+                        const body = !proxyResponse.bodyUsed
+                            ? await proxyResponse.text()
+                            : ""
+                        logger.error(
+                            `Dårlig respons ${proxyResponse.status} - ${body}`,
+                        )
+                        return new Response(body, {
+                            status: proxyResponse.status,
+                            headers: proxyResponse.headers,
+                        })
                     } else {
                         return proxyResponse
                     }
-
                 },
             )
         } else {
@@ -50,9 +59,16 @@ export async function action({ request }: Route.ActionArgs) {
             return await fetch(url, responseOrRequest).then(
                 async (proxyResponse) => {
                     if (!proxyResponse.ok) {
-                        const body = !proxyResponse.bodyUsed ? await proxyResponse.text() : ""
-                        logger.error(`Dårlig respons ${proxyResponse.status} - ${body}`)
-                        return new Response(body, { status: proxyResponse.status, headers: proxyResponse.headers })
+                        const body = !proxyResponse.bodyUsed
+                            ? await proxyResponse.text()
+                            : ""
+                        logger.error(
+                            `Dårlig respons ${proxyResponse.status} - ${body}`,
+                        )
+                        return new Response(body, {
+                            status: proxyResponse.status,
+                            headers: proxyResponse.headers,
+                        })
                     } else {
                         return proxyResponse
                     }

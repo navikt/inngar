@@ -1,18 +1,44 @@
 export interface App {
     name: string
     namespace: string
+    preserveContextPath: boolean
 }
 
 export const apps = {
-    veilarboppfolging: { name: "veilarboppfolging", namespace: "poao" },
-    veilarbportefolje: { name: "veilarbportefolje", namespace: "obo" },
-    veilarbperson: { name: "veilarbperson", namespace: "obo" },
-    veilarbdialog: { name: "veilarbdialog", namespace: "dab" },
-    veilarbveileder: { name: "veilarbveileder", namespace: "obo" },
-    "obo-unleash": { name: "obo-unleash", namespace: "obo" },
+    veilarboppfolging: {
+        name: "veilarboppfolging",
+        namespace: "poao",
+        preserveContextPath: true,
+    },
+    veilarbportefolje: {
+        name: "veilarbportefolje",
+        namespace: "obo",
+        preserveContextPath: true,
+    },
+    veilarbperson: {
+        name: "veilarbperson",
+        namespace: "obo",
+        preserveContextPath: true,
+    },
+    veilarbdialog: {
+        name: "veilarbdialog",
+        namespace: "dab",
+        preserveContextPath: true,
+    },
+    veilarbveileder: {
+        name: "veilarbveileder",
+        namespace: "obo",
+        preserveContextPath: true,
+    },
+    "obo-unleash": {
+        name: "obo-unleash",
+        namespace: "obo",
+        preserveContextPath: false,
+    },
     modiacontextholder: {
         name: "modiacontextholder",
         namespace: "personoversikt",
+        preserveContextPath: true,
     },
 }
 
