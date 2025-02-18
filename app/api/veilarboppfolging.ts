@@ -46,7 +46,7 @@ const startOppfolging = async (
     fnr: string,
     token: string,
 ): Promise<StartOppfolgingSuccess | StartOppfolgingErrorResponse> => {
-    let response = await fetch(startOppfolgingUrl, {
+    return await fetch(startOppfolgingUrl, {
         headers: {
             ["Nav-Consumer-Id"]: "inngar",
             Authorization: `Bearer ${token}`,
@@ -54,20 +54,37 @@ const startOppfolging = async (
         },
         body: JSON.stringify({ fnr, henviserSystem: "DEMO" }),
         method: "POST",
-    }).then(async (proxyResponse) => {
-        if (!proxyResponse.ok && !(proxyResponse.status === 409)) {
-            logger.error(
-                `Dårlig respons ${proxyResponse.status} - ${!proxyResponse.bodyUsed ? await proxyResponse.text() : ""}`,
-            )
-        }
-        return proxyResponse
     })
-    if (!response.ok) {
-        logger.error(`Start oppfølging feilet: ${response.status}`)
-        return { ok: false as const, error: await response.text() }
-    }
-    logger.info("Oppfølging startet")
-    return { ok: true as const, body: await response.json() }
+        .then(async (proxyResponse: Response) => {
+            if (!proxyResponse.ok && !(proxyResponse.status === 409)) {
+                const body = !proxyResponse.bodyUsed
+                    ? await proxyResponse.text()
+                    : ""
+                logger.error(
+                    `Start oppfølging feilet med http-status: ${proxyResponse.status}`,
+                )
+                logger.error(`Start oppfølging feilet med melding ${body}`)
+                return {
+                    ok: false as const,
+                    error: body,
+                } as StartOppfolgingErrorResponse
+            } else {
+                logger.info("Oppfølging startet")
+                return {
+                    ok: true as const,
+                    body: await proxyResponse.json(),
+                } as StartOppfolgingSuccess
+            }
+        })
+        .catch((e: Error) => {
+            logger.error(
+                `Start oppfølging feilet (http kall feilet): ${e.toString()}`,
+            )
+            return {
+                ok: false as const,
+                error: "Start oppfølging feilet",
+            } as StartOppfolgingErrorResponse
+        })
 }
 
 const query = `

@@ -18,8 +18,9 @@ const getAktivBrukerMock = () => {
     const aktiveBrukerMocking = mockSettings.aktivBruker
     if (aktiveBrukerMocking === "ja") {
         if (over18Mocking === "Over18") {
-            console.log("SVARER PÅ AKTIVBRUKER", mockSettings.fnr)
-            return HttpResponse.json({ aktivBruker: mockSettings.fnr })
+            return HttpResponse.json({
+                aktivBruker: mockSettings.fnr,
+            })
         } else {
             return HttpResponse.json({ aktivBruker: "01011110523" })
         }
