@@ -10,7 +10,7 @@ const toUrl = (targetApp: App, url: URL): string => {
     const path = targetApp.preserveContextPath
         ? url.pathname // "/obo-unleash/api/lol
         : url.pathname.replace(`/${targetApp.name}`, "") // "</obo-unleash>/api/lol -> /api/lol
-    return `http://${targetApp.name}.${targetApp.namespace}${path}`
+    return `http://${targetApp.name}.${targetApp.namespace}${path}${url.search}`
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
