@@ -46,7 +46,7 @@ const VisittkortInner = ({ fnrState }: { fnrState: FnrState }) => {
         const appMountFunction = window.NAVSPA[exportName]
         const lol = appMountFunction(rootMountRef.current, {
             enhet: undefined,
-            fnr: (!fnrState.loading && fnrState.fnr) || "",
+            fnr: (!fnrState.loading && fnrState.fnr) || null,
             tilbakeTilFlate: "",
             visVeilederVerktoy: true,
             key: getIncrementedKey(),
@@ -57,6 +57,7 @@ const VisittkortInner = ({ fnrState }: { fnrState: FnrState }) => {
 }
 
 const Visittkort = ({ fnrState }: { fnrState: FnrState }) => {
+    if (fnrState.loading || !fnrState.fnr) return null
     return (
         <div className="bg-white">
             <ClientOnlyChild>
