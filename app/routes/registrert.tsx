@@ -1,15 +1,18 @@
-import { CheckmarkCircleIcon, XMarkOctagonIcon } from "@navikt/aksel-icons"
 import { Heading } from "@navikt/ds-react/Typography"
 import { Link, useSearchParams } from "react-router"
 import type { ArenaReponseKoder } from "~/api/veilarboppfolging"
+import { Alert, BodyShort, List } from "@navikt/ds-react"
+import { getVeilarbpersonflateUrl } from "~/config.client"
+import type { Route } from "./+types/registrert"
 
-type SuccessPageProps = {
-    // Add props if needed in the future
+export const clientLoader = () => {
+    return {
+        veilarbpersonflateUrl: getVeilarbpersonflateUrl(),
+    }
 }
-
-const aktivitetsplanUrl = import.meta.env.VITE_AKTIVITETSPLAN_URL
-
-const SuccessPage = (props: SuccessPageProps) => {
+∂
+const SuccessPage = (props: Route.ComponentProps) => {
+    const veilarbpersonflateUrl = props.loaderData.veilarbpersonflateUrl
     const [params] = useSearchParams()
     const result = params.get("result") as ArenaReponseKoder
 
@@ -20,7 +23,7 @@ const SuccessPage = (props: SuccessPageProps) => {
             case "FNR_FINNES_IKKE":
                 return "Klarte ikke finne bruker."
             case "KAN_REAKTIVERES_FORENKLET":
-                return "Brukere som kan reaktiveres kan ikke registreres for arbeidsoppfølging."
+                return "Brukere som kan reaktiveres i Arena kan ikke registreres for arbeidsoppfølging."
             case "BRUKER_ALLEREDE_ARBS":
                 return "Registreringen var vellykket!"
             case "BRUKER_ALLEREDE_IARBS":
@@ -40,21 +43,39 @@ const SuccessPage = (props: SuccessPageProps) => {
     return (
         <div className="flex flex-col space-y-4 w-[620px] p-4 mx-auto">
             <Heading size="large">
-                {isSuccess ? "Registrering ok" : "Registrering feilet"}
+                {isSuccess
+                    ? "Start arbeidsrettet oppfølging"
+                    : "Registrering feilet"}
             </Heading>
-            <div className="flex flex-col  gap-2">
-                {isSuccess ? (
-                    <CheckmarkCircleIcon className="w-10 h-10 text-green-500" />
-                ) : (
-                    <XMarkOctagonIcon className="w-10 h-10 text-red-500" />
-                )}
-                <p className="text-lg">{getMessage()}</p>
-                {isSuccess && (
-                    <Link to={aktivitetsplanUrl}>
-                        Gå tilbake til aktivitetsplanen
+            {isSuccess ? (
+                <>
+                    <Alert variant={"success"}>
+                        <BodyShort>Registreringen var vellykket!</BodyShort>
+                        <List size="small">
+                            <List.Item>
+                                Personen har tilgang til aktivitetsplan og
+                                arbeidsrettet dialog
+                            </List.Item>
+                            <List.Item>
+                                Det er mulig å gjøre $14a vurdering
+                            </List.Item>
+                        </List>
+                    </Alert>
+                    <Link to={`${veilarbpersonflateUrl}/aktivitetsplan`}>
+                        Gå til aktivitetsplanen
                     </Link>
-                )}
-            </div>
+                    <Link to={`${veilarbpersonflateUrl}/dialog`}>
+                        Gå til dialogen
+                    </Link>
+                    <Link to={`${veilarbpersonflateUrl}/vedtaksstotte`}>
+                        Gå til 14a vurderingen
+                    </Link>
+                </>
+            ) : (
+                <Alert variant={"error"}>
+                    <p className="text-lg">{getMessage()}</p>
+                </Alert>
+            )}
         </div>
     )
 }

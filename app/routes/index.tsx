@@ -118,7 +118,7 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
 export function meta({}: Route.MetaArgs) {
     return [
         { title: "Modia" },
-        { name: "inngar", content: "Start arbeidsoppfølging" },
+        { name: "inngar", content: "Start arbeidsrettet oppfølging" },
     ]
 }
 

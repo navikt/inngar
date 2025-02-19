@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
 import { logger } from "../../server/logger"
-import { getOversiktenLink } from "~/config"
+import { getOversiktenLink } from "~/config.client"
 
 const exportName = "veilarbvisittkortfs"
 
@@ -55,7 +55,7 @@ const VisittkortInner = ({
             enhet,
             fnr,
             tilbakeTilFlate: oversiktenLink,
-            visVeilederVerktoy: true,
+            visVeilederVerktoy: false,
             key: getIncrementedKey(),
         })
     })
