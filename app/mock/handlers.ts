@@ -12,6 +12,8 @@ const contextHolder = "http://modiacontextholder.personoversikt"
 const veilarboppfolging = `http://veilarboppfolging.poao`
 const veilarbperson = `http://veilarbperson.obo`
 const veilarbportefolje = `http://veilarbportefolje.obo`
+const veilarbveileder = `http://veilarbveileder.obo`
+const oboUnleash = `http://obo-unleash.obo`
 
 const getAktivBrukerMock = () => {
     const over18Mocking = mockSettings.over18
@@ -43,19 +45,28 @@ export const handlers = [
             aktivEnhet: "0219",
         })
     }),
+    http.get(`${contextHolder}/api/context/v2/aktivenhet`, () => {
+        return HttpResponse.json({ aktivEnhet: "0219" })
+    }),
     http.post(`${contextHolder}/api/context`, async ({ request }) => {
-        const fnr = (
-            (await request.json()) as {
-                eventType: "NY_AKTIV_BRUKER" | "??"
-                verdi: string
+        const payload = (await request.json()) as {
+            eventType: "NY_AKTIV_BRUKER" | "NY_AKTIV_ENHET"
+            verdi: string
+        }
+
+        if (payload.eventType === "NY_AKTIV_BRUKER") {
+            mockSettings.fnr = payload.verdi
+            if (mockSettings.aktivBruker === "ja") {
+                return HttpResponse.json({
+                    aktivBruker: payload.verdi,
+                    aktivEnhet: "0219",
+                })
+            } else {
+                return HttpResponse.json({
+                    aktivBruker: null,
+                    aktivEnhet: "0219",
+                })
             }
-        ).verdi
-        mockSettings.fnr = fnr
-        if (mockSettings.aktivBruker === "ja") {
-            return HttpResponse.json({
-                aktivBruker: fnr,
-                aktivEnhet: "0219",
-            })
         } else {
             return HttpResponse.json({
                 aktivBruker: null,
@@ -121,11 +132,44 @@ export const handlers = [
                     resultat: "Bruker registrert",
                     kode: arenaSvar,
                 },
-                { status:  feilSvar.includes(arenaSvar) ? 409 :200 },
+                { status: feilSvar.includes(arenaSvar) ? 409 : 200 },
             )
         },
     ),
     http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, () => {
         return graphqlMock(mockSettings)
+    }),
+    http.get(`${veilarbveileder}/veilarbveileder/api/veileder/me`, () => {
+        return HttpResponse.json({
+            ident: "Z994381",
+            navn: "E_994381, F_994381",
+            fornavn: "F_994381",
+            etternavn: "E_994381",
+        })
+    }),
+    http.get(
+        `${veilarbveileder}/veilarbveileder/api/enhet/:enhetId/veiledere`,
+        () => {
+            return HttpResponse.json({
+                enhet: {
+                    enhetId: "0315",
+                    navn: "Nav Grünerløkka",
+                },
+                veilederListe: [
+                    {
+                        ident: "Z991681",
+                        navn: "E_991681, F_991681",
+                        fornavn: "F_991681",
+                        etternavn: "E_991681",
+                    },
+                ],
+            })
+        },
+    ),
+    http.get(`${oboUnleash}/api/feature`, () => {
+        return HttpResponse.json({
+            "veilarbvisittkortfs.vis-ny-inngang-til-arbeidsrettet-oppfolging":
+                true,
+        })
     }),
 ]
