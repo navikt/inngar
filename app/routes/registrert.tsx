@@ -10,7 +10,7 @@ export const clientLoader = () => {
         veilarbpersonflateUrl: getVeilarbpersonflateUrl(),
     }
 }
-∂
+
 const SuccessPage = (props: Route.ComponentProps) => {
     const veilarbpersonflateUrl = props.loaderData.veilarbpersonflateUrl
     const [params] = useSearchParams()
