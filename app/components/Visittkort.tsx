@@ -63,6 +63,10 @@ const VisittkortInner = ({
     return <div ref={rootMountRef}></div>
 }
 
+const VisittkortPlaceholder = () => {
+    return <div className="bg-white h-[76.8px]"></div>
+}
+
 const Visittkort = ({
     fnrState,
     navKontor,
@@ -73,7 +77,7 @@ const Visittkort = ({
     if (fnrState.loading || !fnrState.fnr) return null
     return (
         <div className="bg-white">
-            <ClientOnlyChild>
+            <ClientOnlyChild placeholder={<VisittkortPlaceholder />}>
                 <VisittkortInner fnr={fnrState.fnr} enhet={navKontor} />
             </ClientOnlyChild>
         </div>

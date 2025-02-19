@@ -56,9 +56,13 @@ const InternarbeidsflateDecorator = ({
     return <div ref={rootMountRef}></div>
 }
 
+const DecoratorPlaceholder = () => {
+    return <div className="bg-gray-900 h-[48px]">LOADING</div>
+}
+
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
     return (
-        <ClientOnlyChild>
+        <ClientOnlyChild placeholder={<DecoratorPlaceholder />}>
             <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />
         </ClientOnlyChild>
     )
