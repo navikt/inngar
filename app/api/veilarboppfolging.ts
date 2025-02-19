@@ -125,6 +125,7 @@ export type KanIkkeStartePgaFolkeregisterStatus =
     | "DOD"
     | "IKKE_LOVLIG_OPPHOLD"
     | "UKJENT_STATUS_FOLKEREGISTERET"
+    | "INGEN_STATUS_FOLKEREGISTERET"
 export type KanStarteOppfolging =
     | "JA"
     | "ALLEREDE_UNDER_OPPFOLGING"

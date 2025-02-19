@@ -22,6 +22,7 @@ const kanStarteOppfolgingOptions: MockSettings["kanStarteOppfolging"][] = [
     "DOD",
     "UKJENT_STATUS_FOLKEREGISTERET",
     "IKKE_LOVLIG_OPPHOLD",
+    "INGEN_STATUS_FOLKEREGISTERET",
 ]
 
 export const MockSettingsForm = ({

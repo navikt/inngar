@@ -17,6 +17,10 @@ const ugyldigStatusTekster: Record<
         tittel: "Bruker har en ukjent status i folkeregisteret",
         tekst: "Bare brukere med lovlig opphold kan registreres for arbeidsrettet oppfølging",
     },
+    INGEN_STATUS_FOLKEREGISTERET: {
+        tittel: "Bruker har ingen registrert en status i folkeregisteret",
+        tekst: "Bare brukere med lovlig opphold kan registreres for arbeidsrettet oppfølging. Uten noen registrert status i folkeregisteret kan vi ikke vite om bruker har lovlig oppfhold.",
+    },
 }
 
 export const UgyldigFregStatusWarning = ({

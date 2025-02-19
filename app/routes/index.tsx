@@ -44,6 +44,7 @@ const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
             return BrukerStatus.ALLEREDE_UNDER_OPPFOLGING
         case "DOD":
         case "UKJENT_STATUS_FOLKEREGISTERET":
+        case "INGEN_STATUS_FOLKEREGISTERET":
         case "IKKE_LOVLIG_OPPHOLD":
             return BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS
         default:
