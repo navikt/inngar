@@ -37,18 +37,21 @@ export const getOboToken = async (
     if (process.env.NODE_ENV == "development") {
         return { ok: true, token: "token" }
     }
+
     const token = getToken(request)
     if (!token)
         return {
             errorResponse: new Response("Unauthorized", { status: 401 }),
             ok: false,
         }
+
     const validation = await validateToken(token)
     if (!validation.ok)
         return {
             errorResponse: new Response("Forbidden", { status: 403 }),
             ok: false,
         }
+
     const oboToken = await requestOboToken(token, scopeFrom(app))
     if (!oboToken.ok)
         return {

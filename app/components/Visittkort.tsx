@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
 import { logger } from "../../server/logger"
+import { getOversiktenLink } from "~/config"
 
 const exportName = "veilarbvisittkortfs"
 
@@ -37,16 +38,23 @@ const getIncrementedKey = () => {
     key = key + 1
     return (key + 1).toString()
 }
-const VisittkortInner = ({ fnr }: { fnr: string }) => {
+const VisittkortInner = ({
+    fnr,
+    enhet,
+}: {
+    fnr: string
+    enhet: string | null | undefined
+}) => {
     const rootMountRef = useRef(null)
 
     useEffect(() => {
         if (!rootMountRef.current) return
+        const oversiktenLink = getOversiktenLink()
         const appMountFunction = window.NAVSPA[exportName]
         appMountFunction(rootMountRef.current, {
-            enhet: undefined,
+            enhet,
             fnr,
-            tilbakeTilFlate: "",
+            tilbakeTilFlate: oversiktenLink,
             visVeilederVerktoy: true,
             key: getIncrementedKey(),
         })
@@ -55,12 +63,18 @@ const VisittkortInner = ({ fnr }: { fnr: string }) => {
     return <div ref={rootMountRef}></div>
 }
 
-const Visittkort = ({ fnrState }: { fnrState: FnrState }) => {
+const Visittkort = ({
+    fnrState,
+    navKontor,
+}: {
+    fnrState: FnrState
+    navKontor: string | null | undefined
+}) => {
     if (fnrState.loading || !fnrState.fnr) return null
     return (
         <div className="bg-white">
             <ClientOnlyChild>
-                <VisittkortInner fnr={fnrState.fnr} />
+                <VisittkortInner fnr={fnrState.fnr} enhet={navKontor} />
             </ClientOnlyChild>
         </div>
     )

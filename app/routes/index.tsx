@@ -2,7 +2,7 @@ import type { Route } from "./+types/index"
 import { Alert, Heading } from "@navikt/ds-react"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
-import { apps, toAppUrl } from "~/util/appConstants"
+import { apps } from "~/util/appConstants"
 import {
     type KanIkkeStarteOppfolgingPgaIkkeTilgang,
     type KanIkkeStartePgaFolkeregisterStatus,
@@ -15,6 +15,8 @@ import { resilientFetch } from "~/util/resilientFetch"
 import { IkkeTilgangWarning } from "~/registreringPage/IkkeTilgangWarning"
 import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"
 import { UgyldigFregStatusWarning } from "~/registreringPage/UgyldigFregStatusWarning"
+import Visittkort from "~/components/Visittkort"
+import { aktivBrukerUrl, aktivEnhetUrl } from "~/config"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -25,11 +27,6 @@ export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
         ...serverData,
     }
 }
-
-const aktivBrukerUrl = toAppUrl(
-    apps.modiacontextholder,
-    "/api/context/v2/aktivbruker",
-)
 
 enum BrukerStatus {
     INGEN_BRUKER_VALGT = "INGEN_BRUKER_VALGT",
@@ -55,8 +52,11 @@ const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
 }
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-    console.log("LOADER Index.tsx")
     try {
+        const hentAktivEnhet = () =>
+            resilientFetch<{ aktivEnhet: string | null }>(
+                new Request(aktivEnhetUrl, new Request(loaderArgs.request)),
+            )
         const hentAktivBruker = () =>
             resilientFetch<{ aktivBruker: string | null }>(
                 new Request(aktivBrukerUrl, new Request(loaderArgs.request)),
@@ -64,10 +64,12 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
         const hentOboForVeilarboppfolging = () =>
             getOboToken(loaderArgs.request, apps.veilarboppfolging)
 
-        const [tokenOrResponse, aktivBrukerResult] = await Promise.all([
-            hentOboForVeilarboppfolging(),
-            hentAktivBruker(),
-        ])
+        const [tokenOrResponse, aktivBrukerResult, aktivEnhetResult] =
+            await Promise.all([
+                hentOboForVeilarboppfolging(),
+                hentAktivBruker(),
+                hentAktivEnhet(),
+            ])
 
         if (!aktivBrukerResult.ok) {
             logger.warn(aktivBrukerResult.error.message)
@@ -94,9 +96,13 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
             }
             const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
             const enhet = oppfolgingsEnhet.enhet ?? null
+            const aktivEnhet = aktivEnhetResult.ok
+                ? aktivEnhetResult.data.aktivEnhet
+                : null
             return {
                 status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
-                enhet,
+                navKontor: enhet,
+                aktivtNavKontor: aktivEnhet,
                 fnr: aktivBruker,
                 kanStarteOppfolging: oppfolging.kanStarteOppfolging,
             }
@@ -181,10 +187,16 @@ export default function Index({
     loaderData: Awaited<ReturnType<typeof loader>>
 }) {
     return (
-        <div className="flex flex-col w-[620px] p-4 mx-auto space-y-4">
-            <Heading size="large">Start arbeidsrettet oppfølging</Heading>
-            <IndexPage {...loaderData} />
-        </div>
+        <>
+            <Visittkort
+                fnrState={{ loading: false, fnr: loaderData.fnr }}
+                navKontor={loaderData.aktivtNavKontor}
+            />
+            <div className="flex flex-col w-[620px] p-4 mx-auto space-y-4">
+                <Heading size="large">Start arbeidsrettet oppfølging</Heading>
+                <IndexPage {...loaderData} />
+            </div>
+        </>
     )
 }
 
@@ -199,7 +211,12 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 </Alert>
             )
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
-            return <StartOppfolgingForm fnr={props.fnr} enhet={props.enhet} />
+            return (
+                <StartOppfolgingForm
+                    fnr={props.fnr}
+                    navKontor={props.navKontor}
+                />
+            )
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
             return (
                 <UgyldigFregStatusWarning

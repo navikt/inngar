@@ -9,24 +9,24 @@ import {
     Heading,
     Link,
     List,
-    TextField,
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
+import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 
 const arbeidssokerRegistreringUrl =
     "https://arbeidssokerregistrering-for-veileder.intern.dev.nav.no/" // import.meta.env.ARBEIDSSOKERREGISTRERING_URL
 
-interface Enhet {
+export interface NavKontor {
     navn: string
     id: string
     kilde: string
 }
 
 export const StartOppfolgingForm = ({
-    enhet,
+    navKontor,
     fnr,
 }: {
-    enhet: Enhet | null
+    navKontor: NavKontor | null
     fnr: string
 }) => {
     const fetcher = useFetcher()
@@ -61,7 +61,7 @@ export const StartOppfolgingForm = ({
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}
-            <EnhetsInfo enhet={enhet} />
+            <NavKontorInfo enhet={navKontor} />
             <List>
                 <List.Item>
                     Før du kan gjøre en § 14 a vurdering må du registrere
@@ -100,46 +100,5 @@ const FormError = ({ message }: { message: string }) => {
                 {message}
             </ErrorSummary.Item>
         </ErrorSummary>
-    )
-}
-
-const EnhetsInfo = ({ enhet }: { enhet: Enhet | null | undefined }) => {
-    if (enhet === null || enhet === undefined) {
-        return (
-            <Alert variant="warning">
-                Fant ikke enhet - brukeren har mest sannsynlig ikke registrert
-                bostedsaddresse i Norge.
-                <List>
-                    <List.Item>
-                        Hvis bruker har tidligere arbeidsgiver og kommer enhet
-                        til å bli utledet av forrige arbeidsgivers addresse
-                    </List.Item>
-                    <List.Item>
-                        Hvis ingen annen passende enhet er funnet kommer bruker
-                        til å bli tilordnet enhet 2990 (IT-avdelingen)
-                    </List.Item>
-                </List>
-            </Alert>
-        )
-    }
-
-    const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geografisk tilknytning"
-    const beskrivelseTekst =
-        enhet.kilde === "ARENA"
-            ? "Bruker er registrert på følgende enhet i Arena:"
-            : "Bruker blir tildelt følgende enhet etter geografisk tilknytning:"
-
-    return (
-        <>
-            <TextField
-                label="Oppfolgingsenhet"
-                description={beskrivelseTekst}
-                value={`${enhet.navn} (${enhet.id}) - ${kilde}`}
-                readOnly
-            />
-            <BodyShort>
-                Bruker kommer til å bli lagt til i porteføljen til enheten.
-            </BodyShort>
-        </>
     )
 }

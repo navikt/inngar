@@ -12,9 +12,7 @@ import "@navikt/ds-css"
 import type { Route } from "./+types/root"
 import stylesheet from "./app.css?url"
 import Decorator from "~/components/Decorator"
-import { useState } from "react"
 import { importSubApp } from "~/util/importUtil"
-import Visittkort from "~/components/Visittkort"
 import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
@@ -53,7 +51,6 @@ export type FnrState =
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const { cssUrl, jsUrl } = useLoaderData()
-    const [fnrState, setState] = useState<FnrState>({ loading: true })
     const fetcher = useFetcher()
     const reloadIndexPage = () => {
         const formData = new FormData()
@@ -84,11 +81,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
                         console.log("onFnrChanged", fnr)
                         if (!fnr) return
 
-                        setState({ loading: false, fnr })
                         reloadIndexPage()
                     }}
                 />
-                <Visittkort fnrState={fnrState} />
+
                 {children}
                 <ScrollRestoration />
                 <Scripts />
