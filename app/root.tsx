@@ -2,6 +2,7 @@ import {
     Links,
     Meta,
     Outlet,
+    redirect,
     Scripts,
     ScrollRestoration,
     useFetcher,
@@ -94,7 +95,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export const action = () => {
-    return new Response(undefined, { status: 201 })
+    return redirect(`/`)
 }
 
 export default function App({ loaderData }) {
