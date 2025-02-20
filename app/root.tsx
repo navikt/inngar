@@ -17,6 +17,8 @@ import { importSubApp } from "~/util/importUtil"
 import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
+import { useEffect } from "react"
+import { loggBesok } from "~/amplitude.client"
 
 export const loader = async ({}: Route.LoaderArgs) => {
     let other = {}
@@ -57,6 +59,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         const formData = new FormData()
         fetcher.submit(formData, { method: "POST", action: "/" })
     }
+
+    useEffect(() => {
+        loggBesok()
+    }, [])
 
     return (
         <html lang="en" className="bg-bg-subtle">
