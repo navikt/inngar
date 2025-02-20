@@ -13,6 +13,9 @@ const server = setupWorker(
 )
 
 const mockedBackends = [
+    "obo-unleash",
+    "modiacontextholder",
+    "veilarbveileder",
     "veilarbdialog",
     "veilarboppfolging",
     "veilarbperson",
@@ -22,6 +25,7 @@ const mockedBackends = [
     "root",
     "mock-settings",
     ".woff",
+    ".manifest",
 ]
 
 await server.start({
