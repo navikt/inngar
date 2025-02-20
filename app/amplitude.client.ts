@@ -10,7 +10,13 @@ const apiKey =
 
 const AMPLITUDE_API_KEY = apiKey
 
-init(AMPLITUDE_API_KEY)
+init(AMPLITUDE_API_KEY, undefined, {
+    autocapture: true,
+    serverUrl: "https://amplitude.nav.no/collect",
+    ingestionMetadata: {
+        sourceName: window.location.toString(),
+    },
+})
 
 const logEvent = (eventName: string, eventProperties: Record<string, any>) => {
     track(eventName, {
