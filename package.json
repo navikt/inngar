@@ -9,6 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.11.12",
     "@navikt/ds-css": "^7.12.2",
     "@navikt/ds-react": "^7.12.2",
     "@navikt/ds-tailwind": "^7.12.2",
