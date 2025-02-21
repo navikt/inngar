@@ -32,7 +32,7 @@ export const loggBesok = () => {
     logEvent("start-arbeidsoppfolging.besok", {})
 }
 export const loggSkjemaFullført = () => {
-    logEvent("skjema-fullfort", {
+    logEvent("skjema fullført", {
         skjemanavn: "start-arbeidsoppfolging",
         skjemaId: "start-arbeidsoppfolging",
     })
