@@ -38,7 +38,7 @@ const InternarbeidsflateDecorator = ({
     useEffect(() => {
         if (rootMountRef.current) {
             appMountFunction(rootMountRef.current, {
-                fetchActiveUserOnMount: false,
+                fetchActiveUserOnMount: true,
                 onEnhetChanged: () => {},
                 onFnrChanged: onFnrChanged,
                 showSearchArea: true,

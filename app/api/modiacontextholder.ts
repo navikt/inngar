@@ -17,7 +17,6 @@ const setFnrIContextHolder = async (fnr: Fnr, request: Request) => {
         verdi: fnr,
         eventType: "NY_AKTIV_BRUKER",
     }
-    // const requestInit = new Request(request)
     const oboToken = await getOboToken(request, apps.modiacontextholder)
     if (oboToken.ok) {
         return resilientFetch(contextUrl, {
