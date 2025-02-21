@@ -1,6 +1,8 @@
-import { resilientFetch } from "~/util/resilientFetch"
+import { type FetchError, resilientFetch } from "~/util/resilientFetch"
 import { contextUrl, generateFnrCodeUrl, retrieveFnrUrl } from "~/config"
 import { logger } from "../../server/logger"
+import { getOboToken } from "~/util/tokenExchange.server"
+import { apps } from "~/util/appConstants"
 
 type Fnr = string
 type Code = string
@@ -15,17 +17,30 @@ const setFnrIContextHolder = async (fnr: Fnr, request: Request) => {
         verdi: fnr,
         eventType: "NY_AKTIV_BRUKER",
     }
-    const requestInit = new Request(request)
-    return resilientFetch(contextUrl, {
-        ...requestInit,
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-            ...requestInit.headers,
-            ["Nav-Consumer-Id"]: "inngar",
-            ["Content-Type"]: "application/json",
-        },
-    })
+    // const requestInit = new Request(request)
+    const oboToken = await getOboToken(request, apps.modiacontextholder)
+    if (oboToken.ok) {
+        return resilientFetch(contextUrl, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {
+                Authorization: `Bearer ${oboToken.token}`,
+                ["Nav-Consumer-Id"]: "inngar",
+                ["Content-Type"]: "application/json",
+            },
+        })
+    } else {
+        logger.error(
+            `Fikk ikke bruker i kontekst (On-Behalf-Of mot kontekstholder feilet) : ${oboToken.errorResponse}`,
+        )
+        return {
+            ok: false,
+            error: new Error(
+                "Fikk ikke bruker i kontekst (On-Behalf-Of mot kontekstholder feilet)",
+            ),
+            type: "FetchError",
+        } as FetchError
+    }
 }
 
 const getFnrFromCode = async (code: Code) => {

@@ -61,7 +61,7 @@ export const resilientFetch = async <T>(
                         : await result.text(),
             } as Success<T>
         } else {
-            logger.info(
+            logger.warn(
                 `${config?.method} ${result.status} ${getUrlString(request)}`,
             )
             const body =
@@ -88,7 +88,7 @@ export const resilientFetch = async <T>(
             return {
                 ok: false as const,
                 type: "FetchError" as const,
-                error: new Error("Unknown error"),
+                error: new Error(`Unknown error ${e.toString()}`),
             } as FetchError
         }
     }

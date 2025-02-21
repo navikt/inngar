@@ -57,7 +57,7 @@ const InternarbeidsflateDecorator = ({
 }
 
 const DecoratorPlaceholder = () => {
-    return <div className="bg-gray-900 h-[48px]">LOADING</div>
+    return <div className="bg-gray-900 h-[48px]"></div>
 }
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
