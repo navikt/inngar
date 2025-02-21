@@ -1,5 +1,5 @@
 import type { Route } from "./+types/index"
-import { Alert, Heading } from "@navikt/ds-react"
+import { Alert, Heading, List } from "@navikt/ds-react"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
 import { apps } from "~/util/appConstants"
@@ -17,6 +17,7 @@ import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"
 import { UgyldigFregStatusWarning } from "~/registreringPage/UgyldigFregStatusWarning"
 import Visittkort from "~/components/Visittkort"
 import { aktivBrukerUrl, aktivEnhetUrl } from "~/config"
+import { ListItem } from "@navikt/ds-react/List"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -193,7 +194,7 @@ export default function Index({
                 fnrState={{ loading: false, fnr: loaderData.fnr }}
                 navKontor={loaderData.aktivtNavKontor}
             />
-            <div className="flex flex-col w-[620px] p-4 mx-auto space-y-4">
+            <div className="flex flex-col w-[620px] p-4 mt-6 mx-auto space-y-8">
                 <Heading size="large">Start arbeidsrettet oppfølging</Heading>
                 <IndexPage {...loaderData} />
             </div>
@@ -207,8 +208,20 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
             return <Alert variant="info">Ingen bruker valgt</Alert>
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING:
             return (
-                <Alert variant="info">
-                    Bruker er allerede under arbeidsoppfølging
+                <Alert variant="success">
+                    <Heading size="small">
+                        Denne personen er allerede under arbeidsrettet
+                        oppfølging
+                    </Heading>
+                    <List>
+                        <ListItem>
+                            Personen har tilgang til aktivitetsplan og
+                            arbeidsrettet oppfølging.
+                        </ListItem>
+                        <ListItem>
+                            Det er mulig å gjøre oppfølgingsvedtak § 14 a.
+                        </ListItem>
+                    </List>
                 </Alert>
             )
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:

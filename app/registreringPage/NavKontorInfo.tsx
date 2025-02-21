@@ -29,20 +29,17 @@ export const NavKontorInfo = ({
     const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geografisk tilknytning"
     const beskrivelseTekst =
         enhet.kilde === "ARENA"
-            ? "Bruker er registrert på følgende nav-kontor i Arena:"
+            ? "Brukeren blir lagt til i porteføljen til denne enheten"
             : "Bruker blir tildelt følgende nav-kontor etter geografisk tilknytning:"
 
     return (
         <>
             <TextField
-                label="Oppfølgingskontor"
+                label="Oppfølgingsenhet"
                 description={beskrivelseTekst}
                 value={`${enhet.navn} (${enhet.id}) - ${kilde}`}
                 readOnly
             />
-            <BodyShort>
-                Bruker kommer til å bli lagt til i porteføljen til enheten.
-            </BodyShort>
         </>
     )
 }
