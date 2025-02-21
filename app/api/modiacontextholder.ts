@@ -29,11 +29,9 @@ const generateForFnr = async (fnr: Fnr): Promise<Code | null> => {
         {
             method: "POST",
             headers: {
-                headers: {
-                    ["Nav-Consumer-Id"]: "inngar",
-                    ["Content-Type"]: "application/json",
-                },
-            },
+                ["Nav-Consumer-Id"]: "inngar",
+                ["Content-Type"]: "application/json",
+            },            },
             body: JSON.stringify({ fnr }),
         },
     )
