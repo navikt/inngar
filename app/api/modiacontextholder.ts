@@ -10,15 +10,18 @@ interface FnrFromCodeResponse {
     code: "string"
 }
 
-const setFnrIContextHolder = async (fnr: Fnr) => {
+const setFnrIContextHolder = async (fnr: Fnr, request: Request) => {
     const payload = {
         verdi: fnr,
         eventType: "NY_AKTIV_BRUKER",
     }
+    const requestInit = new Request(request)
     return resilientFetch(contextUrl, {
+        ...requestInit,
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
+            ...requestInit.headers,
             ["Nav-Consumer-Id"]: "inngar",
             ["Content-Type"]: "application/json",
         },

@@ -30,7 +30,10 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         ModiacontextholderApi.getFnrFromCode(fnrCode).then((result) => {
             if (result.ok) {
                 /* Set user in context, but don't need to wait for it to resolve */
-                ModiacontextholderApi.setFnrIContextHolder(result.data.fnr)
+                ModiacontextholderApi.setFnrIContextHolder(
+                    result.data.fnr,
+                    request,
+                )
                 return result
             }
             return result
