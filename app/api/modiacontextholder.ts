@@ -30,7 +30,9 @@ const generateForFnr = async (fnr: Fnr): Promise<Code | null> => {
     if (result.ok) {
         return result.data.code
     } else {
-        logger.error("Klarte ikke å generere code for fnr", result.error)
+        logger.error(
+            `Klarte ikke å generere code for fnr: ${result.error.toString()}`,
+        )
         return null
     }
 }
