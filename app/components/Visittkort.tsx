@@ -1,5 +1,5 @@
 import type { Route } from "../../.react-router/types/app/routes/+types"
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
 import { logger } from "../../server/logger"
@@ -46,6 +46,7 @@ const VisittkortInner = ({
     enhet: string | null | undefined
 }) => {
     const rootMountRef = useRef(null)
+    const key = useCallback(() => getIncrementedKey(), [fnr])
 
     useEffect(() => {
         if (!rootMountRef.current) return
@@ -56,7 +57,7 @@ const VisittkortInner = ({
             fnr,
             tilbakeTilFlate: oversiktenLink,
             visVeilederVerktoy: false,
-            key: getIncrementedKey(),
+            key,
         })
     })
 
@@ -74,6 +75,10 @@ const Visittkort = ({
     fnrState: FnrState
     navKontor: string | null | undefined
 }) => {
+    useEffect(() => {
+        console.log("On mount Visittkort")
+    }, [])
+
     if (fnrState.loading || !fnrState.fnr) return null
     return (
         <div className="bg-white">

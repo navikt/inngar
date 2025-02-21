@@ -17,6 +17,7 @@ import Visittkort from "~/components/Visittkort"
 import { userLoader } from "~/registreringPage/userLoader"
 import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
+import { useEffect } from "react"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -126,6 +127,10 @@ export default function Index({
 }
 
 const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
+    useEffect(() => {
+        console.log("BrukerStatus", props.status)
+    }, [])
+
     switch (props.status) {
         case BrukerStatus.INGEN_BRUKER_VALGT:
             return <Alert variant="info">Ingen bruker valgt</Alert>
