@@ -35,6 +35,12 @@ export const userLoader = async (request: Request, fnrCode: string) => {
                     request,
                 )
                 return result
+            } else if (
+                result.error &&
+                result.type === "HttpError" &&
+                result.status === 404
+            ) {
+                return { ok: true, data: { aktivBruker: null } }
             }
             return result
         })
