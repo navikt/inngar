@@ -29,7 +29,7 @@ if (env.type != EnvType.local) {
 const logEvent = (eventName: string, eventProperties: Record<string, any>) => {
     track(eventName, {
         ...eventProperties,
-        origin: "start-arbeidsoppfolging",
+        app: "start-arbeidsoppfolging",
     })
 }
 export const loggBesok = () => {
