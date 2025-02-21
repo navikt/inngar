@@ -1,4 +1,4 @@
-import { resilientFetch, type Success } from "~/util/resilientFetch"
+import { resilientFetch } from "~/util/resilientFetch"
 import { aktivEnhetUrl } from "~/config"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { apps } from "~/util/appConstants"
@@ -8,18 +8,6 @@ import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import { finnBrukerStatus } from "~/registreringPage/BrukerStatus"
 import { redirect } from "react-router"
-
-const getAktivBruker = (
-    successResult:
-        | Success<{ aktivBruker: string | null }>
-        | Success<{ fnr: string }>,
-) => {
-    if ("aktivBruker" in successResult.data) {
-        return successResult.data.aktivBruker
-    } else {
-        return successResult.data.fnr
-    }
-}
 
 export const userLoader = async (request: Request, fnrCode: string) => {
     const hentAktivEnhet = () =>
@@ -40,7 +28,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
                 result.type === "HttpError" &&
                 result.status === 404
             ) {
-                return { ok: true, data: { aktivBruker: null } } as const
+                return { ok: true, data: { fnr: null, code: fnrCode } } as const
             }
             return result
         })
@@ -68,10 +56,9 @@ export const userLoader = async (request: Request, fnrCode: string) => {
                 "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
         })
 
-    const aktivBruker = getAktivBruker(aktivBrukerResult)
+    const aktivBruker = aktivBrukerResult.data.fnr
     if (!aktivBruker) {
         return redirect("/")
-        // return { status: BrukerStatus.INGEN_BRUKER_VALGT as const } as const
     } else {
         const oppfolgingsStatus =
             await VeilarboppfolgingApi.getOppfolgingStatus(
