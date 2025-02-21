@@ -48,7 +48,7 @@ const VisittkortInner = ({
     const rootMountRef = useRef(null)
 
     console.log("rendering visittkort (all renders)")
-    const key = useCallback(() => {
+    const incrementAndGetVisittkortRenderKey = useCallback(() => {
         console.log("fnr changed, re-rendering visittkort")
         return getIncrementedKey()
     }, [fnr])
@@ -62,7 +62,7 @@ const VisittkortInner = ({
             fnr,
             tilbakeTilFlate: oversiktenLink,
             visVeilederVerktoy: false,
-            key,
+            key: incrementAndGetVisittkortRenderKey(),
         })
     })
 
