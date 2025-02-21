@@ -86,12 +86,6 @@ const SuccessPage = (props: Route.ComponentProps) => {
                         >
                             Gå til dialogen
                         </Link>
-                        <Link
-                            className="underline"
-                            to={`${veilarbpersonflateUrl}/vedtaksstotte`}
-                        >
-                            Gå til oppfølgingsvedtaket § 14 a
-                        </Link>
                     </div>
                 </>
             ) : (
