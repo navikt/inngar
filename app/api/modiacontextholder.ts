@@ -13,11 +13,11 @@ interface FnrFromCodeResponse {
 const getFnrFromCode = async (code: Code) => {
     return await resilientFetch<FnrFromCodeResponse>(retrieveFnrUrl, {
         method: "POST",
+        body: JSON.stringify({ code }),
         headers: {
             ["Nav-Consumer-Id"]: "inngar",
             ["Content-Type"]: "application/json",
         },
-        body: JSON.stringify({ code }),
     }).then((result) => {
         return result
     })
@@ -28,11 +28,11 @@ const generateForFnr = async (fnr: Fnr): Promise<Code | null> => {
         generateFnrCodeUrl,
         {
             method: "POST",
+            body: JSON.stringify({ fnr }),
             headers: {
                 ["Nav-Consumer-Id"]: "inngar",
                 ["Content-Type"]: "application/json",
-            },            },
-            body: JSON.stringify({ fnr }),
+            },
         },
     )
     if (result.ok) {
