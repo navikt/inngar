@@ -46,7 +46,12 @@ const VisittkortInner = ({
     enhet: string | null | undefined
 }) => {
     const rootMountRef = useRef(null)
-    const key = useCallback(() => getIncrementedKey(), [fnr])
+
+    console.log("rendering visittkort (all renders)")
+    const key = useCallback(() => {
+        console.log("fnr changed, re-rendering visittkort")
+        return getIncrementedKey()
+    }, [fnr])
 
     useEffect(() => {
         if (!rootMountRef.current) return
