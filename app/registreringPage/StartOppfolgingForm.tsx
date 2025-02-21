@@ -47,9 +47,17 @@ export const StartOppfolgingForm = ({
             <Alert inline variant={"info"}>
                 <div className="space-y-4">
                     <BodyShort>
+                        Personen vil få informasjon på Min Side om at det er
+                        startet arbeidsrettet oppfølging.
+                    </BodyShort>
+                </div>
+            </Alert>
+            <Alert inline variant={"info"}>
+                <div className="space-y-4">
+                    <BodyShort>
                         Personen blir ikke registrert som arbeidssøker når du
                         starter arbeidsrettet oppfølging for en innbygger her.
-                        Dersom innbyggeren også er arbeidssøker bør du benytte{" "}
+                        Dersom personen også er arbeidssøker bør du benytte{" "}
                         <Link
                             href={arbeidssokerRegistreringUrl}
                             variant="neutral"
@@ -67,15 +75,6 @@ export const StartOppfolgingForm = ({
                     </BodyShort>
                 </div>
             </Alert>
-            <Alert inline variant={"info"}>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Personen vil få informasjon på Min Side om at det er
-                        startet arbeidsrettet oppfølging.
-                    </BodyShort>
-                </div>
-            </Alert>
-
             <fetcher.Form
                 method="post"
                 className="space-y-4"

@@ -1,4 +1,4 @@
-import { Alert, BodyShort, List, TextField } from "@navikt/ds-react"
+import { Alert, BodyShort, Heading, List, TextField } from "@navikt/ds-react"
 import type { NavKontor } from "~/registreringPage/StartOppfolgingForm"
 
 export const NavKontorInfo = ({
@@ -9,17 +9,19 @@ export const NavKontorInfo = ({
     if (enhet === null || enhet === undefined) {
         return (
             <Alert variant="warning">
-                Fant ikke ingen nav kontor til brukeren - brukeren har mest
-                sannsynlig ikke registrert bostedsaddresse i Norge.
+                <Heading size="small">Fant ikke enhet</Heading>
+                Personen har sannsynligvis ingen registrert bostedsadresse i
+                Norge, men du kan fortsatt starte arbeidsrettet oppfølging for
+                personen.
                 <List>
                     <List.Item>
-                        Hvis bruker har tidligere arbeidsgiver og kommer nav
-                        kontor til å bli utledet av forrige arbeidsgivers
-                        addresse
+                        Enhet kan bli tildelt basert på en automatisk sjekk av
+                        eventuelle tidligere arbeidsgiveres adresse.
                     </List.Item>
                     <List.Item>
-                        Hvis ingen annet passende nav kontor er funnet kommer
-                        bruker til å bli tilordnet kontor 2990 (IT-avdelingen)
+                        Hvis ingen annen passende enhet blir funnet vil personen
+                        midlertidig bli tildelt enhet 2990, som vil gjøre en
+                        manuell vurdering av enhet.
                     </List.Item>
                 </List>
             </Alert>
@@ -29,8 +31,8 @@ export const NavKontorInfo = ({
     const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geografisk tilknytning"
     const beskrivelseTekst =
         enhet.kilde === "ARENA"
-            ? "Brukeren blir lagt til i porteføljen til denne enheten"
-            : "Bruker blir tildelt følgende nav-kontor etter geografisk tilknytning:"
+            ? "Personen blir lagt til i porteføljen til denne enheten"
+            : "Personen blir tildelt følgende Nav-kontor etter geografisk tilknytning"
 
     return (
         <>
