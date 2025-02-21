@@ -6,6 +6,7 @@ import { createReadableStreamFromReadable } from "@react-router/node"
 import { isbot } from "isbot"
 import type { RenderToPipeableStreamOptions } from "react-dom/server"
 import { renderToPipeableStream } from "react-dom/server"
+import { logger } from "../server/logger"
 
 if (import.meta.env.DEV) {
     await import("./mock/setupMockServer.server")
@@ -59,7 +60,7 @@ export default function handleRequest(
                     // errors encountered during initial shell rendering since they'll
                     // reject and get logged in handleDocumentRequest.
                     if (shellRendered) {
-                        console.error(error)
+                        logger.error(error)
                     }
                 },
             },
