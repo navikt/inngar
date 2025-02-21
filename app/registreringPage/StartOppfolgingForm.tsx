@@ -8,7 +8,6 @@ import {
     ErrorSummary,
     Heading,
     Link,
-    List,
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
@@ -40,39 +39,39 @@ export const StartOppfolgingForm = ({
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
 
     return (
-        <div className="flex flex-col space-y-4 mx-auto">
-            <Alert inline variant={"info"}>
-                <Heading size={"medium"}>
-                    Innbyggeren blir ikke registrert som arbeidssøker
-                </Heading>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Dersom innbyggeren også søker arbeid bør du benytte
-                        arbeidssøkerregistreringen.
-                    </BodyShort>
-                    <Link href={arbeidssokerRegistreringUrl}>
-                        Gå til Arbeidssøkerregistrering
-                    </Link>
-                    <BodyShort>
-                        Arbeidsrettet oppfølging utløser <b>ikke</b> meldeplikt
-                        for brukeren.
-                    </BodyShort>
-                </div>
-            </Alert>
+        <div className="flex flex-col space-y-8 mx-auto">
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}
             <NavKontorInfo enhet={navKontor} />
-            <List>
-                <List.Item>
-                    Før du kan gjøre en § 14 a vurdering må du registrere
-                    innbyggeren for arbeidsrettet oppfølging.
-                </List.Item>
-                <List.Item>
-                    Innbyggeren får tilgang til aktivitetsplan og arbeidsrettet
-                    dialog så snart oppfølgingen er startet.
-                </List.Item>
-            </List>
+            <Alert inline variant={"info"}>
+                <div className="space-y-4">
+                    <BodyShort>
+                        Personen blir ikke registrert som arbeidssøker når du
+                        starter arbeidsrettet oppfølging for en innbygger her.
+                        Dersom innbyggeren også er arbeidssøker bør du benytte{" "}
+                        <Link href={arbeidssokerRegistreringUrl}>
+                            arbeidssøkerregistreringen.
+                        </Link>
+                    </BodyShort>
+                </div>
+            </Alert>
+            <Alert inline variant={"info"}>
+                <div className="space-y-4">
+                    <BodyShort>
+                        Registreringen for arbeidsrettet oppfølging medfører
+                        ikke at personen får noen meldeplikt.
+                    </BodyShort>
+                </div>
+            </Alert>
+            <Alert inline variant={"info"}>
+                <div className="space-y-4">
+                    <BodyShort>
+                        Personen vil få informasjon på Min Side om at det er
+                        startet arbeidsrettet oppfølging.
+                    </BodyShort>
+                </div>
+            </Alert>
 
             <fetcher.Form
                 method="post"
@@ -85,7 +84,7 @@ export const StartOppfolgingForm = ({
                     disabled={brukerErUnder18 && !erSamtykkeBekreftet}
                     loading={fetcher.state == "submitting"}
                 >
-                    Start arbeidsoppfølging
+                    Start arbeidsrettet oppfølging
                 </Button>
             </fetcher.Form>
             {result ? (
