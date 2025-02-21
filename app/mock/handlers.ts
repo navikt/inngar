@@ -7,6 +7,7 @@ import { hentOppfolgingsstatusPayload } from "./mockdata/hent-oppfolgingsstatus"
 import { hentVergeOgFullmaktPayload } from "./mockdata/hent-vergeOgFullmakt"
 import { mockSettings } from "./mockSettings"
 import { graphqlMock } from "~/mock/mockdata/graphqlMock"
+import { generateFnrCodeUrl, retrieveFnrUrl } from "~/config"
 
 const contextHolder = "http://modiacontextholder.personoversikt"
 const veilarboppfolging = `http://veilarboppfolging.poao`
@@ -44,6 +45,21 @@ export const handlers = [
             aktivBruker: "24429106210",
             aktivEnhet: "0219",
         })
+    }),
+    http.post(`${retrieveFnrUrl}`, async ({ request }) => {
+        const payload = (await request.json()) as { code: string }
+        console.log("Mock handler - Retrieving fnr from code", payload)
+        const response = {
+            fnr: payload.code.split("").reverse().join(""),
+        }
+        return HttpResponse.json(response)
+    }),
+    http.post(`${generateFnrCodeUrl}`, async ({ request }) => {
+        const payload = (await request.json()) as { fnr: string }
+        const response = {
+            code: payload.fnr.split("").reverse().join(""),
+        }
+        return HttpResponse.json(response)
     }),
     http.get(`${contextHolder}/api/context/v2/aktivenhet`, () => {
         return HttpResponse.json({ aktivEnhet: "0219" })

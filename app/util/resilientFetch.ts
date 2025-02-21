@@ -50,7 +50,7 @@ export const resilientFetch = async <T>(
         const bodyType = getBodyTypeFromHeaders(result.headers)
         if (result.ok) {
             logger.info(
-                `${typeof request === "string" ? "GET" : (config?.method ?? "GET")} ${result.status} ${getUrlString(request)}`,
+                `${typeof request === "string" && !config ? "GET" : (config?.method ?? "GET")} ${result.status} ${getUrlString(request)}`,
             )
             return {
                 ok: true as const,

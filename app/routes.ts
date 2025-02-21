@@ -5,7 +5,8 @@ const devRoutes = import.meta.env.DEV
     : []
 
 export default [
-    index("routes/index.tsx", { id: "registrering" }),
+    index("routes/ingenBrukerValgtPage.tsx", { id: "registrering" }),
+    route("/:fnrCode", "routes/index.tsx", { id: "registrering-fnr-code" }),
     route("/registrert", "routes/registrert.tsx"),
     route("/api/modiacontextholder/*", "routes/dekoratorProxy.tsx"),
     route("/metrics", "routes/metrics.tsx"),

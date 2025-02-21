@@ -6,17 +6,16 @@ import { apps } from "~/util/appConstants"
 import {
     type KanIkkeStarteOppfolgingPgaIkkeTilgang,
     type KanIkkeStartePgaFolkeregisterStatus,
-    type KanStarteOppfolging,
     VeilarboppfolgingApi,
 } from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
-import { resilientFetch } from "~/util/resilientFetch"
 import { IkkeTilgangWarning } from "~/registreringPage/IkkeTilgangWarning"
 import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"
 import { UgyldigFregStatusWarning } from "~/registreringPage/UgyldigFregStatusWarning"
 import Visittkort from "~/components/Visittkort"
-import { aktivBrukerUrl, aktivEnhetUrl } from "~/config"
+import { userLoader } from "~/registreringPage/userLoader"
+import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
@@ -29,86 +28,10 @@ export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     }
 }
 
-enum BrukerStatus {
-    INGEN_BRUKER_VALGT = "INGEN_BRUKER_VALGT",
-    IKKE_UNDER_OPPFOLGING = "IKKE_UNDER_OPPFOLGING",
-    ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING",
-    IKKE_TILGANG = "IKKE_TILGANG",
-    UGYLDIG_BRUKER_FREG_STATUS = "UGYLDIG_BRUKER_FREG_STATUS",
-}
-
-const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
-    switch (kanStarteOppfolging) {
-        case "JA":
-            return BrukerStatus.IKKE_UNDER_OPPFOLGING
-        case "ALLEREDE_UNDER_OPPFOLGING":
-            return BrukerStatus.ALLEREDE_UNDER_OPPFOLGING
-        case "DOD":
-        case "UKJENT_STATUS_FOLKEREGISTERET":
-        case "INGEN_STATUS_FOLKEREGISTERET":
-        case "IKKE_LOVLIG_OPPHOLD":
-            return BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS
-        default:
-            return BrukerStatus.IKKE_TILGANG
-    }
-}
-
 export async function loader(loaderArgs: Route.LoaderArgs) {
     try {
-        const hentAktivEnhet = () =>
-            resilientFetch<{ aktivEnhet: string | null }>(
-                new Request(aktivEnhetUrl, new Request(loaderArgs.request)),
-            )
-        const hentAktivBruker = () =>
-            resilientFetch<{ aktivBruker: string | null }>(
-                new Request(aktivBrukerUrl, new Request(loaderArgs.request)),
-            )
-        const hentOboForVeilarboppfolging = () =>
-            getOboToken(loaderArgs.request, apps.veilarboppfolging)
-
-        const [tokenOrResponse, aktivBrukerResult, aktivEnhetResult] =
-            await Promise.all([
-                hentOboForVeilarboppfolging(),
-                hentAktivBruker(),
-                hentAktivEnhet(),
-            ])
-
-        if (!aktivBrukerResult.ok) {
-            logger.warn(aktivBrukerResult.error.message)
-            logger.warn(aktivBrukerResult.type)
-            throw aktivBrukerResult.error
-        }
-        if (!tokenOrResponse.ok)
-            throw dataWithTraceId({
-                errorMessage:
-                    "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
-            })
-
-        if (!aktivBrukerResult.data.aktivBruker) {
-            return { status: BrukerStatus.INGEN_BRUKER_VALGT as const } as const
-        } else {
-            const aktivBruker = aktivBrukerResult.data.aktivBruker
-            const oppfolgingsStatus =
-                await VeilarboppfolgingApi.getOppfolgingStatus(
-                    aktivBruker,
-                    tokenOrResponse.token,
-                )
-            if (!oppfolgingsStatus.ok) {
-                throw oppfolgingsStatus.error
-            }
-            const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
-            const enhet = oppfolgingsEnhet.enhet ?? null
-            const aktivEnhet = aktivEnhetResult.ok
-                ? aktivEnhetResult.data.aktivEnhet
-                : null
-            return {
-                status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
-                navKontor: enhet,
-                aktivtNavKontor: aktivEnhet,
-                fnr: aktivBruker,
-                kanStarteOppfolging: oppfolging.kanStarteOppfolging,
-            }
-        }
+        const fnrCode = loaderArgs.params.fnrCode as string | null
+        return userLoader(loaderArgs.request, fnrCode)
     } catch (e) {
         throw dataWithTraceId(
             { errorMessage: e.message, stack: e.stack },
