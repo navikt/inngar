@@ -11,7 +11,6 @@ const RegistreringUnder18 = ({
     return (
         <div>
             <ConfirmationPanel
-                className="mb-5"
                 label="Jeg bekrefter at de nødvendige vurderingene er gjort og dokumentert i Gosys (obligatorisk)"
                 onChange={(e) => bekreftSamtykke(e.target.checked)}
             >
