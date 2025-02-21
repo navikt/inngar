@@ -50,7 +50,10 @@ export const StartOppfolgingForm = ({
                         Personen blir ikke registrert som arbeidssøker når du
                         starter arbeidsrettet oppfølging for en innbygger her.
                         Dersom innbyggeren også er arbeidssøker bør du benytte{" "}
-                        <Link href={arbeidssokerRegistreringUrl}>
+                        <Link
+                            href={arbeidssokerRegistreringUrl}
+                            variant="neutral"
+                        >
                             arbeidssøkerregistreringen.
                         </Link>
                     </BodyShort>

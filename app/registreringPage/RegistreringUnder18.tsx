@@ -1,14 +1,4 @@
-import {
-    Alert,
-    BodyShort,
-    Box,
-    Checkbox,
-    ConfirmationPanel,
-    Heading,
-    List,
-    ReadMore,
-    Link,
-} from "@navikt/ds-react"
+import { ConfirmationPanel, Heading, Link, List } from "@navikt/ds-react"
 import { ListItem } from "@navikt/ds-react/List"
 
 const urlSamtykkeNavet =
@@ -30,7 +20,7 @@ const RegistreringUnder18 = ({
                     <ListItem>
                         Det kreves et samtykke fra foresatte for å kunne starte
                         oppfølging.{" "}
-                        <Link underline={true} href={urlSamtykkeNavet}>
+                        <Link variant="neutral" href={urlSamtykkeNavet}>
                             Følg retningslinjene for samtykke på Navet.
                         </Link>
                     </ListItem>
