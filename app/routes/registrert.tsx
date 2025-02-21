@@ -18,20 +18,30 @@ const SuccessPage = (props: Route.ComponentProps) => {
 
     const getMessage = () => {
         switch (result) {
-            case "OK_REGISTRERT_I_ARENA":
-                return "Registreringen var vellykket!"
             case "FNR_FINNES_IKKE":
-                return "Klarte ikke finne bruker."
+                return {
+                    heading: "Vi finner ikke dette fødselsnummeret",
+                    tekst: "Kan det ha sneket seg inn en skrivefeil?",
+                }
             case "KAN_REAKTIVERES_FORENKLET":
-                return "Brukere som kan reaktiveres i Arena kan ikke registreres for arbeidsoppfølging."
-            case "BRUKER_ALLEREDE_ARBS":
-                return "Registreringen var vellykket!"
-            case "BRUKER_ALLEREDE_IARBS":
-                return "Registreringen var vellykket!"
+                return {
+                    heading: "Denne personen har blitt deaktivert i Arena",
+                    tekst: "Det er mulig å reaktivere personen igjen i Arena, men med konsekvenser i tillegg til å starte personen for arbeidsrettet oppfølging:",
+                    punkter: [
+                        "Reaktivering vil gi personen tilbake ytelsen personen hadde før deaktivering uten at saksbehandling gjennomføres.",
+                        "Reaktivering vil registrere personen som arbeidssøker.",
+                    ],
+                }
             case "UKJENT_FEIL":
-                return "Ukjent feil oppstod under registreringen."
+                return {
+                    heading: "Teknisk feil",
+                    tekst: "Prøv igjen senere. Dersom feilen ikke forsvinner kan du rapportere dette i Porten. Husk å oppgi feilkoden i saken.",
+                }
             default:
-                return "Ukjent status for registreringen."
+                return {
+                    heading: "",
+                    tekst: "Ukjent status for registreringen.",
+                }
         }
     }
 
@@ -73,7 +83,15 @@ const SuccessPage = (props: Route.ComponentProps) => {
                 </>
             ) : (
                 <Alert variant={"error"}>
-                    <p className="text-lg">{getMessage()}</p>
+                    <Heading size="small">{getMessage().heading}</Heading>
+                    {getMessage().tekst}
+                    {getMessage().punkter && (
+                        <List>
+                            {getMessage().punkter.map((punkt) => (
+                                <List.Item>{punkt}</List.Item>
+                            ))}
+                        </List>
+                    )}
                 </Alert>
             )}
         </div>

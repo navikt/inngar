@@ -1,21 +1,32 @@
-import { Alert, BodyShort, Heading, List } from "@navikt/ds-react"
+import { Alert, BodyShort, Heading, List, Link } from "@navikt/ds-react"
 import type { KanIkkeStartePgaFolkeregisterStatus } from "~/api/veilarboppfolging"
 import { ListItem } from "@navikt/ds-react/List"
 
+interface Lenke {
+    tekst: string
+    lenke: string
+}
+
 const ugyldigStatusTekster: Record<
     KanIkkeStartePgaFolkeregisterStatus,
-    { tittel: string; tekst: string; listePunkter: Array<string> }
+    { tittel: string; tekst: string; lenker?: Array<Lenke> }
 > = {
     DOD: {
-        tittel: "Bruker er registert død i folkeregisteret",
+        tittel: "Denne personen er registrert død i folkeregisteret",
         tekst: "",
     },
     IKKE_LOVLIG_OPPHOLD: {
         tittel: "Denne personen har ikke lovlig opphold i Norge",
         tekst: "Følg servicerutinen og gi avslag på arbeidsrettet oppfølging.",
-        listePunkter: [
-            "Mal for avslag til utsendelse gjennom fagsystemet Gosys",
-            "Vurdering av lovlig opphold og avslag etter Nav-loven § 14 a",
+        lenker: [
+            {
+                tekst: "Mal for avslag til utsendelse gjennom fagsystemet Gosys",
+                lenke: "https://navno-my.sharepoint.com/:w:/g/personal/asa_bjorno_Nav_no/Ef5tbcEwvHRBk-cMYbtR35QB_148Ikca4BDfbkNkXCIcJg?e=xBJSHO",
+            },
+            {
+                tekst: "Vurdering av lovlig opphold og avslag etter Nav-loven § 14 a",
+                lenke: "https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Vurdering-av-oppholdsrett,-lovlig-opphold-og-avslag-etter-NAV-loven-%C2%A7-14-a.aspx?web=1",
+            },
         ],
     },
     UKJENT_STATUS_FOLKEREGISTERET: {
@@ -38,10 +49,12 @@ export const UgyldigFregStatusWarning = ({
         <Alert variant={"error"}>
             <Heading size="small">{tekster.tittel}</Heading>
             <BodyShort>{tekster.tekst}</BodyShort>
-            {tekster.listePunkter && (
+            {tekster.lenker && (
                 <List>
-                    {tekster.listePunkter.map((punkt) => (
-                        <ListItem key={punkt}>{punkt}</ListItem>
+                    {tekster.lenker.map((punkt) => (
+                        <ListItem>
+                            <Link href={punkt.lenke}>{punkt.tekst}</Link>
+                        </ListItem>
                     ))}
                 </List>
             )}

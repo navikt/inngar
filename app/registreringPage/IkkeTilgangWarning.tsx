@@ -6,20 +6,20 @@ const ikkeTilgangTekst: Record<
     { tittel: string; tekst: string }
 > = {
     IKKE_TILGANG_EGNE_ANSATTE: {
-        tittel: "Bruker er ansatt i NAV",
-        tekst: "Du har ikke tilgang til egne ansatte",
+        tittel: "Denne personen er skjermet (egen ansatt)",
+        tekst: "Bare veiledere med tilgang til skjermede ansatte kan behandle denne personens saker.",
     },
     IKKE_TILGANG_FORTROLIG_ADRESSE: {
-        tittel: "Bruker har fortrolig adresse",
-        tekst: "Du har ikke tilgang til brukere med fortrolig adresse",
+        tittel: "Brukeren har fortrolig adresse",
+        tekst: "For å starte brukeren på arbeidsrettet oppfølging må du sende en oppgave til Vikafossen (tidigere Nav Viken).",
     },
     IKKE_TILGANG_MODIA: {
-        tittel: "Ikke tilgang til Modia",
-        tekst: "Du har ikke tilgang til Modia",
+        tittel: "Du har ikke tilgang til Modia arbeidsrettet oppfølging",
+        tekst: "Du får tilgang til Modia via din identansvarlige. Din nærmeste leder skal godkjenne tilgangen.",
     },
     IKKE_TILGANG_STRENGT_FORTROLIG_ADRESSE: {
-        tittel: "Ikke tilgang - strengt fortrolig adresse",
-        tekst: "Du har ikke tilgang til brukere med strengt fortrolig adresse",
+        tittel: "Brukeren har strengt fortrolig adresse",
+        tekst: "For å starte brukeren på arbeidsrettet oppfølging må du sende en oppgave til Vikafossen (tidigere Nav Viken).",
     },
     IKKE_TILGANG_ENHET: {
         tittel: "Ikke tilgang til enhet",
