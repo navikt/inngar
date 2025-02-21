@@ -1,7 +1,7 @@
 import { Heading } from "@navikt/ds-react/Typography"
 import { Link, useSearchParams } from "react-router"
 import type { ArenaReponseKoder } from "~/api/veilarboppfolging"
-import { Alert, BodyShort, List } from "@navikt/ds-react"
+import { Alert, List } from "@navikt/ds-react"
 import { getVeilarbpersonflateUrl } from "~/config.client"
 import type { Route } from "./+types/registrert"
 
@@ -51,7 +51,7 @@ const SuccessPage = (props: Route.ComponentProps) => {
         result === "BRUKER_ALLEREDE_IARBS"
 
     return (
-        <div className="flex flex-col space-y-4 w-[620px] p-4 mx-auto">
+        <div className="flex flex-col space-y-8 w-[620px] p-4 mx-auto">
             <Heading size="large">
                 {isSuccess
                     ? "Start arbeidsrettet oppfølging"
@@ -59,27 +59,40 @@ const SuccessPage = (props: Route.ComponentProps) => {
             </Heading>
             {isSuccess ? (
                 <>
-                    <Alert variant={"success"}>
-                        <BodyShort>Registreringen var vellykket!</BodyShort>
-                        <List size="small">
+                    <Alert variant="success">
+                        <Heading size="small">
+                            Denne personen er nå under arbeidsrettet oppfølging
+                        </Heading>
+                        <List>
                             <List.Item>
                                 Personen har tilgang til aktivitetsplan og
-                                arbeidsrettet dialog
+                                arbeidsrettet dialog.
                             </List.Item>
                             <List.Item>
-                                Det er mulig å gjøre $14a vurdering
+                                Det er mulig å gjøre oppfølgingsvedtak § 14 a.
                             </List.Item>
                         </List>
                     </Alert>
-                    <Link to={`${veilarbpersonflateUrl}/aktivitetsplan`}>
-                        Gå til aktivitetsplanen
-                    </Link>
-                    <Link to={`${veilarbpersonflateUrl}/dialog`}>
-                        Gå til dialogen
-                    </Link>
-                    <Link to={`${veilarbpersonflateUrl}/vedtaksstotte`}>
-                        Gå til 14a vurderingen
-                    </Link>
+                    <div className="flex flex-col space-y-4">
+                        <Link
+                            className="underline"
+                            to={`${veilarbpersonflateUrl}/aktivitetsplan`}
+                        >
+                            Gå til aktivitetsplanen
+                        </Link>
+                        <Link
+                            className="underline"
+                            to={`${veilarbpersonflateUrl}/dialog`}
+                        >
+                            Gå til dialogen
+                        </Link>
+                        <Link
+                            className="underline"
+                            to={`${veilarbpersonflateUrl}/vedtaksstotte`}
+                        >
+                            Gå til oppfølgingsvedtaket § 14 a
+                        </Link>
+                    </div>
                 </>
             ) : (
                 <Alert variant={"error"}>
