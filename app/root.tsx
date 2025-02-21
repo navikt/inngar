@@ -58,7 +58,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     const { cssUrl, jsUrl } = useLoaderData()
     const fetcher = useFetcher()
     const { fnrCode } = useParams()
-    const reloadIndexPage = (fnr: string | null | undefined) => {
+    const redirectToChangedUser = (fnr: string | null | undefined) => {
         const formData = new FormData()
         formData.set("fnr", fnr || "")
         formData.set("fnrCode", fnrCode || "")
@@ -90,8 +90,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <body>
                 <Decorator
                     onFnrChanged={(fnr) => {
-                        console.log("onFnrChanged", fnr)
-                        reloadIndexPage(fnr)
+                        console.log("onFnrChanged", fnr, "fnrCode", fnrCode)
+                        redirectToChangedUser(fnr)
                     }}
                 />
 
@@ -108,18 +108,17 @@ export const action = async ({
     context,
     params,
 }: Route.ActionArgs) => {
+    /* This is only called if fnr is changed after page-load */
+
     const formData = await request.formData()
     const fnr = formData.get("fnr") as string | null
     const fnrCode = formData.get("fnrCode") as string | null
 
-    // Navigated to url with fnr but context has no user
-    if (!fnr && fnrCode) {
+    /* This means context was cleared explicitly after page-load */
+    if (!fnr) {
         return redirect(`/`)
-    } else if (!fnr) {
-        // No user in context and no fnr in request
-        return new Response(undefined, { status: 201 })
     } else {
-        // FnrCode in url and fnr in context, use fnr in context and redirect to /:code for that fnr
+        /* User changed to new fnr after page load */
         const code = await ModiacontextholderApi.generateForFnr(fnr)
         if (code) {
             return redirect(`/${code}`)

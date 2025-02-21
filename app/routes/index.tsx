@@ -28,10 +28,10 @@ export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     }
 }
 
-export async function loader(loaderArgs: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
     try {
-        const fnrCode = loaderArgs.params.fnrCode as string | null
-        return userLoader(loaderArgs.request, fnrCode)
+        const fnrCode = params.fnrCode
+        return userLoader(request, fnrCode)
     } catch (e) {
         throw dataWithTraceId(
             { errorMessage: e.message, stack: e.stack },

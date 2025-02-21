@@ -1,5 +1,5 @@
 import { resilientFetch, type Success } from "~/util/resilientFetch"
-import { aktivBrukerUrl, aktivEnhetUrl } from "~/config"
+import { aktivEnhetUrl } from "~/config"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { apps } from "~/util/appConstants"
 import { logger } from "../../server/logger"
@@ -21,18 +21,20 @@ const getAktivBruker = (
     }
 }
 
-export const userLoader = async (request: Request, fnrCode: string | null) => {
+export const userLoader = async (request: Request, fnrCode: string) => {
     const hentAktivEnhet = () =>
         resilientFetch<{ aktivEnhet: string | null }>(
             new Request(aktivEnhetUrl, new Request(request)),
         )
-    const hentAktivBruker =
-        fnrCode == null
-            ? () =>
-                  resilientFetch<{ aktivBruker: string | null }>(
-                      new Request(aktivBrukerUrl, new Request(request)),
-                  )
-            : () => ModiacontextholderApi.getFnrFromCode(fnrCode)
+    const hentAktivBruker = () =>
+        ModiacontextholderApi.getFnrFromCode(fnrCode).then((result) => {
+            if (result.ok) {
+                /* Set user in context, but don't need to wait for it to resolve */
+                ModiacontextholderApi.setFnrIContextHolder(result.data.fnr)
+                return result
+            }
+            return result
+        })
 
     /* Ikke ta denne inn i VeilarboppfolgingApi, da kan den ikke paralelliseres */
     const hentOboForVeilarboppfolging = () =>

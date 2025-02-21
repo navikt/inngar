@@ -1,5 +1,5 @@
 import { resilientFetch } from "~/util/resilientFetch"
-import { generateFnrCodeUrl, retrieveFnrUrl } from "~/config"
+import { contextUrl, generateFnrCodeUrl, retrieveFnrUrl } from "~/config"
 import { logger } from "../../server/logger"
 
 type Fnr = string
@@ -8,6 +8,21 @@ type Code = string
 interface FnrFromCodeResponse {
     fnr: "string"
     code: "string"
+}
+
+const setFnrIContextHolder = async (fnr: Fnr) => {
+    const payload = {
+        verdi: fnr,
+        eventType: "NY_AKTIV_BRUKER",
+    }
+    return resilientFetch(contextUrl, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+            ["Nav-Consumer-Id"]: "inngar",
+            ["Content-Type"]: "application/json",
+        },
+    })
 }
 
 const getFnrFromCode = async (code: Code) => {
@@ -48,4 +63,5 @@ const generateForFnr = async (fnr: Fnr): Promise<Code | null> => {
 export const ModiacontextholderApi = {
     getFnrFromCode,
     generateForFnr,
+    setFnrIContextHolder,
 }
