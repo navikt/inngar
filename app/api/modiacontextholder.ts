@@ -36,8 +36,6 @@ const getFnrFromCode = async (code: Code) => {
             ["Nav-Consumer-Id"]: "inngar",
             ["Content-Type"]: "application/json",
         },
-    }).then((result) => {
-        return result
     })
 }
 

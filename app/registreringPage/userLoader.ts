@@ -48,8 +48,9 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         logger.warn(
             `henting av bruker fra fnrCode feilet, ${aktivBrukerResult.type}, ${aktivBrukerResult.error.message}`,
         )
-        throw aktivBrukerResult.error
+        return redirect("/")
     }
+
     if (!tokenOrResponse.ok)
         throw dataWithTraceId({
             errorMessage:
