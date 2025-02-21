@@ -7,6 +7,7 @@ import {
     ScrollRestoration,
     useFetcher,
     useLoaderData,
+    useParams,
 } from "react-router"
 import "@navikt/ds-css"
 
@@ -19,6 +20,7 @@ import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
 import { useEffect } from "react"
 import { loggBesok } from "~/amplitude.client"
+import { ModiacontextholderApi } from "~/api/modiacontextholder"
 
 export const loader = async ({}: Route.LoaderArgs) => {
     let other = {}
@@ -55,8 +57,11 @@ export type FnrState =
 export function Layout({ children }: { children: React.ReactNode }) {
     const { cssUrl, jsUrl } = useLoaderData()
     const fetcher = useFetcher()
-    const reloadIndexPage = () => {
+    const { fnrCode } = useParams()
+    const reloadIndexPage = (fnr: string | null | undefined) => {
         const formData = new FormData()
+        formData.set("fnr", fnr || "")
+        formData.set("fnrCode", fnrCode || "")
         fetcher.submit(formData, { method: "POST", action: "/" })
     }
 
@@ -86,9 +91,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Decorator
                     onFnrChanged={(fnr) => {
                         console.log("onFnrChanged", fnr)
-                        if (!fnr) return
-
-                        reloadIndexPage()
+                        reloadIndexPage(fnr)
                     }}
                 />
 
@@ -100,15 +103,40 @@ export function Layout({ children }: { children: React.ReactNode }) {
     )
 }
 
-export const action = () => {
-    return redirect(`/`)
+export const action = async ({
+    request,
+    context,
+    params,
+}: Route.ActionArgs) => {
+    const formData = await request.formData()
+    const fnr = formData.get("fnr") as string | null
+    const fnrCode = formData.get("fnrCode") as string | null
+
+    // Navigated to url with fnr but context has no user
+    if (!fnr && fnrCode) {
+        return redirect(`/`)
+    } else if (!fnr) {
+        // No user in context and no fnr in request
+        return new Response(undefined, { status: 201 })
+    } else {
+        // FnrCode in url and fnr in context, use fnr in context and redirect to /:code for that fnr
+        const code = await ModiacontextholderApi.generateForFnr(fnr)
+        if (code) {
+            return redirect(`/${code}`)
+        } else {
+            // Fallback if something went wrong
+            return redirect(`/`)
+        }
+    }
 }
 
-export default function App({ loaderData }) {
+export default function App({ loaderData }: Route.ComponentProps) {
     if (import.meta.env.DEV) {
         return (
             <>
-                <MockSettingsForm mockSettings={loaderData.mockSettings} />
+                <MockSettingsForm
+                    mockSettings={(loaderData as any).mockSettings}
+                />
                 <Outlet />
             </>
         )
