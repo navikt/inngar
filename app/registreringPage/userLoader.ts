@@ -40,7 +40,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
                 result.type === "HttpError" &&
                 result.status === 404
             ) {
-                return { ok: true, data: { aktivBruker: null } }
+                return { ok: true, data: { aktivBruker: null } } as const
             }
             return result
         })
@@ -57,8 +57,9 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         ])
 
     if (!aktivBrukerResult.ok) {
-        logger.warn(aktivBrukerResult.error.message)
-        logger.warn(aktivBrukerResult.type)
+        logger.warn(
+            `henting av bruker fra fnrCode feilet, ${aktivBrukerResult.type}, ${aktivBrukerResult.error.message}`,
+        )
         throw aktivBrukerResult.error
     }
     if (!tokenOrResponse.ok)
