@@ -54,12 +54,10 @@ export const loggSkjemaFeilet = (arenaStatus: ArenaReponseKoder) => {
 
 export const loggAlertVist = (
     variant: string,
-    tekst: string,
-    kanStarteOppfolging?: KanStarteOppfolging,
+    kanStarteOppfolging: KanStarteOppfolging | "INGEN_BRUKER_VALGT",
 ) => {
     logEvent("alert vist", {
         variant,
-        tekst,
-        kanStarteOppfolging,
+        tekst: kanStarteOppfolging,
     })
 }

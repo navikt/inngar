@@ -131,31 +131,19 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
     useEffect(() => {
         switch (props.status) {
             case BrukerStatus.INGEN_BRUKER_VALGT:
-                loggAlertVist("info", "Ingen bruker valgt")
+                loggAlertVist("info", "INGEN_BRUKER_VALGT")
                 break
             case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING:
-                loggAlertVist("info", "Allerede under oppfølging", undefined)
+                loggAlertVist("info", "ALLEREDE_UNDER_OPPFOLGING")
                 break
             case BrukerStatus.IKKE_UNDER_OPPFOLGING:
-                loggAlertVist(
-                    "info",
-                    "Ikke under oppfølging",
-                    props.kanStarteOppfolging,
-                )
+                loggAlertVist("info", props.kanStarteOppfolging)
                 break
             case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
-                loggAlertVist(
-                    "error",
-                    "Ugyldig bruker freg status",
-                    props.kanStarteOppfolging,
-                )
+                loggAlertVist("error", props.kanStarteOppfolging)
                 break
             case BrukerStatus.IKKE_TILGANG:
-                loggAlertVist(
-                    "error",
-                    "Ikke tilgang",
-                    props.kanStarteOppfolging,
-                )
+                loggAlertVist("error", props.kanStarteOppfolging)
                 break
         }
     }, [])
