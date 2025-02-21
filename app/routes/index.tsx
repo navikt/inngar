@@ -136,9 +136,6 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
             case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING:
                 loggAlertVist("info", "ALLEREDE_UNDER_OPPFOLGING")
                 break
-            case BrukerStatus.IKKE_UNDER_OPPFOLGING:
-                loggAlertVist("info", props.kanStarteOppfolging)
-                break
             case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
                 loggAlertVist("error", props.kanStarteOppfolging)
                 break
