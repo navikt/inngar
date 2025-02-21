@@ -35,11 +35,11 @@ const SuccessPage = (props: Route.ComponentProps) => {
             case "UKJENT_FEIL":
                 return {
                     heading: "Teknisk feil",
-                    tekst: "Prøv igjen senere. Dersom feilen ikke forsvinner kan du rapportere dette i Porten. Husk å oppgi feilkoden i saken.",
+                    tekst: "Prøv igjen senere. Dersom feilen ikke forsvinner kan du rapportere dette i Porten.",
                 }
             default:
                 return {
-                    heading: "",
+                    heading: "Det skjedde en feil",
                     tekst: "Ukjent status for registreringen.",
                 }
         }
