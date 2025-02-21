@@ -72,7 +72,7 @@ export const resilientFetch = async <T>(
                 ok: false as const,
                 error: new Error(body),
                 status: result.status,
-                errorBody: await result.text(),
+                errorBody: body,
             } as HttpError
         }
     } catch (e: unknown) {
