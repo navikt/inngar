@@ -18,6 +18,7 @@ import { userLoader } from "~/registreringPage/userLoader"
 import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
 import { useEffect } from "react"
+import { loggAlertVist } from "~/amplitude.client"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -128,7 +129,35 @@ export default function Index({
 
 const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
     useEffect(() => {
-        console.log("BrukerStatus", props.status)
+        switch (props.status) {
+            case BrukerStatus.INGEN_BRUKER_VALGT:
+                loggAlertVist("info", "Ingen bruker valgt")
+                break
+            case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING:
+                loggAlertVist("info", "Allerede under oppfølging", undefined)
+                break
+            case BrukerStatus.IKKE_UNDER_OPPFOLGING:
+                loggAlertVist(
+                    "info",
+                    "Ikke under oppfølging",
+                    props.kanStarteOppfolging,
+                )
+                break
+            case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
+                loggAlertVist(
+                    "error",
+                    "Ugyldig bruker freg status",
+                    props.kanStarteOppfolging,
+                )
+                break
+            case BrukerStatus.IKKE_TILGANG:
+                loggAlertVist(
+                    "error",
+                    "Ikke tilgang",
+                    props.kanStarteOppfolging,
+                )
+                break
+        }
     }, [])
 
     switch (props.status) {

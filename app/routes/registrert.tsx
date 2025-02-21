@@ -4,6 +4,8 @@ import type { ArenaReponseKoder } from "~/api/veilarboppfolging"
 import { Alert, List } from "@navikt/ds-react"
 import { getVeilarbpersonflateUrl } from "~/config.client"
 import type { Route } from "./+types/registrert"
+import { useEffect } from "react"
+import { loggSkjemaFeilet, loggSkjemaFullført } from "~/amplitude.client"
 
 export const clientLoader = () => {
     return {
@@ -49,6 +51,14 @@ const SuccessPage = (props: Route.ComponentProps) => {
         result === "OK_REGISTRERT_I_ARENA" ||
         result === "BRUKER_ALLEREDE_ARBS" ||
         result === "BRUKER_ALLEREDE_IARBS"
+
+    useEffect(() => {
+        if (!isSuccess) {
+            loggSkjemaFeilet(result)
+        } else {
+            loggSkjemaFullført(result)
+        }
+    }, [])
 
     return (
         <div className="flex flex-col space-y-8 w-[620px] p-4 mx-auto">
