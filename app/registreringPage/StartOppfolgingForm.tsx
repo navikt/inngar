@@ -11,7 +11,6 @@ import {
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
-import { loggSkjemaFullført } from "~/amplitude.client"
 
 const arbeidssokerRegistreringUrl =
     "https://arbeidssokerregistrering-for-veileder.intern.dev.nav.no/" // import.meta.env.ARBEIDSSOKERREGISTRERING_URL
@@ -75,11 +74,7 @@ export const StartOppfolgingForm = ({
                     </BodyShort>
                 </div>
             </Alert>
-            <fetcher.Form
-                method="post"
-                className="space-y-4"
-                onSubmit={loggSkjemaFullført}
-            >
+            <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <Button
