@@ -47,12 +47,6 @@ const VisittkortInner = ({
 }) => {
     const rootMountRef = useRef(null)
 
-    // console.log("rendering visittkort (all renders)")
-    // const incrementAndGetVisittkortRenderKey = useCallback(() => {
-    //     console.log("fnr changed, re-rendering visittkort")
-    //     return getIncrementedKey()
-    // }, [fnr])
-
     useEffect(() => {
         if (!rootMountRef.current) return
         const oversiktenLink = getOversiktenLink()

@@ -10,13 +10,12 @@ spec:
   port: 3000
   replicas:
     min: 1
-    max: 1
+    max: 2
   resources:
     requests:
-      cpu: 50m
+      cpu: 500m
   ingresses:
-    - https://inngar.intern.dev.nav.no
-    - https://start-arbeidsoppfolging.ansatt.dev.nav.no
+    - https://start-arbeidsoppfolging.intern.nav.no
   liveness:
     initialDelay: 20
     path: /internal/isAlive
