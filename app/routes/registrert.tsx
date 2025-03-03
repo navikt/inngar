@@ -1,7 +1,7 @@
 import { Heading } from "@navikt/ds-react/Typography"
 import { Link, useSearchParams } from "react-router"
 import type { ArenaReponseKoder } from "~/api/veilarboppfolging"
-import { Alert, List } from "@navikt/ds-react"
+import { Alert, BodyShort, List } from "@navikt/ds-react"
 import { getVeilarbpersonflateUrl } from "~/config.client"
 import type { Route } from "./+types/registrert"
 import { useEffect } from "react"
@@ -82,6 +82,23 @@ const SuccessPage = (props: Route.ComponentProps) => {
                                 Det er mulig å gjøre oppfølgingsvedtak § 14 a.
                             </List.Item>
                         </List>
+                    </Alert>
+                    <Alert inline variant={"info"}>
+                        <div className="space-y-4">
+                            <BodyShort>
+                                For å lage § 14 a vedtak må du manuelt opprette
+                                oppgaven Individuell oppfølging i Arena. (Endres
+                                i uke 14)
+                            </BodyShort>
+                        </div>
+                    </Alert>
+                    <Alert inline variant={"info"}>
+                        <div className="space-y-4">
+                            <BodyShort>
+                                Det vil ikke være mulig å sette Hovedmål "skaffe
+                                arbeid" før i uke 12 med ny inngang.
+                            </BodyShort>
+                        </div>
                     </Alert>
                     <div className="flex flex-col space-y-4">
                         <Link

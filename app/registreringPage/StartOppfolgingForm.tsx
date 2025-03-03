@@ -55,8 +55,8 @@ export const StartOppfolgingForm = ({
                 <div className="space-y-4">
                     <BodyShort>
                         Personen blir ikke registrert som arbeidssøker når du
-                        starter arbeidsrettet oppfølging for en innbygger her.
-                        Dersom personen også er arbeidssøker bør du benytte{" "}
+                        starter arbeidsrettet oppfølging her. Dersom personen
+                        også er arbeidssøker bør du benytte{" "}
                         <Link
                             href={arbeidssokerRegistreringUrl}
                             variant="neutral"
@@ -71,6 +71,14 @@ export const StartOppfolgingForm = ({
                     <BodyShort>
                         Registreringen for arbeidsrettet oppfølging medfører
                         ikke at personen får noen meldeplikt.
+                    </BodyShort>
+                </div>
+            </Alert>
+            <Alert inline variant={"info"}>
+                <div className="space-y-4">
+                    <BodyShort>
+                        Det vil ikke være mulig å sette Hovedmål "skaffe arbeid"
+                        før i uke 12 med ny inngang.
                     </BodyShort>
                 </div>
             </Alert>
