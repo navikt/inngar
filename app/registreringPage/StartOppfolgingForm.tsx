@@ -11,9 +11,12 @@ import {
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
+import { EnvType, getEnv } from "~/util/envUtil.client"
 
 const arbeidssokerRegistreringUrl =
-    "https://arbeidssokerregistrering-for-veileder.intern.dev.nav.no/" // import.meta.env.ARBEIDSSOKERREGISTRERING_URL
+    getEnv().type === EnvType.prod
+        ? "https://arbeidssokerregistrering-for-veileder.intern.nav.no"
+        : "https://arbeidssokerregistrering-for-veileder.ansatt.dev.nav.no"
 
 export interface NavKontor {
     navn: string
