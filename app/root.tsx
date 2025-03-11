@@ -90,7 +90,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <body>
                 <Decorator
                     onFnrChanged={(fnr) => {
-                        console.log("onFnrChanged", fnr, "fnrCode", fnrCode)
                         redirectToChangedUser(fnr)
                     }}
                 />
