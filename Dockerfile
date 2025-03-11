@@ -1,4 +1,4 @@
-FROM oven/bun:1 AS base
+FROM node:alpine AS base
 
 ENV NODE_ENV=production
 ENV PORT="3000"
