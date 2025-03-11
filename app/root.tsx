@@ -17,7 +17,6 @@ import Decorator from "~/components/Decorator"
 import { importSubApp } from "~/util/importUtil"
 import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
-import { startActiveSpan } from "../server/onlyServerOtelUtils"
 import { useEffect } from "react"
 import { loggBesok } from "~/amplitude.client"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
@@ -27,13 +26,10 @@ export const loader = async ({}: Route.LoaderArgs) => {
     if (import.meta.env.DEV) {
         other = { mockSettings }
     }
-    return startActiveSpan(`loader - root`, async () => {
-        // TODO: Dont use dev url
-        const { cssUrl, jsUrl } = await importSubApp(
-            "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
-        )
-        return { cssUrl, jsUrl, ...other }
-    })
+    const { cssUrl, jsUrl } = await importSubApp(
+        "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
+    )
+    return { cssUrl, jsUrl, ...other }
 }
 
 export const links: Route.LinksFunction = () => [
