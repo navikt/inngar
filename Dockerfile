@@ -1,4 +1,4 @@
-FROM node:alpine AS base
+FROM node:lts-alpine AS base
 
 ENV NODE_ENV=production
 ENV PORT="3000"

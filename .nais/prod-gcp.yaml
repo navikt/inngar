@@ -17,10 +17,10 @@ spec:
   ingresses:
     - https://start-arbeidsoppfolging.intern.nav.no
   liveness:
-    initialDelay: 20
+    initialDelay: 5
     path: /internal/isAlive
   readiness:
-    initialDelay: 20
+    initialDelay: 5
     path: /internal/isReady
   accessPolicy:
     outbound:

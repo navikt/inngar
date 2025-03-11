@@ -18,10 +18,10 @@ spec:
     - https://inngar.intern.dev.nav.no
     - https://start-arbeidsoppfolging.ansatt.dev.nav.no
   liveness:
-    initialDelay: 20
+    initialDelay: 5
     path: /internal/isAlive
   readiness:
-    initialDelay: 20
+    initialDelay: 5
     path: /internal/isReady
   accessPolicy:
     outbound:
