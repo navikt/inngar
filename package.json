@@ -5,7 +5,7 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev | pino-pretty",
-    "start": "bun server/server.ts ./build/server/index.js",
+    "start": "node --experimental-strip-types server/server.ts ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
