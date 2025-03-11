@@ -1,4 +1,4 @@
-import { getEnv } from "~/util/envUtil.client"
+import { getEnv } from "~/util/envUtil"
 
 export const getOversiktenLink = () => {
     const env = getEnv()

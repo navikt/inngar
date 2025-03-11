@@ -1,5 +1,5 @@
 import { init, track } from "@amplitude/analytics-browser"
-import { EnvType, getEnv } from "~/util/envUtil.client"
+import { EnvType, getEnv } from "~/util/envUtil"
 import type {
     ArenaReponseKoder,
     KanStarteOppfolging,
