@@ -21,7 +21,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies (bun)
-        run: bun install
+        run: bun install --frozen-lockfile --production
         env:
           BUN_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name : bun run build
