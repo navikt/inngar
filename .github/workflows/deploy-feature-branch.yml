@@ -1,5 +1,6 @@
-name: Build and deploy
+name: Build and deploy to dev-gcp
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -35,14 +36,6 @@ jobs:
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev-gcp.yaml
-          VAR: image=${{ steps.docker-build-push.outputs.image }}
-          TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
-          DEPLOY_SERVER: deploy.nav.cloud.nais.io:443
-      - name: Deploy to prod
-        uses: nais/deploy/actions/deploy@v2
-        env:
-          CLUSTER: prod-gcp
-          RESOURCE: .nais/prod-gcp.yaml
           VAR: image=${{ steps.docker-build-push.outputs.image }}
           TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
           DEPLOY_SERVER: deploy.nav.cloud.nais.io:443
