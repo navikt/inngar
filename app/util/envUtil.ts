@@ -19,7 +19,7 @@ const Env = {
 export const getEnv = (): EnvConfig => {
     if (typeof window === "undefined") {
         // Server-side
-        const cluster = process.env.NAIS_CLUSTER
+        const cluster = process.env.NAIS_CLUSTER_NAME
         if (cluster === "prod-gcp") return Env.prod
         if (cluster === "dev-gcp") return Env.ansattDev // we default to ansatt.dev rather than intern.dev
         return Env.local
