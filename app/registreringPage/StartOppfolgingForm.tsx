@@ -11,7 +11,7 @@ import {
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
-import { EnvType, getEnv } from "~/util/envUtil.client"
+import { EnvType, getEnv } from "~/util/envUtil"
 
 const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod

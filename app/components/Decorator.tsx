@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import type { Route } from "../../.react-router/types/app/routes/+types"
-import { getEnv } from "~/util/envUtil.client"
+import { getEnv } from "~/util/envUtil"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import type { DecoratorProps } from "~/components/DecoratorProps"
 import { logger } from "../../server/logger"
