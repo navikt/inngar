@@ -1,4 +1,4 @@
-FROM oven/bun:1 AS base
+FROM node:lts-alpine AS base
 
 ENV NODE_ENV=production
 ENV PORT="3000"
@@ -18,4 +18,4 @@ WORKDIR /app
 EXPOSE 3000
 
 ENV NODE_ENV=production
-CMD ["bun", "run", "start"]
+CMD ["npm", "run", "start"]

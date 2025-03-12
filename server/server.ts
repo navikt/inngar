@@ -9,8 +9,8 @@ import express from "express"
 import morgan from "morgan"
 import sourceMapSupport from "source-map-support"
 import getPort from "get-port"
-import * as process from "node:process"
-import { logger } from "./logger"
+import process from "node:process"
+import { logger } from "./logger.ts"
 
 process.on("unhandledRejection", (e) => {
     logger.error(`unhandledRejection: ${e?.toString()}`)

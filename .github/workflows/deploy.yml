@@ -20,11 +20,15 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies (bun)
-        run: bun install
+        run: bun install --frozen-lockfile
         env:
           BUN_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      - name : bun run build
+      - name: bun run build
         run: bun run build
+      - name: delete node_modules
+        run: rm -rf node_modules
+      - name: install dependencies except devDependencies
+        run: bun install --production
       - name: Build and push image and SBOM to OCI registry
         uses: nais/docker-build-push@v0
         id: docker-build-push
