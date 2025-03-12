@@ -5,7 +5,7 @@ on:
       - main
 
 concurrency:
-  group: deploy
+  group: deploy-main
   cancel-in-progress: true
 
 jobs:

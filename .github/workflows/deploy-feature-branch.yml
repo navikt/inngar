@@ -2,12 +2,9 @@ name: Build and deploy to dev-gcp
 run-name:  Deploy ${{ github.ref_name }} to dev by ${{ github.actor }}
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 concurrency:
-  group: deploy
+  group: deploy-feature-branch
   cancel-in-progress: true
 
 jobs:
