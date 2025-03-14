@@ -87,6 +87,13 @@ export const action = async (args: Route.ActionArgs) => {
                         Location: `/registrert?result=${startOppfolgingResponse.body.kode}`,
                     },
                 })
+            } else {
+                throw dataWithTraceId(
+                    {
+                        message: `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging: ${startOppfolgingResponse.error}`,
+                    },
+                    { status: 500 },
+                )
             }
         } else {
             return tokenOrResponse
