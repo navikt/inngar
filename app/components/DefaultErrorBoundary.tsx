@@ -12,7 +12,7 @@ export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
     if (isRouteErrorResponse(error)) {
         errorTitle = error.data?.errorTitle || "Oops!"
-        details = error.data?.errorMessage
+        details = error.data?.errorMessage || error?.data?.message
         traceId = error?.data?.traceId
         stack = error?.data?.stack
     } else if (import.meta.env.DEV && error && error instanceof Error) {
