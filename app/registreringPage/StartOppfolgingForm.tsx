@@ -77,14 +77,6 @@ export const StartOppfolgingForm = ({
                     </BodyShort>
                 </div>
             </Alert>
-            <Alert inline variant={"info"}>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Det vil ikke være mulig å sette Hovedmål "skaffe arbeid"
-                        før i uke 12 med ny inngang.
-                    </BodyShort>
-                </div>
-            </Alert>
             <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />

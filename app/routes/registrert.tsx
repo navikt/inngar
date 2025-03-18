@@ -92,14 +92,6 @@ const SuccessPage = (props: Route.ComponentProps) => {
                             </BodyShort>
                         </div>
                     </Alert>
-                    <Alert inline variant={"info"}>
-                        <div className="space-y-4">
-                            <BodyShort>
-                                Det vil ikke være mulig å sette Hovedmål "skaffe
-                                arbeid" før i uke 12 med ny inngang.
-                            </BodyShort>
-                        </div>
-                    </Alert>
                     <div className="flex flex-col space-y-4">
                         <Link
                             className="underline"
