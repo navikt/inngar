@@ -19,6 +19,8 @@ const oboUnleash = `http://obo-unleash.obo`
 const getAktivBrukerMock = () => {
     const over18Mocking = mockSettings.over18
     const aktiveBrukerMocking = mockSettings.aktivBruker
+    console.log("Aktiv bruker mocking", aktiveBrukerMocking)
+    console.log("over18Mocking", over18Mocking)
     if (aktiveBrukerMocking === "ja") {
         if (over18Mocking === "Over18") {
             return HttpResponse.json({
@@ -105,6 +107,12 @@ export const handlers = [
     http.post(`${veilarbperson}/veilarbperson/api/v3/hent-person`, () => {
         return HttpResponse.json(hentPersonPayload)
     }),
+    http.post(
+        `${veilarbperson}/veilarbperson/api/v3/person/hent-siste-opplysninger-om-arbeidssoeker-med-profilering`,
+        () => {
+            return new HttpResponse(null, { status: 204 })
+        },
+    ),
     http.post(
         `${veilarboppfolging}/veilarboppfolging/api/v2/person/hent-oppfolgingsstatus`,
         () => {

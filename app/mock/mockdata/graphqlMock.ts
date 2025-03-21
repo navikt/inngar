@@ -7,6 +7,7 @@ export const graphqlMock = (mockSettings: Partial<MockSettings>) => {
     const oppfolging = {
         kanStarteOppfolging: kanStarteOppfolgingSetting,
     }
+    console.log("Mocking enhet", enhetMocking)
     switch (enhetMocking) {
         case "Arena":
             return HttpResponse.json({
