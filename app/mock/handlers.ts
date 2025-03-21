@@ -19,8 +19,6 @@ const oboUnleash = `http://obo-unleash.obo`
 const getAktivBrukerMock = () => {
     const over18Mocking = mockSettings.over18
     const aktiveBrukerMocking = mockSettings.aktivBruker
-    console.log("Aktiv bruker mocking", aktiveBrukerMocking)
-    console.log("over18Mocking", over18Mocking)
     if (aktiveBrukerMocking === "ja") {
         if (over18Mocking === "Over18") {
             return HttpResponse.json({
