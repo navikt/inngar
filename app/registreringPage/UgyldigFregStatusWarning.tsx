@@ -17,7 +17,7 @@ const ugyldigStatusTekster: Record<
     },
     IKKE_LOVLIG_OPPHOLD: {
         tittel: "Denne personen har kanskje ikke lovlig opphold i Norge",
-        tekst: "Dersom personen er EU/EØS borger kan dette være feil. Hvis personen ikke er EU/EØS border, følg servicerutinen og gi avslag på arbeidsrettet oppfølging.",
+        tekst: "Dersom personen er EU/EØS borger kan dette være feil. Hvis personen ikke er EU/EØS borger, følg servicerutinen og gi avslag på arbeidsrettet oppfølging.",
         lenker: [
             {
                 tekst: "Mal for avslag til utsendelse gjennom fagsystemet Gosys",
