@@ -13,6 +13,7 @@ const registrerArenaSvarVerdier = [
 
 const kanStarteOppfolgingOptions: MockSettings["kanStarteOppfolging"][] = [
     "JA",
+    "JA_MED_MANUELL_GODKJENNING",
     "ALLEREDE_UNDER_OPPFOLGING",
     "IKKE_TILGANG_FORTROLIG_ADRESSE",
     "IKKE_TILGANG_STRENGT_FORTROLIG_ADRESSE",

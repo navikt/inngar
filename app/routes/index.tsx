@@ -166,11 +166,15 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                     </List>
                 </Alert>
             )
+        case BrukerStatus.KREVER_MANUELL_GODKJENNING:
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
             return (
                 <StartOppfolgingForm
                     fnr={props.fnr}
                     navKontor={props.navKontor}
+                    kreverManuellGodkjenning={
+                        props.status === BrukerStatus.KREVER_MANUELL_GODKJENNING
+                    }
                 />
             )
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:

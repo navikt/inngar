@@ -3,6 +3,7 @@ import type { KanStarteOppfolging } from "~/api/veilarboppfolging"
 export enum BrukerStatus {
     INGEN_BRUKER_VALGT = "INGEN_BRUKER_VALGT",
     IKKE_UNDER_OPPFOLGING = "IKKE_UNDER_OPPFOLGING",
+    KREVER_MANUELL_GODKJENNING = "KREVER_MANUELL_GODKJENNING",
     ALLEREDE_UNDER_OPPFOLGING = "ALLEREDE_UNDER_OPPFOLGING",
     IKKE_TILGANG = "IKKE_TILGANG",
     UGYLDIG_BRUKER_FREG_STATUS = "UGYLDIG_BRUKER_FREG_STATUS",
@@ -12,6 +13,8 @@ export const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
     switch (kanStarteOppfolging) {
         case "JA":
             return BrukerStatus.IKKE_UNDER_OPPFOLGING
+        case "JA_MED_MANUELL_GODKJENNING":
+            return BrukerStatus.KREVER_MANUELL_GODKJENNING
         case "ALLEREDE_UNDER_OPPFOLGING":
             return BrukerStatus.ALLEREDE_UNDER_OPPFOLGING
         case "DOD":

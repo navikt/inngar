@@ -12,6 +12,7 @@ import {
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
+import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 
 const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod
@@ -27,9 +28,11 @@ export interface NavKontor {
 export const StartOppfolgingForm = ({
     navKontor,
     fnr,
+    kreverManuellGodkjenning,
 }: {
     navKontor: NavKontor | null
     fnr: string
+    kreverManuellGodkjenning: boolean
 }) => {
     const fetcher = useFetcher()
     const error = "error" in (fetcher?.data || {}) ? fetcher.data.error : null
@@ -39,11 +42,17 @@ export const StartOppfolgingForm = ({
             : null
     const brukerErUnder18 = isUnder18(fnr)
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
+    const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
 
     return (
         <div className="flex flex-col space-y-8 mx-auto">
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
+            ) : null}
+            {kreverManuellGodkjenning ? (
+                <ManuellGodkjenningAlert
+                    bekreftGodkjenning={setErManueltGodkjent}
+                />
             ) : null}
             <NavKontorInfo enhet={navKontor} />
             <Alert inline variant={"info"}>
@@ -81,7 +90,10 @@ export const StartOppfolgingForm = ({
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <Button
-                    disabled={brukerErUnder18 && !erSamtykkeBekreftet}
+                    disabled={
+                        (brukerErUnder18 && !erSamtykkeBekreftet) ||
+                        (kreverManuellGodkjenning && !erManueltGodkjent)
+                    }
                     loading={fetcher.state == "submitting"}
                 >
                     Start arbeidsrettet oppfølging

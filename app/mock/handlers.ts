@@ -106,6 +106,12 @@ export const handlers = [
         return HttpResponse.json(hentPersonPayload)
     }),
     http.post(
+        `${veilarbperson}/veilarbperson/api/v3/person/hent-siste-opplysninger-om-arbeidssoeker-med-profilering`,
+        () => {
+            return new HttpResponse(null, { status: 204 })
+        },
+    ),
+    http.post(
         `${veilarboppfolging}/veilarboppfolging/api/v2/person/hent-oppfolgingsstatus`,
         () => {
             return HttpResponse.json(hentOppfolgingsstatusPayload)

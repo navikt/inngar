@@ -128,6 +128,7 @@ export type KanIkkeStartePgaFolkeregisterStatus =
     | "INGEN_STATUS_FOLKEREGISTERET"
 export type KanStarteOppfolging =
     | "JA"
+    | "JA_MED_MANUELL_GODKJENNING" // Manuell dokumentering/godkjenning på at bruker har lovlig opphold
     | "ALLEREDE_UNDER_OPPFOLGING"
     | KanIkkeStarteOppfolgingPgaIkkeTilgang
     | KanIkkeStartePgaFolkeregisterStatus
