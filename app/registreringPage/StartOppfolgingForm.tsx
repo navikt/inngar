@@ -14,7 +14,7 @@ import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 
-const arbeidssokerRegistreringUrl =
+export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod
         ? "https://arbeidssokerregistrering-for-veileder.intern.nav.no"
         : "https://arbeidssokerregistrering-for-veileder.ansatt.dev.nav.no"
