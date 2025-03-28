@@ -52,6 +52,12 @@ export const loggSkjemaFeilet = (arenaStatus: ArenaReponseKoder) => {
     })
 }
 
+export const loggLenkeKlikket = (lenketekst: string) => {
+    logEvent("lenke klikket", {
+        lenketekst: lenketekst,
+    })
+}
+
 export const loggAlertVist = (
     variant: string,
     kanStarteOppfolging: KanStarteOppfolging | "INGEN_BRUKER_VALGT",
