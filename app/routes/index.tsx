@@ -14,11 +14,15 @@ import { IkkeTilgangWarning } from "~/registreringPage/IkkeTilgangWarning"
 import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"
 import { UgyldigFregStatusWarning } from "~/registreringPage/UgyldigFregStatusWarning"
 import Visittkort from "~/components/Visittkort"
-import { userLoader } from "~/registreringPage/userLoader"
+import {
+    userLoader,
+    type UserLoaderSuccessResponse,
+} from "~/registreringPage/userLoader"
 import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
 import { useEffect } from "react"
 import { loggAlertVist } from "~/amplitude.client"
+import { ReaktiveringsForm } from "~/registreringPage/ReaktiveringsForm.tsx"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -33,7 +37,10 @@ export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
 export async function loader({ request, params }: Route.LoaderArgs) {
     try {
         const fnrCode = params.fnrCode
-        return userLoader(request, fnrCode)
+        return userLoader(
+            request,
+            fnrCode,
+        ) as unknown as Promise<UserLoaderSuccessResponse>
     } catch (e) {
         throw dataWithTraceId(
             { errorMessage: e.message, stack: e.stack },
@@ -108,6 +115,16 @@ export function HydrateFallback() {
     return <p>Loading...</p>
 }
 
+const getTittel = (brukerStatus: BrukerStatus) => {
+    if (
+        brukerStatus === BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT
+    ) {
+        return "Reaktiver bruker i Arena"
+    } else {
+        return "Start arbeidsrettet oppfølging"
+    }
+}
+
 export default function Index({
     loaderData,
 }: {
@@ -120,7 +137,7 @@ export default function Index({
                 navKontor={loaderData.aktivtNavKontor}
             />
             <div className="flex flex-col w-[620px] p-4 mt-6 mx-auto space-y-8">
-                <Heading size="large">Start arbeidsrettet oppfølging</Heading>
+                <Heading size="large">{getTittel(loaderData.status)}</Heading>
                 <IndexPage {...loaderData} />
             </div>
         </>
@@ -177,6 +194,8 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                     }
                 />
             )
+        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT:
+            return <ReaktiveringsForm fnr={props.fnr} />
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
             return (
                 <UgyldigFregStatusWarning
