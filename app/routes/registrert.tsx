@@ -5,7 +5,11 @@ import { Alert, BodyShort, List } from "@navikt/ds-react"
 import { getVeilarbpersonflateUrl } from "~/config.client"
 import type { Route } from "./+types/registrert"
 import { useEffect } from "react"
-import { loggSkjemaFeilet, loggSkjemaFullført } from "~/amplitude.client"
+import {
+    loggLenkeKlikket,
+    loggSkjemaFeilet,
+    loggSkjemaFullført,
+} from "~/amplitude.client"
 
 export const clientLoader = () => {
     return {
@@ -96,12 +100,16 @@ const SuccessPage = (props: Route.ComponentProps) => {
                         <Link
                             className="underline"
                             to={`${veilarbpersonflateUrl}/aktivitetsplan`}
+                            onClick={() =>
+                                loggLenkeKlikket("Gå til aktivitetsplanen")
+                            }
                         >
                             Gå til aktivitetsplanen
                         </Link>
                         <Link
                             className="underline"
                             to={`${veilarbpersonflateUrl}/dialog`}
+                            onClick={() => loggLenkeKlikket("Gå til dialogen")}
                         >
                             Gå til dialogen
                         </Link>
