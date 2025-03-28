@@ -1,5 +1,5 @@
 import { Heading } from "@navikt/ds-react/Typography"
-import { Link, useSearchParams } from "react-router"
+import { Link, useNavigate, useSearchParams } from "react-router"
 import type { ArenaReponseKoder } from "~/api/veilarboppfolging"
 import { Alert, BodyShort, List } from "@navikt/ds-react"
 import { getVeilarbpersonflateUrl } from "~/config.client"
@@ -21,6 +21,7 @@ const SuccessPage = (props: Route.ComponentProps) => {
     const veilarbpersonflateUrl = props.loaderData.veilarbpersonflateUrl
     const [params] = useSearchParams()
     const result = params.get("result") as ArenaReponseKoder
+    const navigate = useNavigate()
 
     const getMessage = () => {
         switch (result) {
@@ -64,6 +65,16 @@ const SuccessPage = (props: Route.ComponentProps) => {
         }
     }, [])
 
+    const loggOgNaviger = (
+        e: { preventDefault: () => void },
+        url: string,
+        lenkeTekst: string,
+    ) => {
+        e.preventDefault()
+        loggLenkeKlikket(lenkeTekst)
+        navigate(url)
+    }
+
     return (
         <div className="flex flex-col space-y-8 w-[620px] p-4 mx-auto">
             <Heading size="large">
@@ -101,7 +112,11 @@ const SuccessPage = (props: Route.ComponentProps) => {
                             className="underline"
                             to={`${veilarbpersonflateUrl}/aktivitetsplan`}
                             onClick={() =>
-                                loggLenkeKlikket("Gå til aktivitetsplanen")
+                                loggOgNaviger(
+                                    { preventDefault: () => {} },
+                                    `${veilarbpersonflateUrl}/aktivitetsplan`,
+                                    "Gå til aktivitetsplanen",
+                                )
                             }
                         >
                             Gå til aktivitetsplanen
@@ -109,7 +124,13 @@ const SuccessPage = (props: Route.ComponentProps) => {
                         <Link
                             className="underline"
                             to={`${veilarbpersonflateUrl}/dialog`}
-                            onClick={() => loggLenkeKlikket("Gå til dialogen")}
+                            onClick={() =>
+                                loggOgNaviger(
+                                    { preventDefault: () => {} },
+                                    `${veilarbpersonflateUrl}/dialog`,
+                                    "Gå til dialogen",
+                                )
+                            }
                         >
                             Gå til dialogen
                         </Link>
