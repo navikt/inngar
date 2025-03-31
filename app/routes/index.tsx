@@ -195,7 +195,19 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 />
             )
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT:
-            return <ReaktiveringsForm fnr={props.fnr} />
+            return (
+                <ReaktiveringsForm
+                    fnr={props.fnr}
+                    kreverManuellGodkjenning={false}
+                />
+            )
+        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING:
+            return (
+                <ReaktiveringsForm
+                    fnr={props.fnr}
+                    kreverManuellGodkjenning={true}
+                />
+            )
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
             return (
                 <UgyldigFregStatusWarning
