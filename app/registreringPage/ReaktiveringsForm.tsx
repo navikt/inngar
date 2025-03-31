@@ -24,7 +24,7 @@ export const ReaktiveringsForm = ({
             <Alert inline variant={"info"}>
                 <div className="space-y-4">
                     <BodyShort>
-                        Denne personen er på vei til å gå ut av arbeidsrettet
+                        Denne brukeren er på vei til å gå ut av arbeidsrettet
                         oppfølging automatisk. Hvis du ønsker at bruker fortsatt
                         skal ha arbeidsrettet oppfølging, kan du reaktivere
                         brukeren i Arena her.
@@ -34,8 +34,8 @@ export const ReaktiveringsForm = ({
             <Alert inline variant={"info"}>
                 <div className="space-y-4">
                     <BodyShort>
-                        Personen blir ikke registrert som arbeidssøker når du
-                        reaktiverer bruker i Arena. Dersom personen også er
+                        Brukeren blir ikke registrert som arbeidssøker når du
+                        reaktiverer bruker i Arena. Dersom brukeren også er
                         arbeidssøker bør du benytte{" "}
                         <Link
                             href={arbeidssokerRegistreringUrl}
@@ -50,7 +50,7 @@ export const ReaktiveringsForm = ({
                 <div className="space-y-4">
                     <BodyShort>
                         Registreringen for arbeidsrettet oppfølging medfører
-                        ikke at personen får noen meldeplikt.
+                        ikke at brukeren får noen meldeplikt.
                     </BodyShort>
                 </div>
             </Alert>

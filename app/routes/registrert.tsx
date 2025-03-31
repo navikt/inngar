@@ -32,11 +32,11 @@ const SuccessPage = (props: Route.ComponentProps) => {
                 }
             case "KAN_REAKTIVERES_FORENKLET":
                 return {
-                    heading: "Denne personen har blitt deaktivert i Arena",
-                    tekst: "Det er mulig å reaktivere personen igjen i Arena, men med konsekvenser i tillegg til å starte personen for arbeidsrettet oppfølging:",
+                    heading: "Denne brukeren har blitt deaktivert i Arena",
+                    tekst: "Det er mulig å reaktivere brukeren igjen i Arena, men med konsekvenser i tillegg til å starte brukeren for arbeidsrettet oppfølging:",
                     punkter: [
-                        "Reaktivering vil gi personen tilbake ytelsen personen hadde før deaktivering uten at saksbehandling gjennomføres.",
-                        "Reaktivering vil registrere personen som arbeidssøker.",
+                        "Reaktivering vil gi brukeren tilbake ytelsen brukeren hadde før deaktivering uten at saksbehandling gjennomføres.",
+                        "Reaktivering vil registrere brukeren som arbeidssøker.",
                     ],
                 }
             case "UKJENT_FEIL":
@@ -86,11 +86,11 @@ const SuccessPage = (props: Route.ComponentProps) => {
                 <>
                     <Alert variant="success">
                         <Heading size="small">
-                            Denne personen er nå under arbeidsrettet oppfølging
+                            Denne brukeren er nå under arbeidsrettet oppfølging
                         </Heading>
                         <List>
                             <List.Item>
-                                Personen har tilgang til aktivitetsplan og
+                                Brukeren har tilgang til aktivitetsplan og
                                 arbeidsrettet dialog.
                             </List.Item>
                             <List.Item>

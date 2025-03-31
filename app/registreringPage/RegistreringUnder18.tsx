@@ -14,7 +14,7 @@ const RegistreringUnder18 = ({
                 label="Jeg bekrefter at de nødvendige vurderingene er gjort og dokumentert i Gosys (obligatorisk)"
                 onChange={(e) => bekreftSamtykke(e.target.checked)}
             >
-                <Heading size="small">Denne personen er under 18 år</Heading>
+                <Heading size="small">Denne brukeren er under 18 år</Heading>
                 <List>
                     <ListItem>
                         Det kreves et samtykke fra foresatte for å kunne starte
