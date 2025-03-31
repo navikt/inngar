@@ -1,7 +1,7 @@
 import { Heading } from "@navikt/ds-react/Typography"
 import { Link, useNavigate, useSearchParams } from "react-router"
 import type { ArenaReponseKoder } from "~/api/veilarboppfolging"
-import { Alert, BodyShort, List } from "@navikt/ds-react"
+import { Alert, List } from "@navikt/ds-react"
 import { getVeilarbpersonflateUrl } from "~/config.client"
 import type { Route } from "./+types/registrert"
 import { useEffect } from "react"
@@ -98,15 +98,6 @@ const SuccessPage = (props: Route.ComponentProps) => {
                             </List.Item>
                         </List>
                     </Alert>
-                    <Alert inline variant={"info"}>
-                        <div className="space-y-4">
-                            <BodyShort>
-                                For å lage § 14 a vedtak må du manuelt opprette
-                                oppgaven Individuell oppfølging i Arena. (Endres
-                                i uke 14)
-                            </BodyShort>
-                        </div>
-                    </Alert>
                     <div className="flex flex-col space-y-4">
                         <Link
                             className="underline"
@@ -133,6 +124,19 @@ const SuccessPage = (props: Route.ComponentProps) => {
                             }
                         >
                             Gå til dialogen
+                        </Link>
+                        <Link
+                            className="underline"
+                            to={`${veilarbpersonflateUrl}/vedtaksstotte`}
+                            onClick={() =>
+                                loggOgNaviger(
+                                    { preventDefault: () => {} },
+                                    `${veilarbpersonflateUrl}/vedtaksstotte`,
+                                    "Gå til oppfølgingsvedtaket § 14 a",
+                                )
+                            }
+                        >
+                            Gå til oppfølgingsvedtaket § 14 a
                         </Link>
                     </div>
                 </>
