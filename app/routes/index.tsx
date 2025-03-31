@@ -169,12 +169,12 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
             return (
                 <Alert variant="success">
                     <Heading size="small">
-                        Denne personen er allerede under arbeidsrettet
+                        Denne brukeren er allerede under arbeidsrettet
                         oppfølging
                     </Heading>
                     <List>
                         <ListItem>
-                            Personen har tilgang til aktivitetsplan og
+                            Brukeren har tilgang til aktivitetsplan og
                             arbeidsrettet oppfølging.
                         </ListItem>
                         <ListItem>

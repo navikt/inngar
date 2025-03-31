@@ -6,8 +6,8 @@ const ikkeTilgangTekst: Record<
     { tittel: string; tekst: string }
 > = {
     IKKE_TILGANG_EGNE_ANSATTE: {
-        tittel: "Denne personen er skjermet (egen ansatt)",
-        tekst: "Bare veiledere med tilgang til skjermede ansatte kan behandle denne personens saker.",
+        tittel: "Denne brukeren er skjermet (egen ansatt)",
+        tekst: "Bare veiledere med tilgang til skjermede ansatte kan behandle denne brukerens saker.",
     },
     IKKE_TILGANG_FORTROLIG_ADRESSE: {
         tittel: "Brukeren har fortrolig adresse",
