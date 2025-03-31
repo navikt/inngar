@@ -10,16 +10,16 @@ export const NavKontorInfo = ({
         return (
             <Alert variant="warning">
                 <Heading size="small">Fant ikke enhet</Heading>
-                Personen har sannsynligvis ingen registrert bostedsadresse i
+                Brukeren har sannsynligvis ingen registrert bostedsadresse i
                 Norge, men du kan fortsatt starte arbeidsrettet oppfølging for
-                personen.
+                brukeren.
                 <List>
                     <List.Item>
                         Enhet kan bli tildelt basert på en automatisk sjekk av
                         eventuelle tidligere arbeidsgiveres adresse.
                     </List.Item>
                     <List.Item>
-                        Hvis ingen annen passende enhet blir funnet vil personen
+                        Hvis ingen annen passende enhet blir funnet vil brukeren
                         midlertidig bli tildelt enhet 2990, som vil gjøre en
                         manuell vurdering av enhet.
                     </List.Item>
@@ -30,7 +30,7 @@ export const NavKontorInfo = ({
 
     const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geografisk tilknytning"
     const beskrivelseTekst =
-        "Personen blir lagt til i porteføljen til denne enheten"
+        "Brukeren blir lagt til i porteføljen til denne enheten"
 
     return (
         <>

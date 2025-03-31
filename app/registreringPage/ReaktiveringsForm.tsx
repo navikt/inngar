@@ -1,36 +1,13 @@
+import { Alert, BodyShort, Button, Heading, Link } from "@navikt/ds-react"
+import { arbeidssokerRegistreringUrl } from "~/registreringPage/StartOppfolgingForm.tsx"
 import { useFetcher } from "react-router"
-import { isUnder18 } from "~/util/erUnder18Helper"
-import { useState } from "react"
-import {
-    Alert,
-    BodyShort,
-    Button,
-    ErrorSummary,
-    Heading,
-    Link,
-} from "@navikt/ds-react"
-import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
-import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
-import { EnvType, getEnv } from "~/util/envUtil"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
+import { useState } from "react"
 
-export const arbeidssokerRegistreringUrl =
-    getEnv().type === EnvType.prod
-        ? "https://arbeidssokerregistrering-for-veileder.intern.nav.no"
-        : "https://arbeidssokerregistrering-for-veileder.ansatt.dev.nav.no"
-
-export interface NavKontor {
-    navn: string
-    id: string
-    kilde: string
-}
-
-export const StartOppfolgingForm = ({
-    navKontor,
+export const ReaktiveringsForm = ({
     fnr,
     kreverManuellGodkjenning,
 }: {
-    navKontor: NavKontor | null
     fnr: string
     kreverManuellGodkjenning: boolean
 }) => {
@@ -40,26 +17,17 @@ export const StartOppfolgingForm = ({
         "resultat" in (fetcher?.data || {})
             ? (fetcher.data as { kode: string; resultat: string })
             : null
-    const brukerErUnder18 = isUnder18(fnr)
-    const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
 
     return (
         <div className="flex flex-col space-y-8 mx-auto">
-            {brukerErUnder18 ? (
-                <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
-            ) : null}
-            {kreverManuellGodkjenning ? (
-                <ManuellGodkjenningAlert
-                    bekreftGodkjenning={setErManueltGodkjent}
-                />
-            ) : null}
-            <NavKontorInfo enhet={navKontor} />
             <Alert inline variant={"info"}>
                 <div className="space-y-4">
                     <BodyShort>
-                        Brukeren vil få informasjon på Min Side om at det er
-                        startet arbeidsrettet oppfølging.
+                        Denne brukeren er på vei til å gå ut av arbeidsrettet
+                        oppfølging automatisk. Hvis du ønsker at bruker fortsatt
+                        skal ha arbeidsrettet oppfølging, kan du reaktivere
+                        brukeren i Arena her.
                     </BodyShort>
                 </div>
             </Alert>
@@ -67,8 +35,8 @@ export const StartOppfolgingForm = ({
                 <div className="space-y-4">
                     <BodyShort>
                         Brukeren blir ikke registrert som arbeidssøker når du
-                        starter arbeidsrettet oppfølging her. Dersom brukeren
-                        også er arbeidssøker bør du benytte{" "}
+                        reaktiverer bruker i Arena. Dersom brukeren også er
+                        arbeidssøker bør du benytte{" "}
                         <Link
                             href={arbeidssokerRegistreringUrl}
                             variant="neutral"
@@ -86,17 +54,21 @@ export const StartOppfolgingForm = ({
                     </BodyShort>
                 </div>
             </Alert>
+            {kreverManuellGodkjenning ? (
+                <ManuellGodkjenningAlert
+                    bekreftGodkjenning={setErManueltGodkjent}
+                />
+            ) : null}
             <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <Button
-                    disabled={
-                        (brukerErUnder18 && !erSamtykkeBekreftet) ||
-                        (kreverManuellGodkjenning && !erManueltGodkjent)
-                    }
                     loading={fetcher.state == "submitting"}
+                    disabled={
+                        kreverManuellGodkjenning ? !erManueltGodkjent : false
+                    }
                 >
-                    Start arbeidsrettet oppfølging
+                    Reaktiver bruker i Arena
                 </Button>
             </fetcher.Form>
             {result ? (
@@ -106,15 +78,5 @@ export const StartOppfolgingForm = ({
                 </Alert>
             ) : null}
         </div>
-    )
-}
-
-const FormError = ({ message }: { message: string }) => {
-    return (
-        <ErrorSummary>
-            <ErrorSummary.Item href="#searchfield-r2">
-                {message}
-            </ErrorSummary.Item>
-        </ErrorSummary>
     )
 }

@@ -4,10 +4,22 @@ import { getOboToken } from "~/util/tokenExchange.server"
 import { apps } from "~/util/appConstants"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
-import { VeilarboppfolgingApi } from "~/api/veilarboppfolging"
+import {
+    type KanStarteOppfolging,
+    VeilarboppfolgingApi,
+} from "~/api/veilarboppfolging"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
-import { finnBrukerStatus } from "~/registreringPage/BrukerStatus"
+import { BrukerStatus, finnBrukerStatus } from "~/registreringPage/BrukerStatus"
 import { redirect } from "react-router"
+import type { NavKontor } from "~/registreringPage/StartOppfolgingForm.tsx"
+
+export interface UserLoaderSuccessResponse {
+    status: BrukerStatus
+    navKontor: NavKontor
+    aktivtNavKontor: string
+    fnr: string
+    kanStarteOppfolging: KanStarteOppfolging
+}
 
 export const userLoader = async (request: Request, fnrCode: string) => {
     const hentAktivEnhet = () =>

@@ -12,11 +12,11 @@ const ugyldigStatusTekster: Record<
     { tittel: string; tekst: string; lenker?: Array<Lenke> }
 > = {
     DOD: {
-        tittel: "Denne personen er registrert død i folkeregisteret",
+        tittel: "Denne brukeren er registrert død i folkeregisteret",
         tekst: "",
     },
     IKKE_LOVLIG_OPPHOLD: {
-        tittel: "Denne personen har ikke lovlig opphold i Norge",
+        tittel: "Denne brukeren har ikke lovlig opphold i Norge",
         tekst: "Følg servicerutinen og gi avslag på arbeidsrettet oppfølging.",
         lenker: [
             {

@@ -130,6 +130,8 @@ export type KanStarteOppfolging =
     | "JA"
     | "JA_MED_MANUELL_GODKJENNING" // Manuell dokumentering/godkjenning på at bruker har lovlig opphold
     | "ALLEREDE_UNDER_OPPFOLGING"
+    | "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT" // Disse kan reaktiveres (foreløpig)
+    | "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING"
     | KanIkkeStarteOppfolgingPgaIkkeTilgang
     | KanIkkeStartePgaFolkeregisterStatus
 
