@@ -122,7 +122,7 @@ const getTittel = (brukerStatus: BrukerStatus) => {
         brukerStatus ==
             BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING
     ) {
-        return "Reaktiver bruker i Arena"
+        return "Reaktiver arbeidsrettet oppfølging"
     } else {
         return "Start arbeidsrettet oppfølging"
     }

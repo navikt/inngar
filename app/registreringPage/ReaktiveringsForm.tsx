@@ -24,10 +24,12 @@ export const ReaktiveringsForm = ({
             <Alert inline variant={"info"}>
                 <div className="space-y-4">
                     <BodyShort>
-                        Denne brukeren er på vei til å gå ut av arbeidsrettet
-                        oppfølging automatisk. Hvis du ønsker at bruker fortsatt
-                        skal ha arbeidsrettet oppfølging, kan du reaktivere
-                        brukeren i Arena her.
+                        Denne brukeren vil automatisk miste tilgang til
+                        arbeidsrettet oppfølging på grunn av inaktivering i
+                        Arena. Hvis du ønsker at brukeren fortsatt skal motta
+                        arbeidsrettet oppfølging, kan du reaktivere den her.
+                        Dette vil gjenopprette aktiv status både i Modia
+                        arbeidsrettet oppfølging og i Arena.
                     </BodyShort>
                 </div>
             </Alert>
@@ -35,8 +37,8 @@ export const ReaktiveringsForm = ({
                 <div className="space-y-4">
                     <BodyShort>
                         Brukeren blir ikke registrert som arbeidssøker når du
-                        reaktiverer bruker i Arena. Dersom brukeren også er
-                        arbeidssøker bør du benytte{" "}
+                        reaktiverer arbeidsrettet oppfølging. Dersom brukeren
+                        også er arbeidssøker bør du benytte{" "}
                         <Link
                             href={arbeidssokerRegistreringUrl}
                             variant="neutral"
@@ -68,7 +70,7 @@ export const ReaktiveringsForm = ({
                         kreverManuellGodkjenning ? !erManueltGodkjent : false
                     }
                 >
-                    Reaktiver bruker i Arena
+                    Reaktiver arbeidsrettet oppfølging
                 </Button>
             </fetcher.Form>
             {result ? (
