@@ -3,6 +3,7 @@ import { arbeidssokerRegistreringUrl } from "~/registreringPage/StartOppfolgingF
 import { useFetcher } from "react-router"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { useState } from "react"
+import { loggKnappKlikket } from "~/amplitude.client.ts"
 
 export const ReaktiveringsForm = ({
     fnr,
@@ -68,6 +69,9 @@ export const ReaktiveringsForm = ({
                     loading={fetcher.state == "submitting"}
                     disabled={
                         kreverManuellGodkjenning ? !erManueltGodkjent : false
+                    }
+                    onClick={() =>
+                        loggKnappKlikket("Reaktiver arbeidsrettet oppfølging")
                     }
                 >
                     Reaktiver arbeidsrettet oppfølging

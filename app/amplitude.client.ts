@@ -67,3 +67,8 @@ export const loggAlertVist = (
         tekst: kanStarteOppfolging,
     })
 }
+
+export const loggKnappKlikket = (knappTekst: string) =>
+    logEvent("knapp klikket", {
+        tekst: knappTekst,
+    })

@@ -13,6 +13,7 @@ import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
+import { loggKnappKlikket } from "~/amplitude.client.ts"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod
@@ -95,6 +96,9 @@ export const StartOppfolgingForm = ({
                         (kreverManuellGodkjenning && !erManueltGodkjent)
                     }
                     loading={fetcher.state == "submitting"}
+                    onClick={() =>
+                        loggKnappKlikket("Start arbeidsrettet oppfølging")
+                    }
                 >
                     Start arbeidsrettet oppfølging
                 </Button>
