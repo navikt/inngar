@@ -21,6 +21,9 @@ import { startActiveSpan } from "../server/onlyServerOtelUtils"
 import { useEffect } from "react"
 import { loggBesok } from "~/amplitude.client"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
+import process from "node:process"
+
+const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 
 export const loader = async ({}: Route.LoaderArgs) => {
     let other = {}
@@ -30,7 +33,7 @@ export const loader = async ({}: Route.LoaderArgs) => {
     return startActiveSpan(`loader - root`, async () => {
         // TODO: Dont use dev url
         const { cssUrl, jsUrl } = await importSubApp(
-            "https://cdn.nav.no/poao/veilarbvisittkortfs-dev/build",
+            `https://cdn.nav.no/poao/veilarbvisittkortfs-${isProd ? "prod" : "dev"}/build`,
         )
         return { cssUrl, jsUrl, ...other }
     })
