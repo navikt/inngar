@@ -9,9 +9,6 @@ COPY ./bun.lockb /app/bun.lockb
 COPY ./build /app/build
 COPY bunfig.toml /app/bunfig.toml
 COPY ./server /app/server
-# COPY server/onlyServerOtelUtils.ts /app/app/util/onlyServerOtelUtils.ts
-# COPY app/loggerOld.ts /app/app/loggerOld.ts
-# COPY server/server.ts /app/server.ts
 
 WORKDIR /app
 
