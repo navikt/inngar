@@ -64,7 +64,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     const redirectToChangedUser = (fnr: string | null | undefined) => {
         const formData = new FormData()
         formData.set("fnr", fnr || "")
-        formData.set("fnrCode", fnrCode || "")
+        formData.set("fnrCode", fnrCode ?? "")
         fetcher.submit(formData, { method: "POST", action: "/" })
     }
 
