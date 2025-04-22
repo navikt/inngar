@@ -36,6 +36,8 @@ spec:
           namespace: obo
         - application: veilarbveileder
           namespace: obo
+        - application: veilarbvedtaksstotte
+          namespace: obo
         - application: obo-unleash
           namespace: obo
         - application: modiacontextholder

@@ -27,6 +27,9 @@ export default [
     route("/veilarbveileder/*", "routes/veilarbProxy.tsx", {
         id: "veilarbveileder",
     }),
+    route("/veilarbvedtaksstotte", "routes/veilarbProxy.tsx", {
+        id: "veilarbvedtaksstotte",
+    }),
     route("/obo-unleash/*", "routes/veilarbProxy.tsx", {
         id: "obo-unleash",
     }),
