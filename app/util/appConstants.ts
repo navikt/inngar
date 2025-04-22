@@ -30,6 +30,11 @@ export const apps = {
         namespace: "obo",
         preserveContextPath: true,
     },
+    veilarbvedtaksstotte: {
+        name: "veilarbvedtaksstotte",
+        namespace: "obo",
+        preserveContextPath: true,
+    },
     "obo-unleash": {
         name: "obo-unleash",
         namespace: "obo",
