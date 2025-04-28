@@ -87,11 +87,7 @@ export const StartOppfolgingForm = ({
                     </BodyShort>
                 </div>
             </Alert>
-            <fetcher.Form
-                method="post"
-                action="/startOppfolgingAction"
-                className="space-y-4"
-            >
+            <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <input

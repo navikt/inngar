@@ -1,11 +1,4 @@
-import {
-    Alert,
-    BodyShort,
-    Button,
-    ErrorSummary,
-    Heading,
-    Link,
-} from "@navikt/ds-react"
+import { Alert, BodyShort, Button, Heading, Link } from "@navikt/ds-react"
 import {
     arbeidssokerRegistreringUrl,
     FormError,
