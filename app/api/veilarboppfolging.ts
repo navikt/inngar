@@ -36,7 +36,7 @@ export type ArenaResponseKoder =
 
 interface ReaktiveringOppfolgingResponse {
     ok: boolean
-    kode: string
+    kode: ArenaResponseKoder | "KAN_IKKE_REAKTIVERES"
 }
 
 interface StartOppfolgingSuccessResponse {
@@ -93,7 +93,7 @@ const reaktiverOppfolging = async (
             )
             return {
                 ok: false as const,
-                kode: "Reaktiver oppfølging feilet",
+                kode: "KAN_IKKE_REAKTIVERES",
             } as ReaktiveringOppfolgingResponse
         })
 }
