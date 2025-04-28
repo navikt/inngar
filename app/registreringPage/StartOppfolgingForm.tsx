@@ -14,7 +14,6 @@ import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
-import { startOppfolgingAction } from "~/routes"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod
@@ -90,11 +89,16 @@ export const StartOppfolgingForm = ({
             </Alert>
             <fetcher.Form
                 method="post"
-                action={startOppfolgingAction}
+                action="/startOppfolgingAction"
                 className="space-y-4"
             >
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
+                <input
+                    type="hidden"
+                    name="actionType"
+                    value="startOppfolging"
+                />
                 <Button
                     disabled={
                         (brukerErUnder18 && !erSamtykkeBekreftet) ||
@@ -118,7 +122,7 @@ export const StartOppfolgingForm = ({
     )
 }
 
-const FormError = ({ message }: { message: string }) => {
+export const FormError = ({ message }: { message: string }) => {
     return (
         <ErrorSummary>
             <ErrorSummary.Item href="#searchfield-r2">

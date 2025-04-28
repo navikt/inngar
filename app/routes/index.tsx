@@ -65,7 +65,25 @@ export function handleError(
     }
 }
 
-export const startOppfolgingAction = async (args: Route.ActionArgs) => {
+export const action = async (args: Route.ActionArgs) => {
+    const formdata = await args.request.formData()
+    const actionType = formdata.get("actionType")
+
+    if (!actionType) {
+        return { error: "actionType mangler" }
+    }
+
+    switch (actionType) {
+        case "startOppfolging":
+            return startOppfolging(args)
+        case "reaktiverOppfolging":
+            return reaktiverOppfolging(args)
+        default:
+            return { error: `Ukjent actionType: ${actionType}` }
+    }
+}
+
+export const startOppfolging = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
     const fnr = formdata.get("fnr")
 
@@ -111,7 +129,7 @@ export const startOppfolgingAction = async (args: Route.ActionArgs) => {
     }
 }
 
-export const reaktiverOppfolgingAction = async (args: Route.ActionArgs) => {
+export const reaktiverOppfolging = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
     const fnr = formdata.get("fnr")
 

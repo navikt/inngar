@@ -1,10 +1,19 @@
-import { Alert, BodyShort, Button, Heading, Link } from "@navikt/ds-react"
-import { arbeidssokerRegistreringUrl } from "~/registreringPage/StartOppfolgingForm.tsx"
+import {
+    Alert,
+    BodyShort,
+    Button,
+    ErrorSummary,
+    Heading,
+    Link,
+} from "@navikt/ds-react"
+import {
+    arbeidssokerRegistreringUrl,
+    FormError,
+} from "~/registreringPage/StartOppfolgingForm.tsx"
 import { useFetcher } from "react-router"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { useState } from "react"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
-import { reaktiverOppfolgingAction } from "~/routes"
 
 export const ReaktiveringsForm = ({
     fnr,
@@ -63,13 +72,14 @@ export const ReaktiveringsForm = ({
                     bekreftGodkjenning={setErManueltGodkjent}
                 />
             ) : null}
-            <fetcher.Form
-                method="post"
-                action={reaktiverOppfolgingAction}
-                className="space-y-4"
-            >
+            <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
+                <input
+                    type="hidden"
+                    name="actionType"
+                    value="reaktiverOppfolging"
+                />
                 <Button
                     loading={fetcher.state == "submitting"}
                     disabled={
