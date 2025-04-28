@@ -65,7 +65,7 @@ export function handleError(
     }
 }
 
-export const action = async (args: Route.ActionArgs) => {
+export const startOppfolgingAction = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
     const fnr = formdata.get("fnr")
 
@@ -92,6 +92,52 @@ export const action = async (args: Route.ActionArgs) => {
                     status: 302,
                     headers: {
                         Location: `/registrert?result=${startOppfolgingResponse.body.kode}`,
+                    },
+                })
+            }
+        } else {
+            return tokenOrResponse
+        }
+    } catch (e) {
+        logger.error(
+            `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging ${e.toString()}`,
+        )
+        throw dataWithTraceId(
+            {
+                message: `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging: ${(e as Error).cause}`,
+            },
+            { status: 500 },
+        )
+    }
+}
+
+export const reaktiverOppfolgingAction = async (args: Route.ActionArgs) => {
+    const formdata = await args.request.formData()
+    const fnr = formdata.get("fnr")
+
+    if (!fnr || typeof fnr !== "string") {
+        return {
+            error: `Fødselsnummer er påkrevd men var:${fnr === null ? "null" : fnr}`,
+        }
+    }
+
+    try {
+        logger.info("Reaktiver oppfølging")
+        const tokenOrResponse = await getOboToken(
+            args.request,
+            apps.veilarboppfolging,
+        )
+        if (tokenOrResponse.ok) {
+            const reaktiverOppfolgingResponse =
+                await VeilarboppfolgingApi.reaktiverOppfolging(
+                    fnr,
+                    tokenOrResponse.token,
+                )
+            if (reaktiverOppfolgingResponse.ok) {
+                return new Response(null, {
+                    status: 302,
+                    headers: {
+                        Location: `/registrert?result=${reaktiverOppfolgingResponse.kode}`,
                     },
                 })
             }

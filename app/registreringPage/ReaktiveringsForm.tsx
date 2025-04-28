@@ -4,6 +4,7 @@ import { useFetcher } from "react-router"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { useState } from "react"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
+import { reaktiverOppfolgingAction } from "~/routes"
 
 export const ReaktiveringsForm = ({
     fnr,
@@ -62,7 +63,11 @@ export const ReaktiveringsForm = ({
                     bekreftGodkjenning={setErManueltGodkjent}
                 />
             ) : null}
-            <fetcher.Form method="post" className="space-y-4">
+            <fetcher.Form
+                method="post"
+                action={reaktiverOppfolgingAction()}
+                className="space-y-4"
+            >
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <Button

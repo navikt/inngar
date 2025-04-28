@@ -14,6 +14,7 @@ import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
+import { startOppfolgingAction } from "~/routes"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod
@@ -87,7 +88,11 @@ export const StartOppfolgingForm = ({
                     </BodyShort>
                 </div>
             </Alert>
-            <fetcher.Form method="post" className="space-y-4">
+            <fetcher.Form
+                method="post"
+                action={startOppfolgingAction}
+                className="space-y-4"
+            >
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <Button

@@ -1,7 +1,7 @@
 import type { Route } from "./+types/mocksSettings"
 import { mockSettings } from "../mock/mockSettings"
 import type {
-    ArenaReponseKoder,
+    ArenaResponseKoder,
     KanStarteOppfolging,
 } from "~/api/veilarboppfolging"
 
@@ -10,7 +10,7 @@ export interface MockSettings {
     kanStarteOppfolging: KanStarteOppfolging
     over18: "Over18" | "Under18"
     aktivBruker: "nei" | "ja"
-    registrerArenaSvar: ArenaReponseKoder
+    registrerArenaSvar: ArenaResponseKoder
     fnr: string | null
 }
 
