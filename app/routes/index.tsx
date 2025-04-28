@@ -68,6 +68,12 @@ export function handleError(
 export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
     const actionType = formdata.get("actionType")
+    const fnr = formdata.get("fnr")
+    if (!fnr || typeof fnr !== "string") {
+        return {
+            error: `Fødselsnummer er påkrevd men var:${fnr === null ? "null" : fnr}`,
+        }
+    }
 
     if (!actionType) {
         return { error: "actionType mangler" }
@@ -75,24 +81,15 @@ export const action = async (args: Route.ActionArgs) => {
 
     switch (actionType) {
         case "startOppfolging":
-            return startOppfolging(args)
+            return startOppfolging(args, fnr)
         case "reaktiverOppfolging":
-            return reaktiverOppfolging(args)
+            return reaktiverOppfolging(args, fnr)
         default:
             return { error: `Ukjent actionType: ${actionType}` }
     }
 }
 
-export const startOppfolging = async (args: Route.ActionArgs) => {
-    const formdata = await args.request.formData()
-    const fnr = formdata.get("fnr")
-
-    if (!fnr || typeof fnr !== "string") {
-        return {
-            error: `Fødselsnummer er påkrevd men var:${fnr === null ? "null" : fnr}`,
-        }
-    }
-
+export const startOppfolging = async (args: Route.ActionArgs, fnr: string) => {
     try {
         logger.info("Starter oppfølging")
         const tokenOrResponse = await getOboToken(
@@ -129,16 +126,10 @@ export const startOppfolging = async (args: Route.ActionArgs) => {
     }
 }
 
-export const reaktiverOppfolging = async (args: Route.ActionArgs) => {
-    const formdata = await args.request.formData()
-    const fnr = formdata.get("fnr")
-
-    if (!fnr || typeof fnr !== "string") {
-        return {
-            error: `Fødselsnummer er påkrevd men var:${fnr === null ? "null" : fnr}`,
-        }
-    }
-
+export const reaktiverOppfolging = async (
+    args: Route.ActionArgs,
+    fnr: string,
+) => {
     try {
         logger.info("Reaktiver oppfølging")
         const tokenOrResponse = await getOboToken(
