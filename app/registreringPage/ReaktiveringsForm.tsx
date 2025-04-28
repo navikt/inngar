@@ -65,7 +65,7 @@ export const ReaktiveringsForm = ({
             ) : null}
             <fetcher.Form
                 method="post"
-                action={reaktiverOppfolgingAction()}
+                action={reaktiverOppfolgingAction}
                 className="space-y-4"
             >
                 {error ? <FormError message={error} /> : null}
