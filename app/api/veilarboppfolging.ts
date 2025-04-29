@@ -34,9 +34,18 @@ export type ArenaResponseKoder =
     | "BRUKER_ALLEREDE_IARBS"
     | "UKJENT_FEIL"
 
-interface ReaktiveringOppfolgingResponse {
-    ok: boolean
-    kode: ArenaResponseKoder | "KAN_IKKE_REAKTIVERES"
+interface ReaktiverOppfolgingSuccessResponse {
+    kode: ArenaResponseKoder
+}
+
+interface ReaktiverOppfolgingErrorResponse {
+    ok: false
+    error: string
+}
+
+interface ReaktiverOppfolgingSuccess {
+    ok: true
+    body: ReaktiverOppfolgingSuccessResponse
 }
 
 interface StartOppfolgingSuccessResponse {
@@ -56,7 +65,7 @@ interface StartOppfolgingSuccess {
 const reaktiverOppfolging = async (
     fnr: string,
     token: string,
-): Promise<ReaktiveringOppfolgingResponse> => {
+): Promise<ReaktiverOppfolgingSuccess | ReaktiverOppfolgingErrorResponse> => {
     return await fetch(reaktiverOppfolgingUrl, {
         headers: {
             ["Nav-Consumer-Id"]: "inngar",
@@ -77,14 +86,14 @@ const reaktiverOppfolging = async (
                 logger.error(`Reaktiver oppfølging feilet med melding ${body}`)
                 return {
                     ok: false as const,
-                    kode: body,
-                } as ReaktiveringOppfolgingResponse
+                    error: body,
+                } as ReaktiverOppfolgingErrorResponse
             } else {
                 logger.info("Oppfølging reaktivert")
                 return {
                     ok: true as const,
-                    kode: await proxyResponse.json(),
-                } as ReaktiveringOppfolgingResponse
+                    body: await proxyResponse.json(),
+                } as ReaktiverOppfolgingSuccess
             }
         })
         .catch((e: Error) => {
@@ -93,8 +102,8 @@ const reaktiverOppfolging = async (
             )
             return {
                 ok: false as const,
-                kode: "KAN_IKKE_REAKTIVERES",
-            } as ReaktiveringOppfolgingResponse
+                error: "Reaktiver oppfølging feilet",
+            } as ReaktiverOppfolgingErrorResponse
         })
 }
 
