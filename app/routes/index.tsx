@@ -146,7 +146,7 @@ export const reaktiverOppfolging = async (
                 return new Response(null, {
                     status: 302,
                     headers: {
-                        Location: `/registrert?result=${reaktiverOppfolgingResponse.kode}`,
+                        Location: `/registrert?result=${reaktiverOppfolgingResponse.body.kode}`,
                     },
                 })
             }
