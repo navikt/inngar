@@ -76,7 +76,7 @@ const reaktiverOppfolging = async (
         method: "POST",
     })
         .then(async (proxyResponse: Response) => {
-            if (!proxyResponse.ok && !(proxyResponse.status === 409)) {
+            if (!proxyResponse.ok && proxyResponse.status !== 409) {
                 const body = !proxyResponse.bodyUsed
                     ? await proxyResponse.text()
                     : ""
