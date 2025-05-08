@@ -1,5 +1,8 @@
 import { Alert, BodyShort, Button, Heading, Link } from "@navikt/ds-react"
-import { arbeidssokerRegistreringUrl } from "~/registreringPage/StartOppfolgingForm.tsx"
+import {
+    arbeidssokerRegistreringUrl,
+    FormError,
+} from "~/registreringPage/StartOppfolgingForm.tsx"
 import { useFetcher } from "react-router"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { useState } from "react"
@@ -65,6 +68,11 @@ export const ReaktiveringsForm = ({
             <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
+                <input
+                    type="hidden"
+                    name="actionType"
+                    value="reaktiverOppfolging"
+                />
                 <Button
                     loading={fetcher.state == "submitting"}
                     disabled={

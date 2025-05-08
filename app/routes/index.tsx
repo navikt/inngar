@@ -67,14 +67,29 @@ export function handleError(
 
 export const action = async (args: Route.ActionArgs) => {
     const formdata = await args.request.formData()
+    const actionType = formdata.get("actionType")
     const fnr = formdata.get("fnr")
-
     if (!fnr || typeof fnr !== "string") {
         return {
             error: `Fødselsnummer er påkrevd men var:${fnr === null ? "null" : fnr}`,
         }
     }
 
+    if (!actionType) {
+        return { error: "actionType mangler" }
+    }
+
+    switch (actionType) {
+        case "startOppfolging":
+            return startOppfolging(args, fnr)
+        case "reaktiverOppfolging":
+            return reaktiverOppfolging(args, fnr)
+        default:
+            return { error: `Ukjent actionType: ${actionType}` }
+    }
+}
+
+export const startOppfolging = async (args: Route.ActionArgs, fnr: string) => {
     try {
         logger.info("Starter oppfølging")
         const tokenOrResponse = await getOboToken(
@@ -92,6 +107,46 @@ export const action = async (args: Route.ActionArgs) => {
                     status: 302,
                     headers: {
                         Location: `/registrert?result=${startOppfolgingResponse.body.kode}`,
+                    },
+                })
+            }
+        } else {
+            return tokenOrResponse
+        }
+    } catch (e) {
+        logger.error(
+            `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging ${e.toString()}`,
+        )
+        throw dataWithTraceId(
+            {
+                message: `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging: ${(e as Error).cause}`,
+            },
+            { status: 500 },
+        )
+    }
+}
+
+export const reaktiverOppfolging = async (
+    args: Route.ActionArgs,
+    fnr: string,
+) => {
+    try {
+        logger.info("Reaktiver oppfølging")
+        const tokenOrResponse = await getOboToken(
+            args.request,
+            apps.veilarboppfolging,
+        )
+        if (tokenOrResponse.ok) {
+            const reaktiverOppfolgingResponse =
+                await VeilarboppfolgingApi.reaktiverOppfolging(
+                    fnr,
+                    tokenOrResponse.token,
+                )
+            if (reaktiverOppfolgingResponse.ok) {
+                return new Response(null, {
+                    status: 302,
+                    headers: {
+                        Location: `/registrert?result=${reaktiverOppfolgingResponse.body.kode}`,
                     },
                 })
             }

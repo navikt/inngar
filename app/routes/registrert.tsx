@@ -1,6 +1,6 @@
 import { Heading } from "@navikt/ds-react/Typography"
 import { Link, useNavigate, useSearchParams } from "react-router"
-import type { ArenaReponseKoder } from "~/api/veilarboppfolging"
+import type { ArenaResponseKoder } from "~/api/veilarboppfolging"
 import { Alert, List } from "@navikt/ds-react"
 import { getVeilarbpersonflateUrl } from "~/config.client"
 import type { Route } from "./+types/registrert"
@@ -20,7 +20,7 @@ export const clientLoader = () => {
 const SuccessPage = (props: Route.ComponentProps) => {
     const veilarbpersonflateUrl = props.loaderData.veilarbpersonflateUrl
     const [params] = useSearchParams()
-    const result = params.get("result") as ArenaReponseKoder
+    const result = params.get("result") as ArenaResponseKoder
     const navigate = useNavigate()
 
     const getMessage = () => {

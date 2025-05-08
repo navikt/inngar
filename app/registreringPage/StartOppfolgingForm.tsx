@@ -90,6 +90,11 @@ export const StartOppfolgingForm = ({
             <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
+                <input
+                    type="hidden"
+                    name="actionType"
+                    value="startOppfolging"
+                />
                 <Button
                     disabled={
                         (brukerErUnder18 && !erSamtykkeBekreftet) ||
@@ -113,7 +118,7 @@ export const StartOppfolgingForm = ({
     )
 }
 
-const FormError = ({ message }: { message: string }) => {
+export const FormError = ({ message }: { message: string }) => {
     return (
         <ErrorSummary>
             <ErrorSummary.Item href="#searchfield-r2">

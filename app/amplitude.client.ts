@@ -1,7 +1,7 @@
 import { init, track } from "@amplitude/analytics-browser"
 import { EnvType, getEnv } from "~/util/envUtil"
 import type {
-    ArenaReponseKoder,
+    ArenaResponseKoder,
     KanStarteOppfolging,
 } from "~/api/veilarboppfolging"
 
@@ -36,7 +36,7 @@ export const loggBesok = () => {
     logEvent("start-arbeidsoppfolging.besok", {})
 }
 
-export const loggSkjemaFullført = (arenaStatus: ArenaReponseKoder) => {
+export const loggSkjemaFullført = (arenaStatus: ArenaResponseKoder) => {
     logEvent("skjema fullført", {
         skjemanavn: "start-arbeidsoppfolging",
         skjemaId: "start-arbeidsoppfolging",
@@ -44,7 +44,7 @@ export const loggSkjemaFullført = (arenaStatus: ArenaReponseKoder) => {
     })
 }
 
-export const loggSkjemaFeilet = (arenaStatus: ArenaReponseKoder) => {
+export const loggSkjemaFeilet = (arenaStatus: ArenaResponseKoder) => {
     logEvent("skjema innsending feilet", {
         skjemanavn: "start-arbeidsoppfolging",
         skjemaId: "start-arbeidsoppfolging",

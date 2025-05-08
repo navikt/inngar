@@ -11,16 +11,22 @@ const toUrl = (targetApp: App, pathname: string): string => {
     return `http://${targetApp.name}.${targetApp.namespace}${pathname}`
 }
 
+const reaktiverOppfolgingUrl = toUrl(
+    apps.veilarboppfolging,
+    "/veilarboppfolging/api/v3/oppfolging/reaktiver",
+)
+
 const startOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
     "/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode",
 )
+
 const graphqlUrl = toUrl(
     apps.veilarboppfolging,
     "/veilarboppfolging/api/graphql",
 )
 
-export type ArenaReponseKoder =
+export type ArenaResponseKoder =
     | "OK_REGISTRERT_I_ARENA"
     | "FNR_FINNES_IKKE"
     | "KAN_REAKTIVERES_FORENKLET"
@@ -28,8 +34,22 @@ export type ArenaReponseKoder =
     | "BRUKER_ALLEREDE_IARBS"
     | "UKJENT_FEIL"
 
+interface ReaktiverOppfolgingSuccessResponse {
+    kode: ArenaResponseKoder
+}
+
+interface ReaktiverOppfolgingErrorResponse {
+    ok: false
+    error: string
+}
+
+interface ReaktiverOppfolgingSuccess {
+    ok: true
+    body: ReaktiverOppfolgingSuccessResponse
+}
+
 interface StartOppfolgingSuccessResponse {
-    kode: ArenaReponseKoder
+    kode: ArenaResponseKoder
 }
 
 interface StartOppfolgingErrorResponse {
@@ -40,6 +60,51 @@ interface StartOppfolgingErrorResponse {
 interface StartOppfolgingSuccess {
     ok: true
     body: StartOppfolgingSuccessResponse
+}
+
+const reaktiverOppfolging = async (
+    fnr: string,
+    token: string,
+): Promise<ReaktiverOppfolgingSuccess | ReaktiverOppfolgingErrorResponse> => {
+    return await fetch(reaktiverOppfolgingUrl, {
+        headers: {
+            ["Nav-Consumer-Id"]: "inngar",
+            Authorization: `Bearer ${token}`,
+            ["Content-Type"]: "application/json",
+        },
+        body: JSON.stringify({ fnr }),
+        method: "POST",
+    })
+        .then(async (proxyResponse: Response) => {
+            if (!proxyResponse.ok && proxyResponse.status !== 409) {
+                const body = !proxyResponse.bodyUsed
+                    ? await proxyResponse.text()
+                    : ""
+                logger.error(
+                    `Reaktiver oppfølging feilet med http-status: ${proxyResponse.status}`,
+                )
+                logger.error(`Reaktiver oppfølging feilet med melding ${body}`)
+                return {
+                    ok: false as const,
+                    error: body,
+                } as ReaktiverOppfolgingErrorResponse
+            } else {
+                logger.info("Oppfølging reaktivert")
+                return {
+                    ok: true as const,
+                    body: await proxyResponse.json(),
+                } as ReaktiverOppfolgingSuccess
+            }
+        })
+        .catch((e: Error) => {
+            logger.error(
+                `Reaktiver oppfølging feilet (http kall feilet): ${e.toString()}`,
+            )
+            return {
+                ok: false as const,
+                error: "Reaktiver oppfølging feilet",
+            } as ReaktiverOppfolgingErrorResponse
+        })
 }
 
 const startOppfolging = async (
@@ -184,4 +249,5 @@ const getOppfolgingStatus = async (fnr: string, token: string) => {
 export const VeilarboppfolgingApi = {
     startOppfolging,
     getOppfolgingStatus,
+    reaktiverOppfolging,
 }
