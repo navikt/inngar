@@ -11,7 +11,7 @@ updates:
     schedule:
       interval: "daily"
       day: thursday
-      time: "12:24"
+      time: "12:37"
       timezone: Europe/Oslo
     open-pull-requests-limit: 10
   - package-ecosystem: "npm"
@@ -19,7 +19,7 @@ updates:
     schedule:
       interval: "daily"
       day: thursday
-      time: "12:24"
+      time: "12:37"
       timezone: Europe/Oslo
     open-pull-requests-limit: 10
     groups:
