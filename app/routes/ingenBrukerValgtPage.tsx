@@ -17,6 +17,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
             return redirect(`/${fnrCode}`)
         }
     }
+    return {}
 }
 
 export default function Index({}: Route.ComponentProps) {
