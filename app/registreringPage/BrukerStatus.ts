@@ -16,6 +16,8 @@ export const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
         case "JA":
             return BrukerStatus.IKKE_UNDER_OPPFOLGING
         case "JA_MED_MANUELL_GODKJENNING":
+        case "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
+        case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR":
             return BrukerStatus.KREVER_MANUELL_GODKJENNING
         case "ALLEREDE_UNDER_OPPFOLGING":
             return BrukerStatus.ALLEREDE_UNDER_OPPFOLGING
