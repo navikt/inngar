@@ -62,6 +62,7 @@ export const ReaktiveringsForm = ({
             </Alert>
             {kreverManuellGodkjenning ? (
                 <ManuellGodkjenningAlert
+                    brukerStatus={}
                     bekreftGodkjenning={setErManueltGodkjent}
                 />
             ) : null}

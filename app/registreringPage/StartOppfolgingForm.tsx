@@ -14,6 +14,7 @@ import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
+import type { BrukerStatus } from "~/registreringPage/BrukerStatus.ts"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod
@@ -29,13 +30,18 @@ export interface NavKontor {
 export const StartOppfolgingForm = ({
     navKontor,
     fnr,
-    kreverManuellGodkjenning,
+    brukerStatus,
 }: {
     navKontor: NavKontor | null
     fnr: string
-    kreverManuellGodkjenning: boolean
+    brukerStatus:
+        | BrukerStatus.IKKE_UNDER_OPPFOLGING
+        | BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT
+        | BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR
 }) => {
     const fetcher = useFetcher()
+    const kreverManuellGodkjenning =
+        brukerStatus !== BrukerStatus.IKKE_UNDER_OPPFOLGING
     const error = "error" in (fetcher?.data || {}) ? fetcher.data.error : null
     const result =
         "resultat" in (fetcher?.data || {})
@@ -52,6 +58,7 @@ export const StartOppfolgingForm = ({
             ) : null}
             {kreverManuellGodkjenning ? (
                 <ManuellGodkjenningAlert
+                    brukerStatus={brukerStatus}
                     bekreftGodkjenning={setErManueltGodkjent}
                 />
             ) : null}
