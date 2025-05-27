@@ -14,7 +14,7 @@ import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
-import type { BrukerStatus } from "~/registreringPage/BrukerStatus.ts"
+import { BrukerStatus } from "~/registreringPage/BrukerStatus.ts"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod

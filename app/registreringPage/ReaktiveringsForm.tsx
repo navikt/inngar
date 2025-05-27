@@ -7,15 +7,23 @@ import { useFetcher } from "react-router"
 import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { useState } from "react"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
+import {
+    BrukerStatus,
+    type ReaktiveringsStatusSomKreverManuellGodkjenning,
+} from "~/registreringPage/BrukerStatus.ts"
 
 export const ReaktiveringsForm = ({
     fnr,
-    kreverManuellGodkjenning,
+    brukerStatus,
 }: {
     fnr: string
-    kreverManuellGodkjenning: boolean
+    brukerStatus:
+        | ReaktiveringsStatusSomKreverManuellGodkjenning
+        | BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT
 }) => {
     const fetcher = useFetcher()
+    const kreverManuellGodkjenning =
+        brukerStatus !== BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT
     const error = "error" in (fetcher?.data || {}) ? fetcher.data.error : null
     const result =
         "resultat" in (fetcher?.data || {})
@@ -62,7 +70,7 @@ export const ReaktiveringsForm = ({
             </Alert>
             {kreverManuellGodkjenning ? (
                 <ManuellGodkjenningAlert
-                    brukerStatus={}
+                    brukerStatus={brukerStatus}
                     bekreftGodkjenning={setErManueltGodkjent}
                 />
             ) : null}

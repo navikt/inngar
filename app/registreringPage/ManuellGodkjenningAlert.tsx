@@ -3,7 +3,6 @@ import {
     BodyShort,
     ConfirmationPanel,
     Heading,
-    List,
 } from "@navikt/ds-react"
 import {
     BrukerStatus,
@@ -13,7 +12,12 @@ import {
 const tekster: Record<BrukerStatusSomKreverManuellGodkjenning, string> = {
     [BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT]:
         'Bruker har status "Ikke bosatt" i Norge',
-    [BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR]: "lol",
+    [BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR]:
+        "Bruker har status midlertidig eller inaktiv i folkeregisteret og er ikke statsborger i EU/EØS eller GBR.",
+    [BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT]:
+        'Bruker har status "Ikke bosatt" i Norge',
+    [BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR]:
+        "Bruker har status midlertidig eller inaktiv i folkeregisteret og er ikke statsborger i EU/EØS eller GBR.",
 }
 
 export const ManuellGodkjenningAlert = ({
@@ -32,18 +36,6 @@ export const ManuellGodkjenningAlert = ({
                 Person har ikke lovlig opphold ifølge Folkeregisteret
             </Heading>
             <BodyShort>{tekster[brukerStatus]}</BodyShort>
-            <BodyShort className="pt-4">
-                Dette skjer fordi bruker har en av disse statusene:
-                <List size="small">
-                    <List.Item>
-                        Bruker har status "Ikke bosatt" i Norge
-                    </List.Item>
-                    <List.Item>
-                        Bruker er midlertidig bosatt og er ikke statsborger i
-                        EU/EØS eller GBR.
-                    </List.Item>
-                </List>
-            </BodyShort>
             <BodyLong>
                 Du må opprette et notat og dokumentere i Gosys om bruker har
                 lovlig opphold.

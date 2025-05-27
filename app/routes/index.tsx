@@ -248,23 +248,16 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 <StartOppfolgingForm
                     fnr={props.fnr}
                     navKontor={props.navKontor}
-                    kreverManuellGodkjenning={
-                        props.status !== BrukerStatus.IKKE_UNDER_OPPFOLGING
-                    }
+                    brukerStatus={props.status}
                 />
             )
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT:
+        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR:
+        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT:
             return (
                 <ReaktiveringsForm
                     fnr={props.fnr}
-                    kreverManuellGodkjenning={false}
-                />
-            )
-        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING:
-            return (
-                <ReaktiveringsForm
-                    fnr={props.fnr}
-                    kreverManuellGodkjenning={true}
+                    brukerStatus={props.status}
                 />
             )
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
