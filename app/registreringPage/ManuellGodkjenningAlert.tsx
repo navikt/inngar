@@ -13,11 +13,11 @@ const tekster: Record<BrukerStatusSomKreverManuellGodkjenning, string> = {
     [BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT]:
         'Bruker har status "Ikke bosatt" i Norge',
     [BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR]:
-        "Bruker har status midlertidig eller inaktiv i folkeregisteret og er ikke statsborger i EU/EØS eller GBR.",
+        'Bruker har status "Midlertidig" eller "Inaktiv" i folkeregisteret og er ikke statsborger i EU/EØS eller GBR.',
     [BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT]:
         'Bruker har status "Ikke bosatt" i Norge',
     [BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR]:
-        "Bruker har status midlertidig eller inaktiv i folkeregisteret og er ikke statsborger i EU/EØS eller GBR.",
+        'Bruker har status "Midlertidig" eller "Inaktiv" i folkeregisteret og er ikke statsborger i EU/EØS eller GBR.',
 }
 
 export const ManuellGodkjenningAlert = ({
