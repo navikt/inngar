@@ -35,7 +35,7 @@ export const ManuellGodkjenningAlert = ({
             <Heading size="small">
                 Person har ikke lovlig opphold ifølge Folkeregisteret
             </Heading>
-            <BodyShort>{tekster[brukerStatus]}</BodyShort>
+            <BodyShort className="mb-4 mt-4">{tekster[brukerStatus]}</BodyShort>
             <BodyLong>
                 Du må opprette et notat og dokumentere i Gosys om bruker har
                 lovlig opphold.
