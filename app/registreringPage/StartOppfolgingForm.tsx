@@ -98,9 +98,10 @@ export const StartOppfolgingForm = ({
                 <Button
                     disabled={
                         (brukerErUnder18 && !erSamtykkeBekreftet) ||
-                        (kreverManuellGodkjenning && !erManueltGodkjent)
+                        (kreverManuellGodkjenning && !erManueltGodkjent) ||
+                        fetcher.state != "idle"
                     }
-                    loading={fetcher.state == "submitting"}
+                    loading={fetcher.state != "idle"}
                     onClick={() =>
                         loggKnappKlikket("Start arbeidsrettet oppfølging")
                     }
