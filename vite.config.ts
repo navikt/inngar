@@ -11,4 +11,10 @@ export default defineConfig({
         },
     },
     plugins: [reactRouter(), tsconfigPaths()],
+    optimizeDeps: {
+        include: ["@opentelemetry/api"],
+    },
+    ssr: {
+        noExternal: ["@opentelemetry/api"],
+    },
 })
