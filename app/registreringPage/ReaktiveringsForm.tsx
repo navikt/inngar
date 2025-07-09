@@ -4,7 +4,6 @@ import {
     FormError,
 } from "~/registreringPage/StartOppfolgingForm.tsx"
 import { useFetcher } from "react-router"
-import { useState } from "react"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
 
 export const ReaktiveringsForm = ({ fnr }: { fnr: string }) => {
