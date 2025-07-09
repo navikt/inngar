@@ -15,7 +15,11 @@ const ManuellGodkjenningMidlertidigBosattAlert = ({
                 Denne personen har kanskje ikke rett på arbeidsoppfølging fordi
                 statusen i Folkeregisteret er “midlertidig bosatt”, og personen
                 er ikke statsborger i EU/EØS eller GBR. Gjør en
-                <Link>
+                <Link
+                    inlineText
+                    underline
+                    href="https://lovdata.no/lov/2006-06-16-20/§14a"
+                >
                     vurdering av lovlig opphold og avslag etter Nav-loven § 14 a
                 </Link>
                 .

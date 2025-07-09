@@ -14,7 +14,11 @@ const ManuellGodkjenningIkkeBosattAlert = ({
             <BodyShort className="pt-4">
                 Denne personen har kanskje ikke rett på arbeidsrettet oppfølging
                 fordi statusen i Folkeregisteret er "ikke bosatt". Gjør en
-                <Link>
+                <Link
+                    inlineText
+                    underline
+                    href="https://lovdata.no/lov/2006-06-16-20/§14a"
+                >
                     vurdering av lovlig opphold og avslag etter Nav-loven § 14 a
                 </Link>
                 .
