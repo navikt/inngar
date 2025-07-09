@@ -13,7 +13,6 @@ const registrerArenaSvarVerdier = [
 
 const kanStarteOppfolgingOptions: MockSettings["kanStarteOppfolging"][] = [
     "JA",
-    "JA_MED_MANUELL_GODKJENNING",
     "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT",
     "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR",
     "ALLEREDE_UNDER_OPPFOLGING",

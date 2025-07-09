@@ -241,14 +241,20 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                     </List>
                 </Alert>
             )
-        case BrukerStatus.KREVER_MANUELL_GODKJENNING:
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
+        case BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR:
+        case BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT:
             return (
                 <StartOppfolgingForm
                     fnr={props.fnr}
                     navKontor={props.navKontor}
-                    kreverManuellGodkjenning={
-                        props.status === BrukerStatus.KREVER_MANUELL_GODKJENNING
+                    kreverManuellGodkjenningPgaIkkeBosatt={
+                        props.status ===
+                        BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT
+                    }
+                    kreverManuellGodkjenningPgaDnummerIkkeEosGbr={
+                        props.status ===
+                        BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR
                     }
                 />
             )

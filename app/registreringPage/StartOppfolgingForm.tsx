@@ -12,8 +12,9 @@ import {
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
-import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
+import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
+import ManuellGodkjenningMidlertidigBosattAlert from "~/registreringPage/ManuellGodkjenningMidlertidigBosattAlert.tsx"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod
@@ -29,11 +30,13 @@ export interface NavKontor {
 export const StartOppfolgingForm = ({
     navKontor,
     fnr,
-    kreverManuellGodkjenning,
+    kreverManuellGodkjenningPgaIkkeBosatt,
+    kreverManuellGodkjenningPgaDnummerIkkeEosGbr,
 }: {
     navKontor: NavKontor | null
     fnr: string
-    kreverManuellGodkjenning: boolean
+    kreverManuellGodkjenningPgaIkkeBosatt: boolean
+    kreverManuellGodkjenningPgaDnummerIkkeEosGbr: boolean
 }) => {
     const fetcher = useFetcher()
     const error = "error" in (fetcher?.data || {}) ? fetcher.data.error : null
@@ -50,8 +53,13 @@ export const StartOppfolgingForm = ({
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}
-            {kreverManuellGodkjenning ? (
-                <ManuellGodkjenningAlert
+            {kreverManuellGodkjenningPgaIkkeBosatt ? (
+                <ManuellGodkjenningIkkeBosattAlert
+                    bekreftGodkjenning={setErManueltGodkjent}
+                />
+            ) : null}
+            {kreverManuellGodkjenningPgaDnummerIkkeEosGbr ? (
+                <ManuellGodkjenningMidlertidigBosattAlert
                     bekreftGodkjenning={setErManueltGodkjent}
                 />
             ) : null}
@@ -98,7 +106,9 @@ export const StartOppfolgingForm = ({
                 <Button
                     disabled={
                         (brukerErUnder18 && !erSamtykkeBekreftet) ||
-                        (kreverManuellGodkjenning && !erManueltGodkjent) ||
+                        ((kreverManuellGodkjenningPgaIkkeBosatt ||
+                            kreverManuellGodkjenningPgaDnummerIkkeEosGbr) &&
+                            !erManueltGodkjent) ||
                         fetcher.state != "idle"
                     }
                     loading={fetcher.state != "idle"}
