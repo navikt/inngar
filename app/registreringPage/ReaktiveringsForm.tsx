@@ -4,17 +4,10 @@ import {
     FormError,
 } from "~/registreringPage/StartOppfolgingForm.tsx"
 import { useFetcher } from "react-router"
-import { ManuellGodkjenningAlert } from "~/registreringPage/ManuellGodkjenningAlert.tsx"
 import { useState } from "react"
 import { loggKnappKlikket } from "~/amplitude.client.ts"
 
-export const ReaktiveringsForm = ({
-    fnr,
-    kreverManuellGodkjenning,
-}: {
-    fnr: string
-    kreverManuellGodkjenning: boolean
-}) => {
+export const ReaktiveringsForm = ({ fnr }: { fnr: string }) => {
     const fetcher = useFetcher()
     const error = "error" in (fetcher?.data || {}) ? fetcher.data.error : null
     const result =
@@ -60,11 +53,6 @@ export const ReaktiveringsForm = ({
                     </BodyShort>
                 </div>
             </Alert>
-            {kreverManuellGodkjenning ? (
-                <ManuellGodkjenningAlert
-                    bekreftGodkjenning={setErManueltGodkjent}
-                />
-            ) : null}
             <fetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
@@ -75,9 +63,6 @@ export const ReaktiveringsForm = ({
                 />
                 <Button
                     loading={fetcher.state == "submitting"}
-                    disabled={
-                        kreverManuellGodkjenning ? !erManueltGodkjent : false
-                    }
                     onClick={() =>
                         loggKnappKlikket("Reaktiver arbeidsrettet oppfølging")
                     }

@@ -219,7 +219,6 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 break
         }
     }, [])
-
     switch (props.status) {
         case BrukerStatus.INGEN_BRUKER_VALGT:
             return <Alert variant="info">Ingen bruker valgt</Alert>
@@ -247,8 +246,13 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 <StartOppfolgingForm
                     fnr={props.fnr}
                     navKontor={props.navKontor}
-                    kreverManuellGodkjenning={
-                        props.status === BrukerStatus.KREVER_MANUELL_GODKJENNING
+                    kreverManuellGodkjenningPgaIkkeBosatt={
+                        props.status ===
+                        BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT
+                    }
+                    kreverManuellGodkjenningPgaDnummerIkkeEosGbr={
+                        props.status ===
+                        BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR
                     }
                 />
             )
