@@ -14,7 +14,6 @@ export const ReaktiveringsForm = ({ fnr }: { fnr: string }) => {
         "resultat" in (fetcher?.data || {})
             ? (fetcher.data as { kode: string; resultat: string })
             : null
-    const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
 
     return (
         <div className="flex flex-col space-y-8 mx-auto">
