@@ -219,6 +219,7 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 break
         }
     }, [])
+
     switch (props.status) {
         case BrukerStatus.INGEN_BRUKER_VALGT:
             return <Alert variant="info">Ingen bruker valgt</Alert>
@@ -240,8 +241,9 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                     </List>
                 </Alert>
             )
-        case BrukerStatus.KREVER_MANUELL_GODKJENNING:
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
+        case BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR:
+        case BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT:
             return (
                 <StartOppfolgingForm
                     fnr={props.fnr}

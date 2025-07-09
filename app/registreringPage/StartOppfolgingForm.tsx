@@ -48,12 +48,6 @@ export const StartOppfolgingForm = ({
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
 
-    console.log(
-        "manuell godkjenning ikke bosatt: ",
-        kreverManuellGodkjenningPgaIkkeBosatt,
-        " manuell godkjenning midlertidig: ",
-        kreverManuellGodkjenningPgaDnummerIkkeEosGbr,
-    )
     return (
         <div className="flex flex-col space-y-8 mx-auto">
             {brukerErUnder18 ? (
