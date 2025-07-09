@@ -13,7 +13,7 @@ const ManuellGodkjenningIkkeBosattAlert = ({
             <Heading size="small">Ikke bosatt i Norge</Heading>
             <BodyShort className="pt-4">
                 Denne personen har kanskje ikke rett på arbeidsrettet oppfølging
-                fordi statusen i Folkeregisteret er "ikke bosatt". Gjør en
+                fordi statusen i Folkeregisteret er "ikke bosatt". Gjør en{" "}
                 <Link
                     inlineText
                     underline
