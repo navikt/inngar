@@ -23,6 +23,7 @@ import { loggBesok } from "~/amplitude.client"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
 import { VisittkortLoading } from "~/components/Visittkort.tsx"
+import { red } from "@open-draft/logger"
 
 const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 
@@ -155,6 +156,7 @@ export const action = async ({
 
     switch (intent) {
         case "CLEAR_CONTEXT":
+            redirect("/")
             break
         case "FETCH_FNR_FOR_CODE":
             break
