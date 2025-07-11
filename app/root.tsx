@@ -18,10 +18,11 @@ import { importSubApp } from "~/util/importUtil"
 import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { loggBesok } from "~/amplitude.client"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
+import { VisittkortLoading } from "~/components/Visittkort.tsx"
 
 const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 
@@ -61,7 +62,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
     const { cssUrl, jsUrl } = useLoaderData()
     const fetcher = useFetcher()
     const { fnrCode } = useParams()
+
+    const [isLoadingUser, setIsLoadingUser] = useState(false)
+
     const redirectToChangedUser = (fnr: string | null | undefined) => {
+        if (!fnrCode && fnr) {
+            setIsLoadingUser(true)
+        }
+
         const formData = new FormData()
         formData.set("fnr", fnr || "")
         formData.set("fnrCode", fnrCode ?? "")
@@ -71,6 +79,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         loggBesok()
     }, [])
+
+    useEffect(() => {
+        // If fnrCode is in url, is always means we are finished loading
+        if (fnrCode) {
+            setIsLoadingUser(false)
+        }
+    }, [fnrCode])
 
     return (
         <html lang="en" className="bg-bg-subtle">
@@ -96,7 +111,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                         redirectToChangedUser(fnr)
                     }}
                 />
-
+                {isLoadingUser ? <VisittkortLoading /> : null}
                 {children}
                 <ScrollRestoration />
                 <Scripts />

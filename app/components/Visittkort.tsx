@@ -4,11 +4,12 @@ import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
 import { logger } from "../../server/logger"
 import { getOversiktenLink } from "~/config.client"
+import { Skeleton } from "@navikt/ds-react"
 
 const exportName = "veilarbvisittkortfs"
 
 interface VisittKortProps {
-    enhet?: string
+    enhet?: string | null
     fnr: string
     tilbakeTilFlate: string
     visVeilederVerktoy: boolean
@@ -67,6 +68,22 @@ const VisittkortPlaceholder = () => {
     return <div className="bg-white h-[76.8px]"></div>
 }
 
+export const VisittkortLoading = () => {
+    return (
+        <div className="bg-white justify-center flex p-2">
+            <div className="flex items-center flex-1 max-w-[120rem]">
+                <div className="h-4 w-[44.79px] mr-2"></div>
+                <Skeleton variant="circle" width={48} height={48} />
+                <div className="ml-2">
+                    <Skeleton width="150px" height="20px" />
+                </div>
+                <Skeleton className="ml-16" width="150px" height="20px" />
+                <Skeleton className="ml-16" width="150px" height="20px" />
+            </div>
+        </div>
+    )
+}
+
 const Visittkort = ({
     fnrState,
     navKontor,
@@ -74,11 +91,8 @@ const Visittkort = ({
     fnrState: FnrState
     navKontor: string | null | undefined
 }) => {
-    useEffect(() => {
-        console.log("On mount Visittkort")
-    }, [])
-
-    if (fnrState.loading || !fnrState.fnr) return null
+    if (fnrState.loading) return <VisittkortLoading />
+    if (!fnrState.fnr) return null
     return (
         <div className="bg-white">
             <ClientOnlyChild placeholder={<VisittkortPlaceholder />}>
