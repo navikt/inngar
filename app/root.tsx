@@ -154,12 +154,14 @@ export const action = async ({
     const intent = formData.get("intent") as Intent
 
     switch (intent) {
-        case "CLEAR_CONTEXT":
+        case "CLEAR_CONTEXT": {
             redirect("/")
             break
-        case "FETCH_FNR_FOR_CODE":
+        }
+        case "FETCH_FNR_FOR_CODE": {
             break
-        case "GENERATE_FNR_CODE":
+        }
+        case "GENERATE_FNR_CODE": {
             const fnr = formData.get("fnr") as string
             const code = await ModiacontextholderApi.generateForFnr(fnr)
             if (code) {
@@ -168,6 +170,7 @@ export const action = async ({
                 // Fallback if something went wrong
                 return redirect(`/`)
             }
+        }
         default:
             break
     }
