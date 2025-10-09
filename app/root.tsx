@@ -18,10 +18,11 @@ import { importSubApp } from "~/util/importUtil"
 import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { loggBesok } from "~/amplitude.client"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
+import { VisittkortLoading } from "~/components/Visittkort.tsx"
 
 const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 
@@ -57,20 +58,62 @@ export type FnrState =
     | { loading: true }
     | { loading: false; fnr?: string | undefined | null }
 
+type Intent =
+    | "CLEAR_CONTEXT"
+    | "GENERATE_FNR_CODE"
+    | "FETCH_FNR_FOR_CODE"
+    | "INGORE"
+
+const getIntent = (
+    fnr: string | undefined | null,
+    fnrCode: string | undefined | null,
+): Intent => {
+    if (!fnr && !fnrCode) return "CLEAR_CONTEXT"
+    if (fnr && !fnrCode) return "GENERATE_FNR_CODE"
+    if (!fnr && fnrCode) return "FETCH_FNR_FOR_CODE"
+    if (fnr && fnrCode) return "INGORE"
+    return "INGORE"
+}
+
+const nullIfEmpty = (value: string | null | undefined): string | null => {
+    if (value === "" || value === undefined) {
+        return null
+    }
+    return value
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
     const { cssUrl, jsUrl } = useLoaderData()
     const fetcher = useFetcher()
     const { fnrCode } = useParams()
-    const redirectToChangedUser = (fnr: string | null | undefined) => {
+
+    const [isLoadingUser, setIsLoadingUser] = useState(false)
+
+    const onFnrChanged = (fnr: string | null | undefined) => {
+        console.log("onFnrChanged", fnr)
+        if (!fnrCode && fnr) {
+            setIsLoadingUser(true)
+        }
+
         const formData = new FormData()
         formData.set("fnr", fnr || "")
-        formData.set("fnrCode", fnrCode ?? "")
+        formData.set(
+            "intent",
+            getIntent(nullIfEmpty(fnr), nullIfEmpty(fnrCode)),
+        )
         fetcher.submit(formData, { method: "POST", action: "/" })
     }
 
     useEffect(() => {
         loggBesok()
     }, [])
+
+    useEffect(() => {
+        // If fnrCode is in url, is always means we are finished loading
+        if (fnrCode) {
+            setIsLoadingUser(false)
+        }
+    }, [fnrCode])
 
     return (
         <html lang="en" className="bg-bg-subtle">
@@ -91,12 +134,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 />
             </head>
             <body>
-                <Decorator
-                    onFnrChanged={(fnr) => {
-                        redirectToChangedUser(fnr)
-                    }}
-                />
-
+                <Decorator onFnrChanged={onFnrChanged} />
+                {isLoadingUser ? <VisittkortLoading /> : null}
                 {children}
                 <ScrollRestoration />
                 <Scripts />
@@ -111,23 +150,29 @@ export const action = async ({
     params,
 }: Route.ActionArgs) => {
     /* This is only called if fnr is changed after page-load */
-
     const formData = await request.formData()
-    const fnr = formData.get("fnr") as string | null
-    const fnrCode = formData.get("fnrCode") as string | null
+    const intent = formData.get("intent") as Intent
 
-    /* This means context was cleared explicitly after page-load */
-    if (!fnr) {
-        return redirect(`/`)
-    } else {
-        /* User changed to new fnr after page load */
-        const code = await ModiacontextholderApi.generateForFnr(fnr)
-        if (code) {
-            return redirect(`/${code}`)
-        } else {
-            // Fallback if something went wrong
-            return redirect(`/`)
+    switch (intent) {
+        case "CLEAR_CONTEXT": {
+            redirect("/")
+            break
         }
+        case "FETCH_FNR_FOR_CODE": {
+            break
+        }
+        case "GENERATE_FNR_CODE": {
+            const fnr = formData.get("fnr") as string
+            const code = await ModiacontextholderApi.generateForFnr(fnr)
+            if (code) {
+                return redirect(`/${code}`)
+            } else {
+                // Fallback if something went wrong
+                return redirect(`/`)
+            }
+        }
+        default:
+            break
     }
 }
 
