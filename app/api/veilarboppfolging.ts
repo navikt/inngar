@@ -227,6 +227,7 @@ const getOppfolgingStatus = async (fnr: string, token: string) => {
     const response = await resilientFetch<GraphqlResponse>(graphqlUrl, {
         body: JSON.stringify(graphqlBody(fnr)),
         headers: {
+            Accept: "application/json",
             ["Nav-Consumer-Id"]: "inngar",
             Authorization: `Bearer ${token}`,
             ["Content-Type"]: "application/json",
