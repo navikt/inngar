@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import type { Route } from "../../.react-router/types/app/routes/+types"
-import { getEnv } from "~/util/envUtil"
+import { EnvType, getEnv } from "~/util/envUtil"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import type { DecoratorProps } from "~/components/DecoratorProps"
 import { logger } from "../../server/logger"
@@ -27,6 +27,8 @@ export function handleError(
 
 type OnFnrChanged = (fnr?: string | null | undefined) => void
 
+const env = getEnv()
+
 const InternarbeidsflateDecorator = ({
     onFnrChanged,
 }: {
@@ -44,9 +46,8 @@ const InternarbeidsflateDecorator = ({
                 showSearchArea: true,
                 showEnheter: false,
                 appName: "Arbeidsrettet oppfølging",
-                environment: "q2",
-                urlFormat:
-                    getEnv().ingressType === "ansatt" ? "ANSATT" : "NAV_NO",
+                environment: env.type == EnvType.prod ? "prod" : "q2",
+                urlFormat: env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO",
                 showHotkeys: false,
                 proxy: "/api/modiacontextholder",
             })
