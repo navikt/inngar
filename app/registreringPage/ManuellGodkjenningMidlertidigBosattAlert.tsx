@@ -18,7 +18,7 @@ const ManuellGodkjenningMidlertidigBosattAlert = ({
                 <Link
                     inlineText
                     underline
-                    href="navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Vurdering-av-oppholdsrett,-lovlig-opphold-og-avslag-etter-Nav-loven-§-14-a.aspx"
+                    href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Vurdering-av-oppholdsrett,-lovlig-opphold-og-avslag-etter-Nav-loven-§-14-a.aspx"
                 >
                     vurdering av lovlig opphold og avslag etter Nav-loven § 14 a
                 </Link>
