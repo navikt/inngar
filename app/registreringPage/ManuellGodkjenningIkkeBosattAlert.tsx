@@ -17,7 +17,7 @@ const ManuellGodkjenningIkkeBosattAlert = ({
                 <Link
                     inlineText
                     underline
-                    href="https://lovdata.no/lov/2006-06-16-20/§14a"
+                    href="navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Vurdering-av-oppholdsrett,-lovlig-opphold-og-avslag-etter-Nav-loven-§-14-a.aspx"
                 >
                     vurdering av lovlig opphold og avslag etter Nav-loven § 14 a
                 </Link>
