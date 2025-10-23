@@ -19,7 +19,11 @@ const RegistreringUnder18 = ({
                     <ListItem>
                         Det kreves et samtykke fra foresatte for å kunne starte
                         oppfølging.{" "}
-                        <Link variant="neutral" href={urlSamtykkeNavet}>
+                        <Link
+                            variant="neutral"
+                            href={urlSamtykkeNavet}
+                            target="_blank"
+                        >
                             Følg retningslinjene for samtykke på Navet.
                         </Link>
                     </ListItem>

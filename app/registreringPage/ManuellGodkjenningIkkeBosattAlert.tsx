@@ -18,6 +18,7 @@ const ManuellGodkjenningIkkeBosattAlert = ({
                     inlineText
                     underline
                     href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Vurdering-av-oppholdsrett,-lovlig-opphold-og-avslag-etter-Nav-loven-§-14-a.aspx"
+                    target="_blank"
                 >
                     vurdering av lovlig opphold og avslag etter Nav-loven § 14 a
                 </Link>
