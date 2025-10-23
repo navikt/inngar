@@ -1,70 +1,94 @@
-import { EnvType, getEnv } from "~/util/envUtil"
+import { EnvType, getEnv } from "~/util/envUtil";
 
 declare global {
     interface Window {
         umami?: {
-            track: (eventName: string, data?: Record<string, any>) => void
-        }
+            track: (eventName: string, data?: Record<string, any>) => void;
+        };
     }
 }
 
-const env = getEnv()
+const env = getEnv();
+
 export const umamiWebsiteId =
     env.type === EnvType.local
         ? "41187a92-9c2f-420e-a55d-32f63d0f42c6"
         : env.type === EnvType.prod
             ? "c95a40cb-8c0f-43a5-9768-dfff0c21c037"
-            : "41187a92-9c2f-420e-a55d-32f63d0f42c6"
+            : "41187a92-9c2f-420e-a55d-32f63d0f42c6";
 
-export const logEvent = (eventName: string, eventProperties: Record<string, any> = {}) => {
+export function loadUmami(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.nav.no/team-researchops/sporing/sporing.js";
+        script.defer = true;
+        script.setAttribute("data-host-url", "https://umami.nav.no");
+        script.setAttribute("data-website-id", umamiWebsiteId);
+        script.setAttribute("data-tag", "start-arbeidsoppfolging");
+
+        script.onload = () => {
+            if (window.umami) {
+                resolve();
+            } else {
+                reject(new Error("Umami script loaded but window.umami is undefined"));
+            }
+        };
+
+        script.onerror = () => reject(new Error("Failed to load Umami script"));
+
+        document.head.appendChild(script);
+    });
+}
+
+export const logEvent = (
+    eventName: string,
+    eventProperties: Record<string, any> = {}
+) => {
     if (env.type === EnvType.local) {
-        console.log("Umami localhost event:", eventName, eventProperties)
-        // return
-    }
-
-    if (!window.umami) {
-        console.warn("Umami ikke lastet ennå for event:", eventName)
+        console.log("Umami localhost event:", eventName, eventProperties);
         return
     }
 
     try {
-        console.log("Sender event til Umami:", eventName, eventProperties)
-        window.umami.track(eventName, { ...eventProperties, app: "start-arbeidsoppfolging" })
+        console.log("Sender event til Umami:", eventName, eventProperties);
+        window.umami?.track(eventName, {
+            ...eventProperties,
+            app: "start-arbeidsoppfolging",
+        });
     } catch (e) {
-        console.warn("Feil ved Umami tracking:", e)
+        console.warn("Feil ved Umami tracking:", e);
     }
-}
+};
 
 export const loggBesok = () => {
-    logEvent("start-arbeidsoppfolging.besok")
-}
+    logEvent("start-arbeidsoppfolging.besok");
+};
 
 export const loggSkjemaFullført = (arenaStatus: string) => {
     logEvent("skjema fullført", {
         skjemanavn: "start-arbeidsoppfolging",
         skjemaId: "start-arbeidsoppfolging",
         arenaStatus,
-    })
-}
+    });
+};
 
 export const loggSkjemaFeilet = (arenaStatus: string) => {
     logEvent("skjema innsending feilet", {
         skjemanavn: "start-arbeidsoppfolging",
         skjemaId: "start-arbeidsoppfolging",
         arenaStatus,
-    })
-}
+    });
+};
 
-export const loggLenkeKlikket = (lenketekst: string) => {
-    logEvent("lenke klikket", { lenketekst })
-}
+export const loggLenkeKlikket = (lenketekst: string) =>
+    logEvent("lenke klikket", { lenketekst });
 
 export const loggAlertVist = (
     variant: string,
-    kanStarteOppfolging: string | "INGEN_BRUKER_VALGT",
+    kanStarteOppfolging: string | "INGEN_BRUKER_VALGT"
 ) => {
-    logEvent("alert vist", { variant, tekst: kanStarteOppfolging })
-}
+    logEvent("alert vist", { variant, tekst: kanStarteOppfolging });
+};
 
 export const loggKnappKlikket = (knappTekst: string) =>
-    logEvent("knapp klikket", { tekst: knappTekst })
+    logEvent("knapp klikket", { tekst: knappTekst });
