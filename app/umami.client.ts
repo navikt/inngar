@@ -11,7 +11,7 @@ declare global {
 const env = getEnv()
 export const umamiWebsiteId =
     env.type === EnvType.local
-        ? ""
+        ? "41187a92-9c2f-420e-a55d-32f63d0f42c6"
         : env.type === EnvType.prod
             ? "c95a40cb-8c0f-43a5-9768-dfff0c21c037"
             : "41187a92-9c2f-420e-a55d-32f63d0f42c6"
@@ -19,14 +19,17 @@ export const umamiWebsiteId =
 export const logEvent = (eventName: string, eventProperties: Record<string, any> = {}) => {
     if (env.type === EnvType.local) {
         console.log("Umami localhost event:", eventName, eventProperties)
+        // return
+    }
+
+    if (!window.umami) {
+        console.warn("Umami ikke lastet ennå for event:", eventName)
         return
     }
 
     try {
-        window.umami?.track(eventName, {
-            ...eventProperties,
-            app: "start-arbeidsoppfolging",
-        })
+        console.log("Sender event til Umami:", eventName, eventProperties)
+        window.umami.track(eventName, { ...eventProperties, app: "start-arbeidsoppfolging" })
     } catch (e) {
         console.warn("Feil ved Umami tracking:", e)
     }

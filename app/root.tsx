@@ -92,7 +92,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             />
             <script defer src="https://cdn.nav.no/team-researchops/sporing/sporing.js"
                     data-host-url="https://umami.nav.no"
-                    data-website-id={umamiWebsiteId}></script>
+                    data-website-id="41187a92-9c2f-420e-a55d-32f63d0f42c6"
+                    data-tag="start-arbeidsoppfolging"
+            />
         </head>
         <body>
         <Decorator
