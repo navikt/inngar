@@ -109,6 +109,8 @@ export const startOppfolging = async (args: Route.ActionArgs, fnr: string) => {
                         Location: `/registrert?result=${startOppfolgingResponse.body.kode}`,
                     },
                 })
+            } else {
+                return { error: startOppfolgingResponse.error }
             }
         } else {
             return tokenOrResponse
@@ -149,6 +151,8 @@ export const reaktiverOppfolging = async (
                         Location: `/registrert?result=${reaktiverOppfolgingResponse.body.kode}`,
                     },
                 })
+            } else {
+                return { error: reaktiverOppfolgingResponse.error }
             }
         } else {
             return tokenOrResponse
@@ -259,19 +263,9 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 />
             )
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT:
-            return (
-                <ReaktiveringsForm
-                    fnr={props.fnr}
-                    kreverManuellGodkjenning={false}
-                />
-            )
+            return <ReaktiveringsForm fnr={props.fnr} />
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING:
-            return (
-                <ReaktiveringsForm
-                    fnr={props.fnr}
-                    kreverManuellGodkjenning={true}
-                />
-            )
+            return <ReaktiveringsForm fnr={props.fnr} />
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
             return (
                 <UgyldigFregStatusWarning

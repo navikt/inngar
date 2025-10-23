@@ -38,11 +38,17 @@ export const StartOppfolgingForm = ({
     kreverManuellGodkjenningPgaIkkeBosatt: boolean
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr: boolean
 }) => {
-    const fetcher = useFetcher()
-    const error = "error" in (fetcher?.data || {}) ? fetcher.data.error : null
+    const startOppfolgingFetcher = useFetcher()
+    const error =
+        "error" in (startOppfolgingFetcher?.data || {})
+            ? startOppfolgingFetcher.data.error
+            : null
     const result =
-        "resultat" in (fetcher?.data || {})
-            ? (fetcher.data as { kode: string; resultat: string })
+        "resultat" in (startOppfolgingFetcher?.data || {})
+            ? (startOppfolgingFetcher.data as {
+                  kode: string
+                  resultat: string
+              })
             : null
     const brukerErUnder18 = isUnder18(fnr)
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
@@ -95,7 +101,7 @@ export const StartOppfolgingForm = ({
                     </BodyShort>
                 </div>
             </Alert>
-            <fetcher.Form method="post" className="space-y-4">
+            <startOppfolgingFetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
                 <input type="hidden" name="fnr" value={fnr} />
                 <input
@@ -109,16 +115,16 @@ export const StartOppfolgingForm = ({
                         ((kreverManuellGodkjenningPgaIkkeBosatt ||
                             kreverManuellGodkjenningPgaDnummerIkkeEosGbr) &&
                             !erManueltGodkjent) ||
-                        fetcher.state != "idle"
+                        startOppfolgingFetcher.state != "idle"
                     }
-                    loading={fetcher.state != "idle"}
+                    loading={startOppfolgingFetcher.state != "idle"}
                     onClick={() =>
                         loggKnappKlikket("Start arbeidsrettet oppfølging")
                     }
                 >
                     Start arbeidsrettet oppfølging
                 </Button>
-            </fetcher.Form>
+            </startOppfolgingFetcher.Form>
             {result ? (
                 <Alert variant="success">
                     <Heading size="small">{result.kode}</Heading>
