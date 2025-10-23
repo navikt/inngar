@@ -9,7 +9,7 @@ import {
     loggLenkeKlikket,
     loggSkjemaFeilet,
     loggSkjemaFullført,
-} from "~/amplitude.client"
+} from "~/umami.client"
 
 export const clientLoader = () => {
     return {

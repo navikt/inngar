@@ -7,7 +7,7 @@ import {
     ScrollRestoration,
     useFetcher,
     useLoaderData,
-    useParams,
+    useParams
 } from "react-router"
 import "@navikt/ds-css"
 
@@ -19,7 +19,7 @@ import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "../server/onlyServerOtelUtils"
 import { useEffect } from "react"
-import { loggBesok } from "~/amplitude.client"
+import { umamiWebsiteId, loggBesok } from "~/umami.client"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
 
@@ -33,7 +33,7 @@ export const loader = async ({}: Route.LoaderArgs) => {
     return startActiveSpan(`loader - root`, async () => {
         // TODO: Dont use dev url
         const { cssUrl, jsUrl } = await importSubApp(
-            `https://cdn.nav.no/poao/veilarbvisittkortfs-${isProd ? "prod" : "dev"}/build`,
+            `https://cdn.nav.no/poao/veilarbvisittkortfs-${isProd ? "prod" : "dev"}/build`
         )
         return { cssUrl, jsUrl, ...other }
     })
@@ -44,13 +44,13 @@ export const links: Route.LinksFunction = () => [
     {
         rel: "preconnect",
         href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
+        crossOrigin: "anonymous"
     },
     {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
     },
-    { rel: "stylesheet", href: stylesheet },
+    { rel: "stylesheet", href: stylesheet }
 ]
 
 export type FnrState =
@@ -74,42 +74,46 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
     return (
         <html lang="en" className="bg-bg-subtle">
-            <head>
-                <meta charSet="utf-8" />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                />
-                <Meta />
-                <Links />
-                <link rel="stylesheet" href={cssUrl} />
-                <script src={jsUrl} type="module" />
-                <script src="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/bundle.js"></script>
-                <link
-                    rel="stylesheet"
-                    href="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/index.css"
-                />
-            </head>
-            <body>
-                <Decorator
-                    onFnrChanged={(fnr) => {
-                        redirectToChangedUser(fnr)
-                    }}
-                />
+        <head>
+            <meta charSet="utf-8" />
+            <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1"
+            />
+            <Meta />
+            <Links />
+            <link rel="stylesheet" href={cssUrl} />
+            <script src={jsUrl} type="module" />
+            <script
+                src="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/bundle.js"></script>
+            <link
+                rel="stylesheet"
+                href="https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/dev/latest/dist/index.css"
+            />
+            <script defer src="https://cdn.nav.no/team-researchops/sporing/sporing.js"
+                    data-host-url="https://umami.nav.no"
+                    data-website-id={umamiWebsiteId}></script>
+        </head>
+        <body>
+        <Decorator
+            onFnrChanged={(fnr) => {
+                redirectToChangedUser(fnr)
+            }}
+        />
 
-                {children}
-                <ScrollRestoration />
-                <Scripts />
-            </body>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+        </body>
         </html>
     )
 }
 
 export const action = async ({
-    request,
-    context,
-    params,
-}: Route.ActionArgs) => {
+                                 request,
+                                 context,
+                                 params
+                             }: Route.ActionArgs) => {
     /* This is only called if fnr is changed after page-load */
 
     const formData = await request.formData()

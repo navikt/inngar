@@ -4,7 +4,7 @@ import {
     FormError,
 } from "~/registreringPage/StartOppfolgingForm.tsx"
 import { useFetcher } from "react-router"
-import { loggKnappKlikket } from "~/amplitude.client.ts"
+import { loggKnappKlikket } from "~/umami.client.ts"
 
 export const ReaktiveringsForm = ({ fnr }: { fnr: string }) => {
     const fetcher = useFetcher()
