@@ -21,7 +21,7 @@ import {
 import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
 import { useEffect } from "react"
-import { loggAlertVist } from "~/amplitude.client"
+import { loggAlertVist } from "~/umami.client"
 import { ReaktiveringsForm } from "~/registreringPage/ReaktiveringsForm.tsx"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {

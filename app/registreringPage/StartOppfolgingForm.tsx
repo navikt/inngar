@@ -12,7 +12,7 @@ import {
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
-import { loggKnappKlikket } from "~/amplitude.client.ts"
+import { loggKnappKlikket } from "~/umami.client.ts"
 import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
 import ManuellGodkjenningMidlertidigBosattAlert from "~/registreringPage/ManuellGodkjenningMidlertidigBosattAlert.tsx"
 
