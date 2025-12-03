@@ -14,7 +14,7 @@ const ManuellGodkjenningMidlertidigBosattAlert = ({
             <BodyShort className="pt-4">
                 Denne personen har kanskje ikke rett på arbeidsoppfølging fordi
                 statusen i Folkeregisteret er “midlertidig bosatt” (d-nummer),
-                og personen er ikke statsborger i EU/EØS eller GBR. Gjør en{" "}
+                og personen er ikke statsborger i EU/EØS. Gjør en{" "}
                 <Link
                     inlineText
                     underline
