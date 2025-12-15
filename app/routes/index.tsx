@@ -178,8 +178,10 @@ const getTittel = (brukerStatus: BrukerStatus) => {
     if (
         brukerStatus ===
             BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT ||
-        brukerStatus ==
-            BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING
+        brukerStatus ===
+            BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT ||
+        brukerStatus ===
+            BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR
     ) {
         return "Reaktiver arbeidsrettet oppfølging"
     } else {
@@ -263,8 +265,8 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 />
             )
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT:
-            return <ReaktiveringsForm fnr={props.fnr} />
-        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING:
+        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR:
+        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT:
             return <ReaktiveringsForm fnr={props.fnr} />
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
             return (
