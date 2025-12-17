@@ -39,18 +39,23 @@ const InternarbeidsflateDecorator = ({
 
     useEffect(() => {
         if (rootMountRef.current) {
-            appMountFunction(rootMountRef.current, {
-                fetchActiveUserOnMount: true,
-                onEnhetChanged: () => {},
-                onFnrChanged: onFnrChanged,
-                showSearchArea: true,
-                showEnheter: false,
-                appName: "Arbeidsrettet oppfølging",
-                environment: env.type == EnvType.prod ? "prod" : "q2",
-                urlFormat: env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO",
-                showHotkeys: false,
-                proxy: "/api/modiacontextholder",
-            })
+            try {
+                appMountFunction(rootMountRef.current, {
+                    fetchActiveUserOnMount: true,
+                    onEnhetChanged: () => {},
+                    onFnrChanged: onFnrChanged,
+                    showSearchArea: true,
+                    showEnheter: false,
+                    appName: "Arbeidsrettet oppfølging",
+                    environment: env.type == EnvType.prod ? "prod" : "q2",
+                    urlFormat:
+                        env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO",
+                    showHotkeys: false,
+                    proxy: "/api/modiacontextholder",
+                })
+            } catch (e) {
+                console.error(e)
+            }
         }
     })
 
