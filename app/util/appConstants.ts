@@ -10,6 +10,11 @@ export const apps = {
         namespace: "poao",
         preserveContextPath: true,
     },
+    aoOppfolgingskontor: {
+        name: "ao-oppfolgingskontor",
+        namespace: "dab",
+        preserveContextPath: true,
+    },
     veilarbportefolje: {
         name: "veilarbportefolje",
         namespace: "obo",

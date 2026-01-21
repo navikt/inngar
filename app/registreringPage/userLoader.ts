@@ -82,7 +82,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
             throw oppfolgingsStatus.error
         }
         const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
-        const enhet = oppfolgingsEnhet.enhet ?? null
+        const enhet = oppfolgingsEnhet.enhet ?? null // TODO: Endre her
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet
             : null
