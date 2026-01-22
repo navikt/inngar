@@ -50,13 +50,13 @@ export const userLoader = async (request: Request, fnrCode: string) => {
     const hentOboForVeilarboppfolging = () =>
         getOboToken(request, apps.veilarboppfolging)
 
-    const hentOboForAoOppfølgingskontor = () =>
+    const hentOboForAoOppfolgingskontor = () =>
         getOboToken(request, apps.aoOppfolgingskontor)
 
     const [veilarbOppfolgingTokenOrResponse, aoOppfolgingskontorTokenOrResponse, aktivBrukerResult, aktivEnhetResult] =
         await Promise.all([
             hentOboForVeilarboppfolging(),
-            hentOboForAoOppfølgingskontor(),
+            hentOboForAoOppfolgingskontor(),
             hentAktivBruker(),
             hentAktivEnhet(),
         ])
