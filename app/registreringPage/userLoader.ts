@@ -96,17 +96,22 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         }
         const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
 
-        const arbeidsoppfolgingskontorResponse
-            = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(aktivBruker, aoOppfolgingskontorTokenOrResponse.token)
-        if (!arbeidsoppfolgingskontorResponse.ok) {
-            throw arbeidsoppfolgingskontorResponse.error
-        }
-        const navKontor = brukAoOppfolgingskontor
-            ? {
-                navn: arbeidsoppfolgingskontorResponse.data.kontorNavn,
-                id: arbeidsoppfolgingskontorResponse.data.kontorId,
+        const hentNavKontor = async () => {
+            if (brukAoOppfolgingskontor) {
+                const arbeidsoppfolgingskontorResponse
+                    = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(aktivBruker, aoOppfolgingskontorTokenOrResponse.token)
+                if (!arbeidsoppfolgingskontorResponse.ok) {
+                    throw arbeidsoppfolgingskontorResponse.error
+                }
+                return {
+                    navn: arbeidsoppfolgingskontorResponse.data.kontorNavn,
+                    id: arbeidsoppfolgingskontorResponse.data.kontorId,
+                }
+            } else {
+                return oppfolgingsEnhet.enhet
             }
-            : oppfolgingsEnhet.enhet
+        }
+        const navKontor = await hentNavKontor()
 
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet
