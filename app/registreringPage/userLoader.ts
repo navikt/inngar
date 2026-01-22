@@ -92,18 +92,19 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         if (!oppfolgingsStatus.ok) {
             throw oppfolgingsStatus.error
         }
-        const arbeidsoppfolgingskontor = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor("FNR", aoOppfolgingskontorTokenOrResponse.token) // TODO: Legg til brukers FNR
-        if (!arbeidsoppfolgingskontor.ok) {
-            throw arbeidsoppfolgingskontor.error
+        const arbeidsoppfolgingskontorResponse
+            = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor("FNR", aoOppfolgingskontorTokenOrResponse.token) // TODO: Legg til brukers FNR
+        if (!arbeidsoppfolgingskontorResponse.ok) {
+            throw arbeidsoppfolgingskontorResponse.error
         }
         const { oppfolging } = oppfolgingsStatus.data.data
-        const enhet = arbeidsoppfolgingskontor.data ?? null
+        const enhet = arbeidsoppfolgingskontorResponse.data
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet
             : null
         return {
             status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
-            navKontor: { navn: arbeidsoppfolgingskontor.data.kontorNavn, id: arbeidsoppfolgingskontor.data.kontorId, kilde: "AoOppfølgingskontor"  }, // TODO: Hva skal kilde være?
+            navKontor: { navn: enhet.kontorNavn, id: enhet.kontorId, kilde: "AO_OPPFOLGINGSKONTOR"  }, // TODO: Hva skal kilde være? Trenger vi det?
             aktivtNavKontor: aktivEnhet,
             fnr: aktivBruker,
             kanStarteOppfolging: oppfolging.kanStarteOppfolging,

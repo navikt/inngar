@@ -28,7 +28,7 @@ export const NavKontorInfo = ({
         )
     }
 
-    const kilde = enhet.kilde === "ARENA" ? "Arena" : "Geografisk tilknytning"
+    const kilde = enhet.kilde === "AO_OPPFOLGINGSKONTOR" ? "Arbeidsoppfølgingskontor" : "Geografisk tilknytning"
     const beskrivelseTekst =
         "Brukeren blir lagt til i porteføljen til denne enheten"
 
