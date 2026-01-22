@@ -13,6 +13,7 @@ import { BrukerStatus, finnBrukerStatus } from "~/registreringPage/BrukerStatus"
 import { redirect } from "react-router"
 import type { NavKontor } from "~/registreringPage/StartOppfolgingForm.tsx"
 import { AoOppfolgingskontorApi } from "~/api/aoOppfolgingskontor.ts"
+import { EnvType, getEnv } from "~/util/envUtil.ts"
 
 export interface UserLoaderSuccessResponse {
     status: BrukerStatus
@@ -23,6 +24,7 @@ export interface UserLoaderSuccessResponse {
 }
 
 export const userLoader = async (request: Request, fnrCode: string) => {
+    const brukAoOppfolgingskontor = getEnv().type !== EnvType.prod
     const hentAktivEnhet = () =>
         resilientFetch<{ aktivEnhet: string | null }>(
             new Request(aktivEnhetUrl, new Request(request)),
@@ -92,19 +94,26 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         if (!oppfolgingsStatus.ok) {
             throw oppfolgingsStatus.error
         }
+        const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
+
         const arbeidsoppfolgingskontorResponse
             = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(aktivBruker, aoOppfolgingskontorTokenOrResponse.token)
         if (!arbeidsoppfolgingskontorResponse.ok) {
             throw arbeidsoppfolgingskontorResponse.error
         }
-        const { oppfolging } = oppfolgingsStatus.data.data
-        const enhet = arbeidsoppfolgingskontorResponse.data
+        const navKontor = brukAoOppfolgingskontor
+            ? {
+                navn: arbeidsoppfolgingskontorResponse.data.kontorNavn,
+                id: arbeidsoppfolgingskontorResponse.data.kontorId,
+            }
+            : oppfolgingsEnhet.enhet
+
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet
             : null
         return {
             status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
-            navKontor: { navn: enhet.kontorNavn, id: enhet.kontorId },
+            navKontor,
             aktivtNavKontor: aktivEnhet,
             fnr: aktivBruker,
             kanStarteOppfolging: oppfolging.kanStarteOppfolging,
