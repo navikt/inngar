@@ -93,7 +93,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
             throw oppfolgingsStatus.error
         }
         const arbeidsoppfolgingskontorResponse
-            = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(aktivBruker, aoOppfolgingskontorTokenOrResponse.token) // TODO: Legg til brukers FNR
+            = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(aktivBruker, aoOppfolgingskontorTokenOrResponse.token)
         if (!arbeidsoppfolgingskontorResponse.ok) {
             throw arbeidsoppfolgingskontorResponse.error
         }
@@ -104,7 +104,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
             : null
         return {
             status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
-            navKontor: { navn: enhet.kontorNavn, id: enhet.kontorId, kilde: "AO_OPPFOLGINGSKONTOR"  }, // TODO: Hva skal kilde være? Trenger vi det?
+            navKontor: { navn: enhet.kontorNavn, id: enhet.kontorId },
             aktivtNavKontor: aktivEnhet,
             fnr: aktivBruker,
             kanStarteOppfolging: oppfolging.kanStarteOppfolging,

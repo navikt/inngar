@@ -28,7 +28,6 @@ export const NavKontorInfo = ({
         )
     }
 
-    const kilde = enhet.kilde === "AO_OPPFOLGINGSKONTOR" ? "Arbeidsoppfølgingskontor" : "Geografisk tilknytning"
     const beskrivelseTekst =
         "Brukeren blir lagt til i porteføljen til denne enheten"
 
@@ -37,7 +36,7 @@ export const NavKontorInfo = ({
             <TextField
                 label="Oppfølgingsenhet"
                 description={beskrivelseTekst}
-                value={`${enhet.navn} (${enhet.id}) - ${kilde}`}
+                value={`${enhet.navn} (${enhet.id})`}
                 readOnly
             />
         </>
