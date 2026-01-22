@@ -19,7 +19,7 @@ type OnFnrChanged = (fnr?: string | null | undefined) => void
 const env = getEnv()
 
 const DecoratorPlaceholder = () => {
-    return <div className="bg-gray-900 h-[48px]"></div>
+    return <div className="bg-gray-900 min-h-[48px]"></div>
 }
 
 const InternarbeidsflateDecorator = ({
