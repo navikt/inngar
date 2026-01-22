@@ -93,7 +93,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
             throw oppfolgingsStatus.error
         }
         const arbeidsoppfolgingskontorResponse
-            = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor("FNR", aoOppfolgingskontorTokenOrResponse.token) // TODO: Legg til brukers FNR
+            = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(aktivBruker, aoOppfolgingskontorTokenOrResponse.token) // TODO: Legg til brukers FNR
         if (!arbeidsoppfolgingskontorResponse.ok) {
             throw arbeidsoppfolgingskontorResponse.error
         }
