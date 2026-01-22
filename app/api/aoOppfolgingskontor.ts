@@ -2,7 +2,7 @@ import { apps } from "~/util/appConstants.ts"
 import { toUrl } from "~/api/utils.ts"
 import { type FetchError, type HttpError, resilientFetch, type Success } from "~/util/resilientFetch.ts"
 
-const baseUrl = toUrl(apps.aoOppfolgingskontor, "/api")
+const finnArbeidsoppfolgingskontorUrl = toUrl(apps.aoOppfolgingskontor, "/api/finn-kontor")
 
 export interface Arbeidsoppfolgingskontor {
     kontorId: string,
@@ -11,7 +11,7 @@ export interface Arbeidsoppfolgingskontor {
 
 export const finnArbeidsoppfolgingskontor = (fnr: string, token: string): Promise<Success<Arbeidsoppfolgingskontor> | HttpError | FetchError> => {
     return resilientFetch<Arbeidsoppfolgingskontor>(
-        `${baseUrl}/finn-kontor`,
+        finnArbeidsoppfolgingskontorUrl,
         {
             method: "POST",
             body: JSON.stringify({ ident: fnr, erArbeidssøker: false }),
