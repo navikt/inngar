@@ -14,6 +14,7 @@ const veilarboppfolging = `http://veilarboppfolging.poao`
 const veilarbperson = `http://veilarbperson.obo`
 const veilarbportefolje = `http://veilarbportefolje.obo`
 const veilarbveileder = `http://veilarbveileder.obo`
+const aoOppfolgingskontor = `http://ao-oppfolgingskontor.dab`
 const oboUnleash = `http://obo-unleash.obo`
 
 const getAktivBrukerMock = () => {
@@ -189,6 +190,14 @@ export const handlers = [
                 ],
             })
         },
+    ),
+    http.post(
+        `${aoOppfolgingskontor}/api/finn-kontor`, () => {
+            return HttpResponse.json({
+                kontorId: "1234",
+                kontorNavn: "Nav Helsfyr",
+            })
+        }
     ),
     http.get(`${oboUnleash}/api/feature`, () => {
         return HttpResponse.json({

@@ -24,7 +24,6 @@ export const arbeidssokerRegistreringUrl =
 export interface NavKontor {
     navn: string
     id: string
-    kilde: string
 }
 
 export const StartOppfolgingForm = ({

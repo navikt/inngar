@@ -6,10 +6,8 @@ import {
     resilientFetch,
     type Success,
 } from "~/util/resilientFetch"
+import { toUrl } from "~/api/utils.ts"
 
-const toUrl = (targetApp: App, pathname: string): string => {
-    return `http://${targetApp.name}.${targetApp.namespace}${pathname}`
-}
 
 const reaktiverOppfolgingUrl = toUrl(
     apps.veilarboppfolging,

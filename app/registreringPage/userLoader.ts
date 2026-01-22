@@ -12,6 +12,8 @@ import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import { BrukerStatus, finnBrukerStatus } from "~/registreringPage/BrukerStatus"
 import { redirect } from "react-router"
 import type { NavKontor } from "~/registreringPage/StartOppfolgingForm.tsx"
+import { AoOppfolgingskontorApi } from "~/api/aoOppfolgingskontor.ts"
+import { EnvType, getEnv } from "~/util/envUtil.ts"
 
 export interface UserLoaderSuccessResponse {
     status: BrukerStatus
@@ -22,6 +24,7 @@ export interface UserLoaderSuccessResponse {
 }
 
 export const userLoader = async (request: Request, fnrCode: string) => {
+    const brukAoOppfolgingskontor = getEnv().type !== EnvType.prod
     const hentAktivEnhet = () =>
         resilientFetch<{ aktivEnhet: string | null }>(
             new Request(aktivEnhetUrl, new Request(request)),
@@ -49,9 +52,13 @@ export const userLoader = async (request: Request, fnrCode: string) => {
     const hentOboForVeilarboppfolging = () =>
         getOboToken(request, apps.veilarboppfolging)
 
-    const [tokenOrResponse, aktivBrukerResult, aktivEnhetResult] =
+    const hentOboForAoOppfolgingskontor = () =>
+        getOboToken(request, apps.aoOppfolgingskontor)
+
+    const [veilarbOppfolgingTokenOrResponse, aoOppfolgingskontorTokenOrResponse, aktivBrukerResult, aktivEnhetResult] =
         await Promise.all([
             hentOboForVeilarboppfolging(),
+            hentOboForAoOppfolgingskontor(),
             hentAktivBruker(),
             hentAktivEnhet(),
         ])
@@ -63,10 +70,16 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         return redirect("/")
     }
 
-    if (!tokenOrResponse.ok)
+    if (!veilarbOppfolgingTokenOrResponse.ok)
         throw dataWithTraceId({
             errorMessage:
                 "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
+        })
+
+    if (!aoOppfolgingskontorTokenOrResponse.ok)
+        throw dataWithTraceId({
+            errorMessage:
+                "Kunne ikke hente arbeidsoppfølgingskontor (On-Behalf-Of exchange feilet)",
         })
 
     const aktivBruker = aktivBrukerResult.data.fnr
@@ -76,19 +89,36 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         const oppfolgingsStatus =
             await VeilarboppfolgingApi.getOppfolgingStatus(
                 aktivBruker,
-                tokenOrResponse.token,
+                veilarbOppfolgingTokenOrResponse.token,
             )
         if (!oppfolgingsStatus.ok) {
             throw oppfolgingsStatus.error
         }
         const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
-        const enhet = oppfolgingsEnhet.enhet ?? null
+
+        const hentNavKontor = async () => {
+            if (brukAoOppfolgingskontor) {
+                const arbeidsoppfolgingskontorResponse
+                    = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(aktivBruker, aoOppfolgingskontorTokenOrResponse.token)
+                if (!arbeidsoppfolgingskontorResponse.ok) {
+                    throw arbeidsoppfolgingskontorResponse.error
+                }
+                return {
+                    navn: arbeidsoppfolgingskontorResponse.data.kontorNavn,
+                    id: arbeidsoppfolgingskontorResponse.data.kontorId,
+                }
+            } else {
+                return oppfolgingsEnhet.enhet
+            }
+        }
+        const navKontor = await hentNavKontor()
+
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet
             : null
         return {
             status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
-            navKontor: enhet,
+            navKontor,
             aktivtNavKontor: aktivEnhet,
             fnr: aktivBruker,
             kanStarteOppfolging: oppfolging.kanStarteOppfolging,
