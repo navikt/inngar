@@ -1,12 +1,27 @@
 import type { Route } from "../../.react-router/types/app/routes/+types"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
 import { logger } from "../../server/logger"
-import { useVisittkortNavspa } from "~/util/useNAVSPA.tsx"
 import { getOversiktenLink } from "~/config.client.ts"
 
-const exportName = "veilarbvisittkortfs"
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            "ao-visittkort": React.DetailedHTMLProps<
+                React.HTMLAttributes<HTMLElement> & {
+                    fnr?: string
+                    enhet?: string
+                    tilbakeTilFlate?: string
+                    visVeilederVerktoy?: string
+                    skjulEtiketter?: string
+                    avsluttOppfolgingOpptelt?: string
+                },
+                HTMLElement
+            >
+        }
+    }
+}
 
 export interface VisittKortProps {
     enhet?: string
@@ -32,24 +47,18 @@ const VisittkortInner = ({
     fnr: string
     enhet: string | null | undefined
 }) => {
-    const rootMountRef = useRef(null)
-    const mountFunction = useVisittkortNavspa()
-
-    useEffect(() => {
-        if (!rootMountRef.current) return
-        if (!mountFunction) return
-        console.log("Rendrer visittkort")
-        const oversiktenLink = getOversiktenLink()
-        mountFunction(rootMountRef.current, {
-            enhet,
-            fnr,
-            tilbakeTilFlate: oversiktenLink,
-            visVeilederVerktoy: false,
-            key: fnr,
-        })
-    }, [mountFunction])
-
-    return <div className="bg-white h-[76.8px]" ref={rootMountRef}></div>
+    const oversiktenLink = getOversiktenLink()
+    return (
+        <div className="bg-white min-h-[76.8px]">
+            <ao-visittkort
+                enhet={enhet ?? "1234"}
+                fnr={fnr ?? "123123123"}
+                tilbakeTilFlate={oversiktenLink}
+                visVeilederVerktoy={"true"}
+                key={fnr}
+            ></ao-visittkort>
+        </div>
+    )
 }
 const VisittkortPlaceholder = () => {
     return <div className="bg-white h-[76.8px]"></div>
