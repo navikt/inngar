@@ -3,25 +3,17 @@ import { useEffect, useRef } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
 import { logger } from "../../server/logger"
-import { getOversiktenLink } from "~/config.client"
+import { useVisittkortNavspa } from "~/util/useNAVSPA.tsx"
+import { getOversiktenLink } from "~/config.client.ts"
 
 const exportName = "veilarbvisittkortfs"
 
-interface VisittKortProps {
+export interface VisittKortProps {
     enhet?: string
     fnr: string
     tilbakeTilFlate: string
     visVeilederVerktoy: boolean
     key: string
-}
-
-declare const window: {
-    NAVSPA: {
-        veilarbvisittkortfs: (
-            node: HTMLElement,
-            props: VisittKortProps,
-        ) => React.ReactElement
-    }
 }
 
 export function handleError(
@@ -33,11 +25,6 @@ export function handleError(
     }
 }
 
-let key = 1
-const getIncrementedKey = () => {
-    key = key + 1
-    return (key + 1).toString()
-}
 const VisittkortInner = ({
     fnr,
     enhet,
@@ -46,23 +33,24 @@ const VisittkortInner = ({
     enhet: string | null | undefined
 }) => {
     const rootMountRef = useRef(null)
+    const mountFunction = useVisittkortNavspa()
 
     useEffect(() => {
         if (!rootMountRef.current) return
+        if (!mountFunction) return
+        console.log("Rendrer visittkort")
         const oversiktenLink = getOversiktenLink()
-        const appMountFunction = window.NAVSPA[exportName]
-        appMountFunction(rootMountRef.current, {
+        mountFunction(rootMountRef.current, {
             enhet,
             fnr,
             tilbakeTilFlate: oversiktenLink,
             visVeilederVerktoy: false,
             key: fnr,
         })
-    })
+    }, [mountFunction])
 
-    return <div ref={rootMountRef}></div>
+    return <div className="bg-white h-[76.8px]" ref={rootMountRef}></div>
 }
-
 const VisittkortPlaceholder = () => {
     return <div className="bg-white h-[76.8px]"></div>
 }

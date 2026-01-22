@@ -10,7 +10,6 @@ import {
     Link,
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
-import { NavKontorInfo } from "~/registreringPage/NavKontorInfo"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { loggKnappKlikket } from "~/umami.client.ts"
 import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
@@ -32,7 +31,7 @@ export const StartOppfolgingForm = ({
     kreverManuellGodkjenningPgaIkkeBosatt,
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr,
 }: {
-    navKontor: NavKontor | null
+    navKontor: Promise<NavKontor | null>
     fnr: string
     kreverManuellGodkjenningPgaIkkeBosatt: boolean
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr: boolean

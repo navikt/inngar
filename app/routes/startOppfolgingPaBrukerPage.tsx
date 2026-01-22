@@ -189,7 +189,7 @@ const getTittel = (brukerStatus: BrukerStatus) => {
     }
 }
 
-export default function Index({
+export default function StartOppfolgingPaBrukerPage({
     loaderData,
 }: {
     loaderData: Awaited<ReturnType<typeof loader>>
