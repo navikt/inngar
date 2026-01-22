@@ -96,8 +96,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         if (!arbeidsoppfølgingskontor.ok) {
             throw arbeidsoppfølgingskontor.error
         }
-
-        const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
+        const { oppfolging } = oppfolgingsStatus.data.data
         const enhet = arbeidsoppfølgingskontor.data ?? null
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet

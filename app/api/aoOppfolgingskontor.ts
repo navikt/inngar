@@ -2,7 +2,7 @@ import { apps } from "~/util/appConstants.ts"
 import { toUrl } from "~/api/utils.ts"
 import { type FetchError, type HttpError, resilientFetch, type Success } from "~/util/resilientFetch.ts"
 
-const baseUrl = toUrl(apps.aoOppfolgingskontor, "/api/")
+const baseUrl = toUrl(apps.aoOppfolgingskontor, "/api")
 
 export interface Arbeidsoppfølgingskontor {
     kontorId: string,
