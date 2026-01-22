@@ -53,7 +53,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
     const hentOboForAoOppfølgingskontor = () =>
         getOboToken(request, apps.aoOppfolgingskontor)
 
-    const [veilarbOppfolgingTokenOrResponse, aoOppfølgingskontorTokenOrResponse, aktivBrukerResult, aktivEnhetResult] =
+    const [veilarbOppfolgingTokenOrResponse, aoOppfolgingskontorTokenOrResponse, aktivBrukerResult, aktivEnhetResult] =
         await Promise.all([
             hentOboForVeilarboppfolging(),
             hentOboForAoOppfølgingskontor(),
@@ -74,7 +74,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
                 "Kunne ikke hente aktivbruker (On-Behalf-Of exchange feilet)",
         })
 
-    if (!aoOppfølgingskontorTokenOrResponse.ok)
+    if (!aoOppfolgingskontorTokenOrResponse.ok)
         throw dataWithTraceId({
             errorMessage:
                 "Kunne ikke hente arbeidsoppfølgingskontor (On-Behalf-Of exchange feilet)",
@@ -92,18 +92,18 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         if (!oppfolgingsStatus.ok) {
             throw oppfolgingsStatus.error
         }
-        const arbeidsoppfølgingskontor = await AoOppfolgingskontorApi.finnArbeidsoppfølgingskontor("FNR", aoOppfølgingskontorTokenOrResponse.token) // TODO: Legg til brukers FNR
-        if (!arbeidsoppfølgingskontor.ok) {
-            throw arbeidsoppfølgingskontor.error
+        const arbeidsoppfolgingskontor = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor("FNR", aoOppfolgingskontorTokenOrResponse.token) // TODO: Legg til brukers FNR
+        if (!arbeidsoppfolgingskontor.ok) {
+            throw arbeidsoppfolgingskontor.error
         }
         const { oppfolging } = oppfolgingsStatus.data.data
-        const enhet = arbeidsoppfølgingskontor.data ?? null
+        const enhet = arbeidsoppfolgingskontor.data ?? null
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet
             : null
         return {
             status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
-            navKontor: { navn: arbeidsoppfølgingskontor.data.kontorNavn, id: arbeidsoppfølgingskontor.data.kontorId, kilde: "AoOppfølgingskontor"  }, // TODO: Hva skal kilde være?
+            navKontor: { navn: arbeidsoppfolgingskontor.data.kontorNavn, id: arbeidsoppfolgingskontor.data.kontorId, kilde: "AoOppfølgingskontor"  }, // TODO: Hva skal kilde være?
             aktivtNavKontor: aktivEnhet,
             fnr: aktivBruker,
             kanStarteOppfolging: oppfolging.kanStarteOppfolging,

@@ -4,13 +4,13 @@ import { type FetchError, type HttpError, resilientFetch, type Success } from "~
 
 const baseUrl = toUrl(apps.aoOppfolgingskontor, "/api")
 
-export interface Arbeidsoppfølgingskontor {
+export interface Arbeidsoppfolgingskontor {
     kontorId: string,
     kontorNavn: string,
 }
 
-export const finnArbeidsoppfølgingskontor = (fnr: string, token: string): Promise<Success<Arbeidsoppfølgingskontor> | HttpError | FetchError> => {
-    return resilientFetch<Arbeidsoppfølgingskontor>(
+export const finnArbeidsoppfolgingskontor = (fnr: string, token: string): Promise<Success<Arbeidsoppfolgingskontor> | HttpError | FetchError> => {
+    return resilientFetch<Arbeidsoppfolgingskontor>(
         `${baseUrl}/finn-kontor`,
         {
             method: "POST",
@@ -25,5 +25,5 @@ export const finnArbeidsoppfølgingskontor = (fnr: string, token: string): Promi
 }
 
 export const AoOppfolgingskontorApi = {
-    finnArbeidsoppfølgingskontor,
+    finnArbeidsoppfolgingskontor: finnArbeidsoppfolgingskontor,
 }
