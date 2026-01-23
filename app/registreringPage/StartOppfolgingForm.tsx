@@ -68,40 +68,40 @@ export const StartOppfolgingForm = ({
                     bekreftGodkjenning={setErManueltGodkjent}
                 />
             ) : null}
-            <NavKontorInfo enhet={navKontor} />
-            <Alert inline variant={"info"}>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Brukeren vil få informasjon på Min Side om at det er
-                        startet arbeidsrettet oppfølging.
-                    </BodyShort>
-                </div>
-            </Alert>
-            <Alert inline variant={"info"}>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Brukeren blir ikke registrert som arbeidssøker når du
-                        starter arbeidsrettet oppfølging her. Dersom brukeren
-                        også er arbeidssøker bør du benytte{" "}
-                        <Link
-                            href={arbeidssokerRegistreringUrl}
-                            variant="neutral"
-                        >
-                            arbeidssøkerregistreringen.
-                        </Link>
-                    </BodyShort>
-                </div>
-            </Alert>
-            <Alert inline variant={"info"}>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Registreringen for arbeidsrettet oppfølging medfører
-                        ikke at brukeren får noen meldeplikt.
-                    </BodyShort>
-                </div>
-            </Alert>
             <startOppfolgingFetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
+                <NavKontorInfo enhet={navKontor} />
+                <Alert inline variant={"info"}>
+                    <div className="space-y-4">
+                        <BodyShort>
+                            Brukeren vil få informasjon på Min Side om at det er
+                            startet arbeidsrettet oppfølging.
+                        </BodyShort>
+                    </div>
+                </Alert>
+                <Alert inline variant={"info"}>
+                    <div className="space-y-4">
+                        <BodyShort>
+                            Brukeren blir ikke registrert som arbeidssøker når
+                            du starter arbeidsrettet oppfølging her. Dersom
+                            brukeren også er arbeidssøker bør du benytte{" "}
+                            <Link
+                                href={arbeidssokerRegistreringUrl}
+                                variant="neutral"
+                            >
+                                arbeidssøkerregistreringen.
+                            </Link>
+                        </BodyShort>
+                    </div>
+                </Alert>
+                <Alert inline variant={"info"}>
+                    <div className="space-y-4">
+                        <BodyShort>
+                            Registreringen for arbeidsrettet oppfølging medfører
+                            ikke at brukeren får noen meldeplikt.
+                        </BodyShort>
+                    </div>
+                </Alert>
                 <input type="hidden" name="fnr" value={fnr} />
                 <input
                     type="hidden"

@@ -46,6 +46,7 @@ export const MockSettingsForm = ({
     const registrerArenaSvar =
         mockSettings?.registrerArenaSvar || "OK_REGISTRERT_I_ARENA"
     const kanStarteOppfolging = mockSettings?.kanStarteOppfolging || "JA"
+    const kanOverstyreKontor = mockSettings?.kanOverstyreKontor ?? true
 
     const toggleMockSetting = () => setIsOpen(!isOpen)
 
@@ -192,6 +193,24 @@ export const MockSettingsForm = ({
                             ))}
                         </Select>
                     </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <p>Kan overstyre kontor:</p>
+                    <ToggleGroup
+                        defaultValue={kanOverstyreKontor ? "ja" : "nei"}
+                        onChange={(value) => {
+                            fetcher.submit(
+                                {
+                                    ...mockSettings,
+                                    kanOverstyreKontor: value === "ja",
+                                },
+                                { action: "/mock-settings", method: "POST" },
+                            )
+                        }}
+                    >
+                        <ToggleGroup.Item value="ja">Ja</ToggleGroup.Item>
+                        <ToggleGroup.Item value="nei">Nei</ToggleGroup.Item>
+                    </ToggleGroup>
                 </div>
             </div>
         </div>

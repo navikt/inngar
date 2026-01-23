@@ -81,7 +81,10 @@ export const action = async (args: Route.ActionArgs) => {
 
     switch (actionType) {
         case "startOppfolging":
-            return startOppfolging(args, fnr)
+            const kontorSattAvVeileder = formdata.get(
+                "kontorSattAvVeileder",
+            ) as string | null
+            return startOppfolging(args, fnr, kontorSattAvVeileder || undefined)
         case "reaktiverOppfolging":
             return reaktiverOppfolging(args, fnr)
         default:
@@ -89,7 +92,11 @@ export const action = async (args: Route.ActionArgs) => {
     }
 }
 
-export const startOppfolging = async (args: Route.ActionArgs, fnr: string) => {
+export const startOppfolging = async (
+    args: Route.ActionArgs,
+    fnr: string,
+    kontorSattAvVeileder?: string,
+) => {
     try {
         logger.info("Starter oppfølging")
         const tokenOrResponse = await getOboToken(
@@ -101,6 +108,7 @@ export const startOppfolging = async (args: Route.ActionArgs, fnr: string) => {
                 await VeilarboppfolgingApi.startOppfolging(
                     fnr,
                     tokenOrResponse.token,
+                    kontorSattAvVeileder,
                 )
             if (startOppfolgingResponse.ok) {
                 return new Response(null, {

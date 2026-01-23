@@ -16,6 +16,7 @@ const veilarbportefolje = `http://veilarbportefolje.obo`
 const veilarbveileder = `http://veilarbveileder.obo`
 const aoOppfolgingskontor = `http://ao-oppfolgingskontor.dab`
 const oboUnleash = `http://obo-unleash.obo`
+const veilarbaktivitet = `http://veilarbaktivitet.dab`
 
 const getAktivBrukerMock = () => {
     const over18Mocking = mockSettings.over18
@@ -204,4 +205,18 @@ export const handlers = [
                 true,
         })
     }),
+    http.get(
+        `${veilarbaktivitet}/veilarbaktivitet/api/feature`,
+        ({ request }) => {
+            const url = new URL(request.url)
+            const feature = url.searchParams.get("feature")
+
+            const features: Record<string, boolean> = {
+                "inngar.overstyr-kontor":
+                    mockSettings.kanOverstyreKontor ?? true,
+            }
+
+            return HttpResponse.json(features[feature ?? ""] ?? false)
+        },
+    ),
 ]

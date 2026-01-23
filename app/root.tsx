@@ -32,7 +32,6 @@ export const loader = async ({}: Route.LoaderArgs) => {
         other = { mockSettings }
     }
     return startActiveSpan(`loader - root`, async () => {
-        // TODO: Dont use dev url
         const { cssUrl, jsUrl } = await importSubApp(
             `https://cdn.nav.no/poao/veilarbvisittkortfs-${isProd ? "prod" : "dev"}/build`,
         )
