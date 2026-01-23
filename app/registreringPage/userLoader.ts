@@ -18,6 +18,7 @@ import { EnvType, getEnv } from "~/util/envUtil.ts"
 export interface UserLoaderSuccessResponse {
     status: BrukerStatus
     navKontor: Promise<NavKontor>
+    kontorOptions: Promise<NavKontor[]>
     aktivtNavKontor: string
     fnr: string
     kanStarteOppfolging: KanStarteOppfolging
@@ -119,7 +120,33 @@ export const userLoader = async (request: Request, fnrCode: string) => {
                 return Promise.resolve(oppfolgingsEnhet.enhet)
             }
         }
+
+        const hentKontorOptions = async (): Promise<NavKontor[]> => {
+            if (brukAoOppfolgingskontor) {
+                return AoOppfolgingskontorApi.hentAlleKontor(
+                    aktivBruker,
+                    aoOppfolgingskontorTokenOrResponse.token,
+                ).then((alleKontorResponse) => {
+                    if (!alleKontorResponse.ok) {
+                        logger.warn(
+                            `Kunne ikke hente alle kontor: ${alleKontorResponse.type}, ${alleKontorResponse.error.message}`,
+                        )
+                        return []
+                    }
+                    const alleKontor = alleKontorResponse.data.data.alleKontor
+
+                    return alleKontor.map((kontor) => ({
+                        id: kontor.kontorId,
+                        navn: kontor.kontorNavn,
+                    }))
+                })
+            } else {
+                return Promise.resolve([])
+            }
+        }
+
         const navKontor = hentNavKontor()
+        const kontorOptions = hentKontorOptions()
 
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet
@@ -127,6 +154,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         return {
             status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
             navKontor,
+            kontorOptions,
             aktivtNavKontor: aktivEnhet,
             fnr: aktivBruker,
             kanStarteOppfolging: oppfolging.kanStarteOppfolging,

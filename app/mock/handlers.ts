@@ -199,6 +199,29 @@ export const handlers = [
             kontorNavn: "Nav Helsfyr",
         })
     }),
+    http.post(`${aoOppfolgingskontor}/graphql`, async ({ request }) => {
+        const payload = (await request.json()) as {
+            query: string
+            variables: { identArg: string }
+        }
+
+        // Check if it's the alleKontor query
+        if (payload.query.includes("alleKontor")) {
+            return HttpResponse.json({
+                data: {
+                    alleKontor: [
+                        { kontorId: "0219", kontorNavn: "NAV Oslo" },
+                        { kontorId: "1234", kontorNavn: "NAV Helsfyr" },
+                        { kontorId: "0315", kontorNavn: "NAV Grünerløkka" },
+                        { kontorId: "0118", kontorNavn: "NAV Fredrikstad" },
+                        { kontorId: "0604", kontorNavn: "NAV Kongsberg" },
+                    ],
+                },
+            })
+        }
+
+        return HttpResponse.json({ data: null })
+    }),
     http.get(`${oboUnleash}/api/feature`, () => {
         return HttpResponse.json({
             "veilarbvisittkortfs.vis-ny-inngang-til-arbeidsrettet-oppfolging":

@@ -28,11 +28,13 @@ export interface NavKontor {
 
 export const StartOppfolgingForm = ({
     navKontor,
+    kontorOptions,
     fnr,
     kreverManuellGodkjenningPgaIkkeBosatt,
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr,
 }: {
     navKontor: Promise<NavKontor | null>
+    kontorOptions?: Promise<NavKontor[]>
     fnr: string
     kreverManuellGodkjenningPgaIkkeBosatt: boolean
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr: boolean
@@ -70,7 +72,10 @@ export const StartOppfolgingForm = ({
             ) : null}
             <startOppfolgingFetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
-                <NavKontorInfo enhet={navKontor} />
+                <NavKontorInfo
+                    enhet={navKontor}
+                    kontorOptions={kontorOptions}
+                />
                 <Alert inline variant={"info"}>
                     <div className="space-y-4">
                         <BodyShort>

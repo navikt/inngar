@@ -23,6 +23,7 @@ import { loadUmami, loggBesok } from "~/umami.client"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
 import { getEnv } from "~/util/envUtil.ts"
+import { Theme } from "@navikt/ds-react"
 
 const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 
@@ -146,13 +147,19 @@ export default function App({ loaderData }: Route.ComponentProps) {
     if (import.meta.env.DEV) {
         return (
             <>
-                <MockSettingsForm
-                    mockSettings={(loaderData as any).mockSettings}
-                />
-                <Outlet />
+                <Theme theme="light">
+                    <MockSettingsForm
+                        mockSettings={(loaderData as any).mockSettings}
+                    />
+                    <Outlet />
+                </Theme>
             </>
         )
     } else {
-        return <Outlet />
+        return (
+            <Theme theme="light">
+                <Outlet />
+            </Theme>
+        )
     }
 }

@@ -6,7 +6,7 @@ import { apps } from "~/util/appConstants"
 import {
     type KanIkkeStarteOppfolgingPgaIkkeTilgang,
     type KanIkkeStartePgaFolkeregisterStatus,
-    VeilarboppfolgingApi,
+    VeilarboppfolgingApi
 } from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
@@ -14,10 +14,7 @@ import { IkkeTilgangWarning } from "~/registreringPage/IkkeTilgangWarning"
 import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"
 import { UgyldigFregStatusWarning } from "~/registreringPage/UgyldigFregStatusWarning"
 import Visittkort from "~/components/Visittkort"
-import {
-    userLoader,
-    type UserLoaderSuccessResponse,
-} from "~/registreringPage/userLoader"
+import { userLoader, type UserLoaderSuccessResponse } from "~/registreringPage/userLoader"
 import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
 import { useEffect } from "react"
@@ -208,9 +205,13 @@ export default function StartOppfolgingPaBrukerPage({
                 fnrState={{ loading: false, fnr: loaderData.fnr }}
                 navKontor={loaderData.aktivtNavKontor}
             />
-            <div className="flex flex-col w-[620px] p-4 mt-6 mx-auto space-y-8">
-                <Heading size="large">{getTittel(loaderData.status)}</Heading>
-                <IndexPage {...loaderData} />
+            <div className="bg-bg-subtle flex flex-1">
+                <div className="flex flex-col w-[620px] p-4 mt-6 mx-auto space-y-8 ">
+                    <Heading size="large">
+                        {getTittel(loaderData.status)}
+                    </Heading>
+                    <IndexPage {...loaderData} />
+                </div>
             </div>
         </>
     )
@@ -262,6 +263,7 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 <StartOppfolgingForm
                     fnr={props.fnr}
                     navKontor={props.navKontor}
+                    kontorOptions={props.kontorOptions}
                     kreverManuellGodkjenningPgaIkkeBosatt={
                         props.status ===
                         BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT
