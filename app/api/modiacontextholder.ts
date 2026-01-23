@@ -1,8 +1,4 @@
-import {
-    type FetchError,
-    type HttpError,
-    resilientFetch,
-} from "~/util/resilientFetch"
+import { type FetchError, resilientFetch } from "~/util/resilientFetch"
 import {
     aktivBrukerUrl,
     contextUrl,
@@ -95,6 +91,3 @@ export const ModiacontextholderApi = {
     setFnrIContextHolder,
     hentAktivBruker,
 }
-
-const isCodeNotFound = (result: HttpError | FetchError) =>
-    result.error && result.type === "HttpError" && result.status === 404

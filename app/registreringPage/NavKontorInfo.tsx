@@ -11,7 +11,6 @@ export const NavKontorInfo = ({
 }: {
     enhet: Promise<NavKontor | null | undefined>
 }) => {
-    // const { navKontor } = useLoaderData<UserLoaderData>()
     return (
         <Suspense
             fallback={
@@ -42,7 +41,7 @@ export const NavKontorInfo = ({
     )
 }
 
-const IngenKontorAlert = (
+const IngenKontorAlert = () => (
     <Alert variant="warning">
         <Heading size="small">Fant ikke enhet</Heading>
         Brukeren har sannsynligvis ingen registrert bostedsadresse i Norge, men
