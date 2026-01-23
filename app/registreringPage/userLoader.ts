@@ -102,7 +102,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
 
         const hentNavKontor = async () => {
-            if (brukAoOppfolgingskontor || true) {
+            if (brukAoOppfolgingskontor) {
                 return AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(
                     aktivBruker,
                     aoOppfolgingskontorTokenOrResponse.token,
