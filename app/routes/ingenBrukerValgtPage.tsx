@@ -1,14 +1,10 @@
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import type { Route } from "../../.react-router/types/app/routes/+types/ingenBrukerValgtPage"
 import { Alert, Heading } from "@navikt/ds-react"
-import { aktivBrukerUrl } from "~/config"
-import { resilientFetch } from "~/util/resilientFetch"
 import { redirect } from "react-router"
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-    const aktivBruker = await resilientFetch<{ aktivBruker: string | null }>(
-        new Request(aktivBrukerUrl, new Request(request)),
-    )
+    const aktivBruker = await ModiacontextholderApi.hentAktivBruker(request)
     if (aktivBruker.ok && aktivBruker.data.aktivBruker) {
         const fnrCode = await ModiacontextholderApi.generateForFnr(
             aktivBruker.data.aktivBruker,
