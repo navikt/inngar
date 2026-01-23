@@ -1,12 +1,9 @@
 import type { Route } from "./+types/index"
 import { Alert, Heading, List } from "@navikt/ds-react"
-import { getOboToken } from "~/util/tokenExchange.server"
 import { DefaultErrorBoundary } from "~/components/DefaultErrorBoundary"
-import { apps } from "~/util/appConstants"
 import {
     type KanIkkeStarteOppfolgingPgaIkkeTilgang,
     type KanIkkeStartePgaFolkeregisterStatus,
-    VeilarboppfolgingApi,
 } from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
@@ -23,6 +20,8 @@ import { ListItem } from "@navikt/ds-react/List"
 import { useEffect } from "react"
 import { loggAlertVist } from "~/umami.client"
 import { ReaktiveringsForm } from "~/registreringPage/ReaktiveringsForm.tsx"
+import { startOppfolging } from "~/server/oppfolging.server.ts"
+import { reaktiverOppfolging } from "~/server/reaktiver.server.ts"
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (import.meta.env.DEV) {
@@ -86,87 +85,6 @@ export const action = async (args: Route.ActionArgs) => {
             return reaktiverOppfolging(args, fnr)
         default:
             return { error: `Ukjent actionType: ${actionType}` }
-    }
-}
-
-export const startOppfolging = async (args: Route.ActionArgs, fnr: string) => {
-    try {
-        logger.info("Starter oppfølging")
-        const tokenOrResponse = await getOboToken(
-            args.request,
-            apps.veilarboppfolging,
-        )
-        if (tokenOrResponse.ok) {
-            const startOppfolgingResponse =
-                await VeilarboppfolgingApi.startOppfolging(
-                    fnr,
-                    tokenOrResponse.token,
-                )
-            if (startOppfolgingResponse.ok) {
-                return new Response(null, {
-                    status: 302,
-                    headers: {
-                        Location: `/registrert?result=${startOppfolgingResponse.body.kode}`,
-                    },
-                })
-            } else {
-                return { error: startOppfolgingResponse.error }
-            }
-        } else {
-            return tokenOrResponse
-        }
-    } catch (e) {
-        logger.error(
-            `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging ${e.toString()}`,
-        )
-        throw dataWithTraceId(
-            {
-                message: `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging: ${(e as Error).cause}`,
-            },
-            { status: 500 },
-        )
-    }
-}
-
-export const reaktiverOppfolging = async (
-    args: Route.ActionArgs,
-    fnr: string,
-) => {
-    try {
-        logger.info("Reaktiver oppfølging")
-        const tokenOrResponse = await getOboToken(
-            args.request,
-            apps.veilarboppfolging,
-        )
-        if (tokenOrResponse.ok) {
-            const reaktiverOppfolgingResponse =
-                await VeilarboppfolgingApi.reaktiverOppfolging(
-                    fnr,
-                    tokenOrResponse.token,
-                )
-            if (reaktiverOppfolgingResponse.ok) {
-                return new Response(null, {
-                    status: 302,
-                    headers: {
-                        Location: `/registrert?result=${reaktiverOppfolgingResponse.body.kode}`,
-                    },
-                })
-            } else {
-                return { error: reaktiverOppfolgingResponse.error }
-            }
-        } else {
-            return tokenOrResponse
-        }
-    } catch (e) {
-        logger.error(
-            `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging ${e.toString()}`,
-        )
-        throw dataWithTraceId(
-            {
-                message: `Kunne ikke opprette oppfolgingsperiode i veilarboppfolging: ${(e as Error).cause}`,
-            },
-            { status: 500 },
-        )
     }
 }
 
