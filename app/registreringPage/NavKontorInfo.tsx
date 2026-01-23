@@ -1,6 +1,7 @@
 import { Alert, Heading, List, TextField } from "@navikt/ds-react"
 import { Suspense } from "react"
 import { Await } from "react-router"
+import type { NavKontor } from "~/registreringPage/StartOppfolgingForm.tsx"
 
 const beskrivelseTekst =
     "Brukeren blir lagt til i porteføljen til denne enheten"
@@ -23,7 +24,7 @@ export const NavKontorInfo = ({
                 />
             }
         >
-            <Await resolve={navKontor}>
+            <Await resolve={enhet}>
                 {(kontor) =>
                     !!kontor ? (
                         <TextField
