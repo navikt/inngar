@@ -1,5 +1,4 @@
 import { Alert, Heading, List, TextField } from "@navikt/ds-react"
-import type { NavKontor } from "~/registreringPage/StartOppfolgingForm"
 import { Suspense } from "react"
 import { Await } from "react-router"
 
@@ -11,6 +10,7 @@ export const NavKontorInfo = ({
 }: {
     enhet: Promise<NavKontor | null | undefined>
 }) => {
+    // const { navKontor } = useLoaderData<UserLoaderData>()
     return (
         <Suspense
             fallback={
@@ -23,7 +23,7 @@ export const NavKontorInfo = ({
                 />
             }
         >
-            <Await resolve={enhet}>
+            <Await resolve={navKontor}>
                 {(kontor) =>
                     !!kontor ? (
                         <TextField
@@ -32,7 +32,9 @@ export const NavKontorInfo = ({
                             value={`${kontor.navn} (${kontor.id})`}
                             readOnly
                         />
-                    ) : null
+                    ) : (
+                        <IngenKontorAlert />
+                    )
                 }
             </Await>
         </Suspense>
