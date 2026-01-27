@@ -83,7 +83,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }, [])
 
     return (
-        <html lang="en" className="bg-bg-subtle">
+        <html lang="en">
             <head>
                 <meta charSet="utf-8" />
                 <meta
