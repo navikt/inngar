@@ -44,6 +44,8 @@ spec:
           namespace: obo
         - application: modiacontextholder
           namespace: personoversikt
+        - application: veilarbaktivitet
+          namespace: dab
       external:
         - host: cdn.nav.no
   observability:
