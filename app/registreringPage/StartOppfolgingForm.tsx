@@ -56,7 +56,7 @@ export const StartOppfolgingForm = ({
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
 
     return (
-        <div className="flex flex-col space-y-8 mx-auto">
+        <div className="flex flex-col mt-4 space-y-8 mx-auto">
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}

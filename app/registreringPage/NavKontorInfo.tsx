@@ -40,9 +40,6 @@ export const NavKontorInfo = ({
     kontorOptions?: Promise<NavKontor[]>
 }) => {
     const kanOverstyreKontor = useFeatureToggle("inngar.overstyr-kontor")
-    const [selectedKontorId, setSelectedKontorId] = useState<string | null>(
-        null,
-    )
 
     return (
         <Suspense
@@ -79,58 +76,18 @@ export const NavKontorInfo = ({
                                 <TextField
                                     label="Oppfølgingsenhet"
                                     description={beskrivelseTekst}
-                                    value={`${kontor.navn} (${kontor.id})`}
+                                    value={kontorNavn(kontor)}
                                     readOnly
                                 />
                             }
                         >
                             <Await resolve={kontorOptions}>
-                                {(kontorList) => {
-                                    // Initialize selected kontor to default if not set
-                                    if (!selectedKontorId) {
-                                        setSelectedKontorId(kontor)
-                                    }
-
-                                    const displayKontor =
-                                        selectedKontorId || kontor.id
-
-                                    // Only send kontorSattAvVeileder if it differs from the default
-                                    const isManuallyOverridden =
-                                        displayKontor.id !== kontor.id
-
-                                    return (
-                                        <>
-                                            <Combobox
-                                                defaultValue={`${kontor.id} - ${kontor.navn}`}
-                                                label="Oppfølgingsenhet"
-                                                options={kontorList.map(
-                                                    (it) => ({
-                                                        label: `${it.id} ${it.navn}`,
-                                                        value: it.id,
-                                                    }),
-                                                )}
-                                                description={beskrivelseTekst}
-                                                // value={displayKontor.id}
-                                                onToggleSelected={(
-                                                    selectedKontorId,
-                                                ) => {
-                                                    if (selectedKontorId) {
-                                                        setSelectedKontorId(
-                                                            selectedKontorId,
-                                                        )
-                                                    }
-                                                }}
-                                            />
-                                            {isManuallyOverridden && (
-                                                <input
-                                                    type="hidden"
-                                                    name="kontorSattAvVeileder"
-                                                    value={displayKontor.id}
-                                                />
-                                            )}
-                                        </>
-                                    )
-                                }}
+                                {(kontorList) => (
+                                    <KontorVelger
+                                        kontor={kontor}
+                                        kontorList={kontorList}
+                                    />
+                                )}
                             </Await>
                         </Suspense>
                     )
@@ -139,3 +96,52 @@ export const NavKontorInfo = ({
         </Suspense>
     )
 }
+
+const KontorVelger = ({
+    kontor,
+    kontorList,
+}: {
+    kontor: NavKontor
+    kontorList: NavKontor[]
+}) => {
+    const defaultKontor = kontorList.find((it) => it.id === kontor.id)
+    const [selectedKontor, setSelectedKontor] = useState<NavKontor | null>(
+        defaultKontor ?? null,
+    )
+    // const displayKontor = selectedKontor || kontor
+
+    // Only send kontorSattAvVeileder if it differs from the default
+    const isManuallyOverridden =
+        selectedKontor && selectedKontor.id !== kontor.id
+
+    return (
+        <>
+            <Combobox
+                defaultValue={
+                    selectedKontor ? kontorNavn(selectedKontor) : undefined
+                }
+                label="Oppfølgingsenhet"
+                options={kontorList.map((it) => kontorNavn(it))}
+                description={beskrivelseTekst}
+                selectedOptions={
+                    selectedKontor ? [kontorNavn(selectedKontor)] : undefined
+                }
+                onToggleSelected={(selectedKontorId) => {
+                    const navKontor = kontorList.find(
+                        (it) => kontorNavn(it) == selectedKontorId,
+                    )
+                    setSelectedKontor(navKontor ?? null)
+                }}
+            />
+            {isManuallyOverridden && selectedKontor && (
+                <input
+                    type="hidden"
+                    name="kontorSattAvVeileder"
+                    value={selectedKontor.id}
+                />
+            )}
+        </>
+    )
+}
+
+const kontorNavn = (navKontor: NavKontor) => `${navKontor.id} ${navKontor.navn}`

@@ -6,7 +6,7 @@ import { apps } from "~/util/appConstants"
 import {
     type KanIkkeStarteOppfolgingPgaIkkeTilgang,
     type KanIkkeStartePgaFolkeregisterStatus,
-    VeilarboppfolgingApi
+    VeilarboppfolgingApi,
 } from "~/api/veilarboppfolging"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
@@ -14,7 +14,10 @@ import { IkkeTilgangWarning } from "~/registreringPage/IkkeTilgangWarning"
 import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"
 import { UgyldigFregStatusWarning } from "~/registreringPage/UgyldigFregStatusWarning"
 import Visittkort from "~/components/Visittkort"
-import { userLoader, type UserLoaderSuccessResponse } from "~/registreringPage/userLoader"
+import {
+    userLoader,
+    type UserLoaderSuccessResponse,
+} from "~/registreringPage/userLoader"
 import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
 import { useEffect } from "react"

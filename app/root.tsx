@@ -151,14 +151,18 @@ export default function App({ loaderData }: Route.ComponentProps) {
                     <MockSettingsForm
                         mockSettings={(loaderData as any).mockSettings}
                     />
-                    <Outlet />
+                    <div className="bg-bg-subtle">
+                        <Outlet />
+                    </div>
                 </Theme>
             </>
         )
     } else {
         return (
             <Theme theme="light">
-                <Outlet />
+                <div className="bg-bg-subtle">
+                    <Outlet />
+                </div>
             </Theme>
         )
     }

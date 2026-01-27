@@ -210,11 +210,11 @@ export const handlers = [
             return HttpResponse.json({
                 data: {
                     alleKontor: [
-                        { kontorId: "0219", kontorNavn: "NAV Oslo" },
-                        { kontorId: "1234", kontorNavn: "NAV Helsfyr" },
-                        { kontorId: "0315", kontorNavn: "NAV Grünerløkka" },
-                        { kontorId: "0118", kontorNavn: "NAV Fredrikstad" },
-                        { kontorId: "0604", kontorNavn: "NAV Kongsberg" },
+                        { kontorId: "0219", kontorNavn: "Nav Oslo" },
+                        { kontorId: "1234", kontorNavn: "Nav Helsfyr" },
+                        { kontorId: "0315", kontorNavn: "Nav Grünerløkka" },
+                        { kontorId: "0118", kontorNavn: "Nav Fredrikstad" },
+                        { kontorId: "0604", kontorNavn: "Nav Kongsberg" },
                     ],
                 },
             })
