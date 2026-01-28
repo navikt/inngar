@@ -38,6 +38,7 @@ const InternarbeidsflateDecorator = ({
             try {
                 mountFunction(rootMountRef.current, {
                     fetchActiveUserOnMount: true,
+                    fetchActiveEnhetOnMount: false,
                     onEnhetChanged: () => {},
                     onFnrChanged: onFnrChanged,
                     showSearchArea: true,
@@ -66,9 +67,11 @@ const InternarbeidsflateDecorator = ({
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
     return (
-        <ClientOnlyChild placeholder={<DecoratorPlaceholder />}>
-            <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />
-        </ClientOnlyChild>
+        <div className="bg-ax-border-focus min-h-[48px]">
+            <ClientOnlyChild placeholder={<DecoratorPlaceholder />}>
+                <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />
+            </ClientOnlyChild>
+        </div>
     )
 }
 export default Decorator

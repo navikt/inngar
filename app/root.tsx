@@ -23,6 +23,7 @@ import { loadUmami, loggBesok } from "~/umami.client"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
 import { getEnv } from "~/util/envUtil.ts"
+import { Theme } from "@navikt/ds-react"
 
 const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 
@@ -32,7 +33,6 @@ export const loader = async ({}: Route.LoaderArgs) => {
         other = { mockSettings }
     }
     return startActiveSpan(`loader - root`, async () => {
-        // TODO: Dont use dev url
         const { cssUrl, jsUrl } = await importSubApp(
             `https://cdn.nav.no/poao/veilarbvisittkortfs-${isProd ? "prod" : "dev"}/build`,
         )
@@ -83,7 +83,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }, [])
 
     return (
-        <html lang="en" className="bg-bg-subtle">
+        <html lang="en" className="min-h-screen bg-ax-bg-sunken">
             <head>
                 <meta charSet="utf-8" />
                 <meta
@@ -92,7 +92,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 />
                 <Meta />
                 <Links />
-                <link rel="stylesheet" href={cssUrl} />
                 <script src={jsUrl} type="module" />
                 <script
                     src={`https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/${isProd ? "prod" : "dev"}/latest/dist/bundle.js`}
@@ -147,13 +146,23 @@ export default function App({ loaderData }: Route.ComponentProps) {
     if (import.meta.env.DEV) {
         return (
             <>
-                <MockSettingsForm
-                    mockSettings={(loaderData as any).mockSettings}
-                />
-                <Outlet />
+                <Theme theme="light">
+                    <MockSettingsForm
+                        mockSettings={(loaderData as any).mockSettings}
+                    />
+                    <div className="bg-ax-bg-sunken">
+                        <Outlet />
+                    </div>
+                </Theme>
             </>
         )
     } else {
-        return <Outlet />
+        return (
+            <Theme theme="light">
+                <div className="bg-ax-bg-sunken">
+                    <Outlet />
+                </div>
+            </Theme>
+        )
     }
 }

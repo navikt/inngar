@@ -18,7 +18,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export default function Index({}: Route.ComponentProps) {
     return (
-        <div className="flex flex-col w-[620px] p-4 mx-auto space-y-4">
+        <div className="flex flex-col w-[620px] p-4 mx-auto gap-4">
             <Heading size="large">Start arbeidsrettet oppfølging</Heading>
             <Alert variant="info">Ingen bruker valgt</Alert>
         </div>

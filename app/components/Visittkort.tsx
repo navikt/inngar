@@ -49,7 +49,7 @@ const VisittkortInner = ({
 }) => {
     const oversiktenLink = getOversiktenLink()
     return (
-        <div className="bg-white min-h-[76.8px]">
+        <div>
             <ao-visittkort
                 enhet={enhet ?? "1234"}
                 fnr={fnr ?? "123123123"}
@@ -77,7 +77,7 @@ const Visittkort = ({
 
     if (fnrState.loading || !fnrState.fnr) return null
     return (
-        <div className="bg-white">
+        <div className="bg-ax-bg-default min-h-[76.8px]">
             <ClientOnlyChild placeholder={<VisittkortPlaceholder />}>
                 <VisittkortInner fnr={fnrState.fnr} enhet={navKontor} />
             </ClientOnlyChild>

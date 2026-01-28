@@ -7,4 +7,5 @@ export const mockSettings: Partial<MockSettings> = {
     oppfolgingsEnhet: "Arena",
     kanStarteOppfolging: "JA",
     fnr: null,
+    kanOverstyreKontor: true,
 }

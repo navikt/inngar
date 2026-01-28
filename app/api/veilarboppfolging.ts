@@ -108,14 +108,20 @@ const reaktiverOppfolging = async (
 const startOppfolging = async (
     fnr: string,
     token: string,
+    kontorSattAvVeileder?: string,
 ): Promise<StartOppfolgingSuccess | StartOppfolgingErrorResponse> => {
+    const body = {
+        fnr,
+        henviserSystem: "DEMO",
+        kontorSattAvVeileder,
+    }
     return await fetch(startOppfolgingUrl, {
         headers: {
             ["Nav-Consumer-Id"]: "inngar",
             Authorization: `Bearer ${token}`,
             ["Content-Type"]: "application/json",
         },
-        body: JSON.stringify({ fnr, henviserSystem: "DEMO" }),
+        body: JSON.stringify(body),
         method: "POST",
     })
         .then(async (proxyResponse: Response) => {

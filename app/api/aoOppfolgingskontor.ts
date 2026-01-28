@@ -1,15 +1,38 @@
 import { apps } from "~/util/appConstants.ts"
 import { toUrl } from "~/api/utils.ts"
-import { type FetchError, type HttpError, resilientFetch, type Success } from "~/util/resilientFetch.ts"
+import {
+    type FetchError,
+    type HttpError,
+    resilientFetch,
+    type Success,
+} from "~/util/resilientFetch.ts"
 
-const finnArbeidsoppfolgingskontorUrl = toUrl(apps.aoOppfolgingskontor, "/api/finn-kontor")
+const finnArbeidsoppfolgingskontorUrl = toUrl(
+    apps.aoOppfolgingskontor,
+    "/api/finn-kontor",
+)
+const graphqlUrl = toUrl(apps.aoOppfolgingskontor, "/graphql")
 
 export interface Arbeidsoppfolgingskontor {
-    kontorId: string,
-    kontorNavn: string,
+    kontorId: string
+    kontorNavn: string
 }
 
-export const finnArbeidsoppfolgingskontor = (fnr: string, token: string): Promise<Success<Arbeidsoppfolgingskontor> | HttpError | FetchError> => {
+export interface Kontor {
+    kontorId: string
+    kontorNavn: string
+}
+
+export interface AlleKontorResponse {
+    data: {
+        alleKontor: Kontor[]
+    }
+}
+
+export const finnArbeidsoppfolgingskontor = (
+    fnr: string,
+    token: string,
+): Promise<Success<Arbeidsoppfolgingskontor> | HttpError | FetchError> => {
     return resilientFetch<Arbeidsoppfolgingskontor>(
         finnArbeidsoppfolgingskontorUrl,
         {
@@ -24,6 +47,34 @@ export const finnArbeidsoppfolgingskontor = (fnr: string, token: string): Promis
     )
 }
 
+export const hentAlleKontor = (
+    fnr: string,
+    token: string,
+): Promise<Success<AlleKontorResponse> | HttpError | FetchError> => {
+    const query = `
+        query alleKontorQuery($identArg: String) {
+            alleKontor(ident: $identArg) {
+                kontorId
+                kontorNavn
+            }
+        }
+    `
+
+    return resilientFetch<AlleKontorResponse>(graphqlUrl, {
+        method: "POST",
+        body: JSON.stringify({
+            query,
+            variables: { identArg: fnr },
+        }),
+        headers: {
+            ["Nav-Consumer-Id"]: "inngar",
+            Authorization: `Bearer ${token}`,
+            ["Content-Type"]: "application/json",
+        },
+    })
+}
+
 export const AoOppfolgingskontorApi = {
     finnArbeidsoppfolgingskontor: finnArbeidsoppfolgingskontor,
+    hentAlleKontor: hentAlleKontor,
 }
