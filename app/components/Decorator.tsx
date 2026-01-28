@@ -38,6 +38,7 @@ const InternarbeidsflateDecorator = ({
             try {
                 mountFunction(rootMountRef.current, {
                     fetchActiveUserOnMount: true,
+                    fetchActiveEnhetOnMount: false,
                     onEnhetChanged: () => {},
                     onFnrChanged: onFnrChanged,
                     showSearchArea: true,
