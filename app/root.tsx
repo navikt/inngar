@@ -92,7 +92,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 />
                 <Meta />
                 <Links />
-                <link rel="stylesheet" href={cssUrl} />
                 <script src={jsUrl} type="module" />
                 <script
                     src={`https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/${isProd ? "prod" : "dev"}/latest/dist/bundle.js`}
