@@ -10,9 +10,16 @@ export function useFeatureToggle(featureName: FeatureToggles): boolean {
     useEffect(() => {
         logger.info("Henter toggle...")
         fetch(`/veilarbaktivitet/api/feature?feature=${featureName}`)
-            .then((res) => res.json())
+            .then((res) => {
+                if (res.ok) {
+                    return res.json()
+                }
+                throw Error(
+                    `Henting av toggles feilet med status ${res.status} - ${res.statusText}`,
+                )
+            })
             .then((data: Features) => {
-                setEnabled(data === true || data?.[featureName] === true)
+                setEnabled(data?.[featureName] === true)
             })
             .catch(() => {
                 logger.warn("Klarte ikke hente feature-toggles")

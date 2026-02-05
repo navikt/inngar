@@ -1,4 +1,3 @@
-import type { Route } from "./+types/mocksSettings"
 import { mockSettings } from "../mock/mockSettings"
 import type {
     ArenaResponseKoder,
@@ -15,7 +14,7 @@ export interface MockSettings {
     kanOverstyreKontor: boolean
 }
 
-export const action = async ({ request }: Route.ActionArgs) => {
+export const action = async ({ request }: { request: Request }) => {
     const payload = Object.fromEntries(
         await request.formData(),
     ) as unknown as MockSettings

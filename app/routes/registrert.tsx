@@ -146,7 +146,7 @@ const SuccessPage = (props: Route.ComponentProps) => {
                     {getMessage().tekst}
                     {getMessage().punkter && (
                         <List>
-                            {getMessage().punkter.map((punkt) => (
+                            {getMessage()?.punkter?.map((punkt) => (
                                 <List.Item>{punkt}</List.Item>
                             ))}
                         </List>

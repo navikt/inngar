@@ -1,8 +1,8 @@
-import type { Route } from "../../.react-router/types/app/routes/+types"
 import { isRouteErrorResponse } from "react-router"
 import { logger } from "../../server/logger"
 import { XMarkOctagonIcon } from "@navikt/aksel-icons"
 import { ReadMore } from "@navikt/ds-react"
+import type { Route } from "../../.react-router/types/app/routes/+types/startOppfolgingPaBrukerPage"
 
 export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     let errorTitle = "Oops!"
@@ -26,11 +26,11 @@ export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         if (stack) {
             logger.error(stack)
         } else {
-            logger.error("Error (no stack found):", error)
+            logger.error("Error (no stack found):", error as any)
         }
     }
     logger.error(`Noe gikk veldig galt: ${JSON.stringify(error)}`)
-    logger.error(`Noe gikk veldig galt (error uten stringify): `, error)
+    logger.error(`Noe gikk veldig galt (error uten stringify): `, error as any)
 
     return (
         <main className="flex flex-col w-[620px] p-4 mx-auto space-y-4">

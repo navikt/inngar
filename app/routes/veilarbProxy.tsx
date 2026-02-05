@@ -44,7 +44,7 @@ export async function loader({ request }: Route.LoaderArgs) {
             return responseOrRequest
         }
     } catch (e) {
-        logger.error(`Fikk ikke svar fra ${targetApp.name}}: ${e.toString()}`)
+        logger.error(`Fikk ikke svar fra ${targetApp.name}}: ${e?.toString()}`)
         return new Response("Internal server error", { status: 500 })
     }
 }
@@ -79,8 +79,8 @@ export async function action({ request }: Route.ActionArgs) {
             logger.info(`Failed OBO exchange for ${targetApp.name}`)
             return responseOrRequest
         }
-    } catch (e: Error) {
-        logger.error(`Veilarb kall feilet ${url}: ${e.toString()}`)
+    } catch (e) {
+        logger.error(`Veilarb kall feilet ${url}: ${e?.toString()}`)
         return new Response("Internal server error", { status: 500 })
     }
 }

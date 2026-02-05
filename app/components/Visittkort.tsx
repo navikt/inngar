@@ -1,8 +1,6 @@
-import type { Route } from "../../.react-router/types/app/routes/+types"
 import { useEffect } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
-import { logger } from "../../server/logger"
 import { getOversiktenLink } from "~/config.client.ts"
 
 declare global {
@@ -29,15 +27,6 @@ export interface VisittKortProps {
     tilbakeTilFlate: string
     visVeilederVerktoy: boolean
     key: string
-}
-
-export function handleError(
-    error: unknown,
-    { request }: Route.ActionArgs | Route.LoaderArgs,
-) {
-    if (!request.signal.aborted) {
-        logger.error("Aborted:", error)
-    }
 }
 
 const VisittkortInner = ({
