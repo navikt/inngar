@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw"
+import { delay, http, HttpResponse } from "msw"
 import { hentStatusPayload } from "./mockdata/hent-status"
 import { decoratorPayload } from "./mockdata/decorator"
 import { dialogGraphqlPayload } from "./mockdata/dialogGraphql"
@@ -191,14 +191,13 @@ export const handlers = [
             })
         },
     ),
-    http.post(
-        `${aoOppfolgingskontor}/api/finn-kontor`, () => {
-            return HttpResponse.json({
-                kontorId: "1234",
-                kontorNavn: "Nav Helsfyr",
-            })
-        }
-    ),
+    http.post(`${aoOppfolgingskontor}/api/finn-kontor`, async () => {
+        await delay(1000)
+        return HttpResponse.json({
+            kontorId: "1234",
+            kontorNavn: "Nav Helsfyr",
+        })
+    }),
     http.get(`${oboUnleash}/api/feature`, () => {
         return HttpResponse.json({
             "veilarbvisittkortfs.vis-ny-inngang-til-arbeidsrettet-oppfolging":

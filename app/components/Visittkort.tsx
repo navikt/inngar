@@ -1,27 +1,34 @@
 import type { Route } from "../../.react-router/types/app/routes/+types"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
 import { logger } from "../../server/logger"
-import { getOversiktenLink } from "~/config.client"
+import { getOversiktenLink } from "~/config.client.ts"
 
-const exportName = "veilarbvisittkortfs"
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            "ao-visittkort": React.DetailedHTMLProps<
+                React.HTMLAttributes<HTMLElement> & {
+                    fnr?: string
+                    enhet?: string
+                    tilbakeTilFlate?: string
+                    visVeilederVerktoy?: string
+                    skjulEtiketter?: string
+                    avsluttOppfolgingOpptelt?: string
+                },
+                HTMLElement
+            >
+        }
+    }
+}
 
-interface VisittKortProps {
+export interface VisittKortProps {
     enhet?: string
     fnr: string
     tilbakeTilFlate: string
     visVeilederVerktoy: boolean
     key: string
-}
-
-declare const window: {
-    NAVSPA: {
-        veilarbvisittkortfs: (
-            node: HTMLElement,
-            props: VisittKortProps,
-        ) => React.ReactElement
-    }
 }
 
 export function handleError(
@@ -33,11 +40,6 @@ export function handleError(
     }
 }
 
-let key = 1
-const getIncrementedKey = () => {
-    key = key + 1
-    return (key + 1).toString()
-}
 const VisittkortInner = ({
     fnr,
     enhet,
@@ -45,24 +47,19 @@ const VisittkortInner = ({
     fnr: string
     enhet: string | null | undefined
 }) => {
-    const rootMountRef = useRef(null)
-
-    useEffect(() => {
-        if (!rootMountRef.current) return
-        const oversiktenLink = getOversiktenLink()
-        const appMountFunction = window.NAVSPA[exportName]
-        appMountFunction(rootMountRef.current, {
-            enhet,
-            fnr,
-            tilbakeTilFlate: oversiktenLink,
-            visVeilederVerktoy: false,
-            key: fnr,
-        })
-    })
-
-    return <div ref={rootMountRef}></div>
+    const oversiktenLink = getOversiktenLink()
+    return (
+        <div className="bg-white min-h-[76.8px]">
+            <ao-visittkort
+                enhet={enhet ?? "1234"}
+                fnr={fnr ?? "123123123"}
+                tilbakeTilFlate={oversiktenLink}
+                visVeilederVerktoy={"true"}
+                key={fnr}
+            ></ao-visittkort>
+        </div>
+    )
 }
-
 const VisittkortPlaceholder = () => {
     return <div className="bg-white h-[76.8px]"></div>
 }
