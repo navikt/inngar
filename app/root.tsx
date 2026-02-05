@@ -33,10 +33,10 @@ export const loader = async ({}: Route.LoaderArgs) => {
         other = { mockSettings }
     }
     return startActiveSpan(`loader - root`, async () => {
-        const { cssUrl, jsUrl } = await importSubApp(
+        const { jsUrl } = await importSubApp(
             `https://cdn.nav.no/poao/veilarbvisittkortfs-${isProd ? "prod" : "dev"}/build`,
         )
-        return { cssUrl, jsUrl, ...other }
+        return { jsUrl, ...other }
     })
 }
 
@@ -59,7 +59,7 @@ export type FnrState =
     | { loading: false; fnr?: string | undefined | null }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    const { cssUrl, jsUrl } = useLoaderData()
+    const { jsUrl } = useLoaderData()
     const fetcher = useFetcher()
     const { fnrCode } = useParams()
     const env = getEnv()
@@ -145,16 +145,14 @@ export const action = async ({
 export default function App({ loaderData }: Route.ComponentProps) {
     if (import.meta.env.DEV) {
         return (
-            <>
-                <Theme theme="light">
-                    <MockSettingsForm
-                        mockSettings={(loaderData as any).mockSettings}
-                    />
-                    <div className="bg-ax-bg-sunken">
-                        <Outlet />
-                    </div>
-                </Theme>
-            </>
+            <Theme theme="light">
+                <MockSettingsForm
+                    mockSettings={(loaderData as any).mockSettings}
+                />
+                <div className="bg-ax-bg-sunken">
+                    <Outlet />
+                </div>
+            </Theme>
         )
     } else {
         return (

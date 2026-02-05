@@ -84,13 +84,11 @@ export const action = async (args: Route.ActionArgs) => {
 
     switch (actionType) {
         case "startOppfolging":
-            const kontorSattAvVeileder = formdata.get(
-                "kontorSattAvVeileder",
-            ) as string | null
             return startOppfolging(
                 args.request,
                 fnr,
-                kontorSattAvVeileder || undefined,
+                (formdata.get("kontorSattAvVeileder") as string | null) ||
+                    undefined,
             )
         case "reaktiverOppfolging":
             return reaktiverOppfolging(args.request, fnr)

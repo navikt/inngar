@@ -14,7 +14,7 @@ export function useFeatureToggle(featureName: FeatureToggles): boolean {
                 if (res.ok) {
                     return res.json()
                 }
-                throw Error(
+                throw new Error(
                     `Henting av toggles feilet med status ${res.status} - ${res.statusText}`,
                 )
             })
