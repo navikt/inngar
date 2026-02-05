@@ -1,18 +1,7 @@
 import { useEffect, useRef } from "react"
-import type { Route } from "../../.react-router/types/app/routes/+types"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ClientOnlyChild } from "~/util/remoteUtil"
-import { logger } from "../../server/logger"
 import { useDecorateNavspa } from "~/util/useNAVSPA.tsx"
-
-export function handleError(
-    error: unknown,
-    { request }: Route.ActionArgs | Route.LoaderArgs,
-) {
-    if (!request.signal.aborted) {
-        logger.error(error)
-    }
-}
 
 type OnFnrChanged = (fnr?: string | null | undefined) => void
 
@@ -38,6 +27,7 @@ const InternarbeidsflateDecorator = ({
             try {
                 mountFunction(rootMountRef.current, {
                     fetchActiveUserOnMount: true,
+                    fetchActiveEnhetOnMount: false,
                     onEnhetChanged: () => {},
                     onFnrChanged: onFnrChanged,
                     showSearchArea: true,
@@ -66,9 +56,11 @@ const InternarbeidsflateDecorator = ({
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
     return (
-        <ClientOnlyChild placeholder={<DecoratorPlaceholder />}>
-            <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />
-        </ClientOnlyChild>
+        <div className="bg-ax-border-focus min-h-[48px]">
+            <ClientOnlyChild placeholder={<DecoratorPlaceholder />}>
+                <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />
+            </ClientOnlyChild>
+        </div>
     )
 }
 export default Decorator

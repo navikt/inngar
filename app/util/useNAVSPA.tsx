@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import type { DecoratorProps } from "~/components/DecoratorProps.ts"
-import type { VisittKortProps } from "~/components/Visittkort.tsx"
 
 declare const window: {
     NAVSPA: NAVSPAType | undefined
@@ -11,13 +10,10 @@ type MountFunction<Props> = (
     props: Props,
 ) => React.ReactElement
 
-type NavSpaApp = "internarbeidsflate-decorator-v3" | "veilarbvisittkortfs"
-
-type Props = VisittKortProps | DecoratorProps
+type NavSpaApp = "internarbeidsflate-decorator-v3"
 
 type NAVSPAType = {
     "internarbeidsflate-decorator-v3": MountFunction<DecoratorProps>
-    veilarbvisittkortfs: MountFunction<VisittKortProps>
 }
 /**
  * Hook that waits for NAVSPA to be available on the window object.
@@ -26,9 +22,7 @@ type NAVSPAType = {
  */
 const useNAVSPA = (app: NavSpaApp) => {
     const [navSpa, setNavSpa] = useState<
-        | MountFunction<DecoratorProps>
-        | MountFunction<VisittKortProps>
-        | undefined
+        MountFunction<DecoratorProps> | undefined
     >(undefined)
 
     useEffect(() => {
@@ -56,9 +50,6 @@ const useNAVSPA = (app: NavSpaApp) => {
     return navSpa
 }
 
-export const useVisittkortNavspa = ():
-    | MountFunction<VisittKortProps>
-    | undefined => useNAVSPA("veilarbvisittkortfs")
 export const useDecorateNavspa = ():
     | MountFunction<DecoratorProps>
     | undefined => useNAVSPA("internarbeidsflate-decorator-v3")

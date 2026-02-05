@@ -16,6 +16,7 @@ const veilarbportefolje = `http://veilarbportefolje.obo`
 const veilarbveileder = `http://veilarbveileder.obo`
 const aoOppfolgingskontor = `http://ao-oppfolgingskontor.dab`
 const oboUnleash = `http://obo-unleash.obo`
+const veilarbaktivitet = `http://veilarbaktivitet.dab`
 
 const getAktivBrukerMock = () => {
     const over18Mocking = mockSettings.over18
@@ -198,10 +199,46 @@ export const handlers = [
             kontorNavn: "Nav Helsfyr",
         })
     }),
+    http.post(`${aoOppfolgingskontor}/graphql`, async ({ request }) => {
+        const payload = (await request.json()) as {
+            query: string
+            variables: { identArg: string }
+        }
+
+        // Check if it's the alleKontor query
+        if (payload.query.includes("alleKontor")) {
+            return HttpResponse.json({
+                data: {
+                    alleKontor: [
+                        { kontorId: "0219", kontorNavn: "Nav Oslo" },
+                        { kontorId: "1234", kontorNavn: "Nav Helsfyr" },
+                        { kontorId: "0315", kontorNavn: "Nav Grünerløkka" },
+                        { kontorId: "0118", kontorNavn: "Nav Fredrikstad" },
+                        { kontorId: "0604", kontorNavn: "Nav Kongsberg" },
+                    ],
+                },
+            })
+        }
+
+        return HttpResponse.json({ data: null })
+    }),
     http.get(`${oboUnleash}/api/feature`, () => {
         return HttpResponse.json({
             "veilarbvisittkortfs.vis-ny-inngang-til-arbeidsrettet-oppfolging":
                 true,
         })
     }),
+    http.get(
+        `${veilarbaktivitet}/veilarbaktivitet/api/feature`,
+        ({ request }) => {
+            const url = new URL(request.url)
+
+            const features: Record<string, boolean> = {
+                "inngar.overstyr-kontor":
+                    mockSettings.kanOverstyreKontor ?? true,
+            }
+
+            return HttpResponse.json(features)
+        },
+    ),
 ]

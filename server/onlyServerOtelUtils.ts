@@ -11,7 +11,7 @@ interface OtelWrapper {
     getSpan: ((context: Context) => Span | undefined) | undefined
     context: ContextAPI | undefined
     tracer: Tracer | undefined
-    SpanKind: typeof SpanKind
+    SpanKind: typeof SpanKind | undefined
 }
 
 let otelWrapper: OtelWrapper = {

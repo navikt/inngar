@@ -28,11 +28,13 @@ export interface NavKontor {
 
 export const StartOppfolgingForm = ({
     navKontor,
+    kontorOptions,
     fnr,
     kreverManuellGodkjenningPgaIkkeBosatt,
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr,
 }: {
     navKontor: Promise<NavKontor | null>
+    kontorOptions?: Promise<NavKontor[]>
     fnr: string
     kreverManuellGodkjenningPgaIkkeBosatt: boolean
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr: boolean
@@ -54,7 +56,7 @@ export const StartOppfolgingForm = ({
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
 
     return (
-        <div className="flex flex-col space-y-8 mx-auto">
+        <div className="flex flex-col mt-4 space-y-8 mx-auto">
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}
@@ -68,40 +70,43 @@ export const StartOppfolgingForm = ({
                     bekreftGodkjenning={setErManueltGodkjent}
                 />
             ) : null}
-            <NavKontorInfo enhet={navKontor} />
-            <Alert inline variant={"info"}>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Brukeren vil få informasjon på Min Side om at det er
-                        startet arbeidsrettet oppfølging.
-                    </BodyShort>
-                </div>
-            </Alert>
-            <Alert inline variant={"info"}>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Brukeren blir ikke registrert som arbeidssøker når du
-                        starter arbeidsrettet oppfølging her. Dersom brukeren
-                        også er arbeidssøker bør du benytte{" "}
-                        <Link
-                            href={arbeidssokerRegistreringUrl}
-                            variant="neutral"
-                        >
-                            arbeidssøkerregistreringen.
-                        </Link>
-                    </BodyShort>
-                </div>
-            </Alert>
-            <Alert inline variant={"info"}>
-                <div className="space-y-4">
-                    <BodyShort>
-                        Registreringen for arbeidsrettet oppfølging medfører
-                        ikke at brukeren får noen meldeplikt.
-                    </BodyShort>
-                </div>
-            </Alert>
             <startOppfolgingFetcher.Form method="post" className="space-y-4">
                 {error ? <FormError message={error} /> : null}
+                <NavKontorInfo
+                    enhet={navKontor}
+                    kontorOptions={kontorOptions}
+                />
+                <Alert inline variant={"info"}>
+                    <div className="space-y-4">
+                        <BodyShort>
+                            Brukeren vil få informasjon på Min Side om at det er
+                            startet arbeidsrettet oppfølging.
+                        </BodyShort>
+                    </div>
+                </Alert>
+                <Alert inline variant={"info"}>
+                    <div className="space-y-4">
+                        <BodyShort>
+                            Brukeren blir ikke registrert som arbeidssøker når
+                            du starter arbeidsrettet oppfølging her. Dersom
+                            brukeren også er arbeidssøker bør du benytte{" "}
+                            <Link
+                                href={arbeidssokerRegistreringUrl}
+                                variant="neutral"
+                            >
+                                arbeidssøkerregistreringen.
+                            </Link>
+                        </BodyShort>
+                    </div>
+                </Alert>
+                <Alert inline variant={"info"}>
+                    <div className="space-y-4">
+                        <BodyShort>
+                            Registreringen for arbeidsrettet oppfølging medfører
+                            ikke at brukeren får noen meldeplikt.
+                        </BodyShort>
+                    </div>
+                </Alert>
                 <input type="hidden" name="fnr" value={fnr} />
                 <input
                     type="hidden"

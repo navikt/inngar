@@ -1,8 +1,6 @@
-import type { Route } from "../../.react-router/types/app/routes/+types"
 import { useEffect } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
-import { logger } from "../../server/logger"
 import { getOversiktenLink } from "~/config.client.ts"
 
 declare global {
@@ -31,15 +29,6 @@ export interface VisittKortProps {
     key: string
 }
 
-export function handleError(
-    error: unknown,
-    { request }: Route.ActionArgs | Route.LoaderArgs,
-) {
-    if (!request.signal.aborted) {
-        logger.error("Aborted:", error)
-    }
-}
-
 const VisittkortInner = ({
     fnr,
     enhet,
@@ -49,7 +38,7 @@ const VisittkortInner = ({
 }) => {
     const oversiktenLink = getOversiktenLink()
     return (
-        <div className="bg-white min-h-[76.8px]">
+        <div>
             <ao-visittkort
                 enhet={enhet ?? "1234"}
                 fnr={fnr ?? "123123123"}
@@ -77,7 +66,7 @@ const Visittkort = ({
 
     if (fnrState.loading || !fnrState.fnr) return null
     return (
-        <div className="bg-white">
+        <div className="bg-ax-bg-default min-h-[76.8px]">
             <ClientOnlyChild placeholder={<VisittkortPlaceholder />}>
                 <VisittkortInner fnr={fnrState.fnr} enhet={navKontor} />
             </ClientOnlyChild>
