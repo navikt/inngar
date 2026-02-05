@@ -232,14 +232,13 @@ export const handlers = [
         `${veilarbaktivitet}/veilarbaktivitet/api/feature`,
         ({ request }) => {
             const url = new URL(request.url)
-            const feature = url.searchParams.get("feature")
 
             const features: Record<string, boolean> = {
                 "inngar.overstyr-kontor":
                     mockSettings.kanOverstyreKontor ?? true,
             }
 
-            return HttpResponse.json(features[feature ?? ""] ?? false)
+            return HttpResponse.json(features)
         },
     ),
 ]
