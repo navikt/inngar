@@ -17,12 +17,14 @@ export async function loader({ request }: Route.LoaderArgs) {
         const newRequest = new Request(decoratorUrl, new Request(request))
         return await fetch(newRequest).then((proxyResponse) => {
             if (!proxyResponse.ok) {
-                logger.error("Dårlig respons", proxyResponse)
+                logger.error(
+                    `Dårlig respons ${request.url} - status: ${proxyResponse.status}`,
+                )
             }
             return proxyResponse
         })
     } catch (e) {
-        logger.error(`Fikk ikke svar fra modiacontextholder: ${e.toString()}`)
+        logger.error(`Fikk ikke svar fra modiacontextholder: ${e?.toString()}`)
         return new Response("Internal server error", { status: 500 })
     }
 }
@@ -41,6 +43,6 @@ export function handleError(
     { request }: Route.ActionArgs | Route.LoaderArgs,
 ) {
     if (!request.signal.aborted) {
-        logger.error("Aborted:", error)
+        logger.error("Aborted:", error as any)
     }
 }

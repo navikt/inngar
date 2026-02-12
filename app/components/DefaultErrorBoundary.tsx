@@ -1,8 +1,8 @@
-import type { Route } from "../../.react-router/types/app/routes/+types"
 import { isRouteErrorResponse } from "react-router"
 import { logger } from "../../server/logger"
 import { XMarkOctagonIcon } from "@navikt/aksel-icons"
 import { ReadMore } from "@navikt/ds-react"
+import type { Route } from "../../.react-router/types/app/routes/+types/startOppfolgingPaBrukerPage"
 
 export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     let errorTitle = "Oops!"
@@ -15,24 +15,22 @@ export function DefaultErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         details = error.data?.errorMessage
         traceId = error?.data?.traceId
         stack = error?.data?.stack
-    } else if (import.meta.env.DEV && error && error instanceof Error) {
+    } else if (error && error instanceof Error) {
         details = error?.message
         stack = error?.stack
     }
 
-    if (import.meta.env.DEV) {
-        if (error instanceof Error) {
-            logger.error(error.stack)
-        } else {
-            if (stack) {
-                logger.error(stack)
-            } else {
-                logger.error("Error (no stack found):", error)
-            }
-        }
+    if (error instanceof Error) {
+        logger.error(error.stack)
     } else {
-        logger.error(`Noe gikk veldig galt: ${JSON.stringify(error)}`)
+        if (stack) {
+            logger.error(stack)
+        } else {
+            logger.error("Error (no stack found):", error as any)
+        }
     }
+    logger.error(`Noe gikk veldig galt: ${JSON.stringify(error)}`)
+    logger.error(`Noe gikk veldig galt (error uten stringify): `, error as any)
 
     return (
         <main className="flex flex-col w-[620px] p-4 mx-auto space-y-4">

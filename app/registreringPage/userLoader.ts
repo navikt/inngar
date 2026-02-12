@@ -17,7 +17,8 @@ import { EnvType, getEnv } from "~/util/envUtil.ts"
 
 export interface UserLoaderSuccessResponse {
     status: BrukerStatus
-    navKontor: NavKontor
+    navKontor: Promise<NavKontor>
+    kontorOptions: Promise<NavKontor[]>
     aktivtNavKontor: string
     fnr: string
     kanStarteOppfolging: KanStarteOppfolging
@@ -48,20 +49,25 @@ export const userLoader = async (request: Request, fnrCode: string) => {
             return result
         })
 
-    /* Ikke ta denne inn i VeilarboppfolgingApi, da kan den ikke paralelliseres */
+    /* Ikke ta denne inn i VeilarboppfolgingApi, da kan den ikke paralelliseres
+     * Bare obo-biten kan paralelliseres fordi resten av operasjonen er avhengig av aktivBruker */
     const hentOboForVeilarboppfolging = () =>
         getOboToken(request, apps.veilarboppfolging)
 
     const hentOboForAoOppfolgingskontor = () =>
         getOboToken(request, apps.aoOppfolgingskontor)
 
-    const [veilarbOppfolgingTokenOrResponse, aoOppfolgingskontorTokenOrResponse, aktivBrukerResult, aktivEnhetResult] =
-        await Promise.all([
-            hentOboForVeilarboppfolging(),
-            hentOboForAoOppfolgingskontor(),
-            hentAktivBruker(),
-            hentAktivEnhet(),
-        ])
+    const [
+        veilarbOppfolgingTokenOrResponse,
+        aoOppfolgingskontorTokenOrResponse,
+        aktivBrukerResult,
+        aktivEnhetResult,
+    ] = await Promise.all([
+        hentOboForVeilarboppfolging(),
+        hentOboForAoOppfolgingskontor(),
+        hentAktivBruker(),
+        hentAktivEnhet(),
+    ])
 
     if (!aktivBrukerResult.ok) {
         logger.warn(
@@ -98,20 +104,49 @@ export const userLoader = async (request: Request, fnrCode: string) => {
 
         const hentNavKontor = async () => {
             if (brukAoOppfolgingskontor) {
-                const arbeidsoppfolgingskontorResponse
-                    = await AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(aktivBruker, aoOppfolgingskontorTokenOrResponse.token)
-                if (!arbeidsoppfolgingskontorResponse.ok) {
-                    throw arbeidsoppfolgingskontorResponse.error
-                }
-                return {
-                    navn: arbeidsoppfolgingskontorResponse.data.kontorNavn,
-                    id: arbeidsoppfolgingskontorResponse.data.kontorId,
-                }
+                return AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(
+                    aktivBruker,
+                    aoOppfolgingskontorTokenOrResponse.token,
+                ).then((arbeidsoppfolgingskontorResponse) => {
+                    if (!arbeidsoppfolgingskontorResponse.ok) {
+                        throw arbeidsoppfolgingskontorResponse.error
+                    }
+                    return {
+                        navn: arbeidsoppfolgingskontorResponse.data.kontorNavn,
+                        id: arbeidsoppfolgingskontorResponse.data.kontorId,
+                    }
+                })
             } else {
-                return oppfolgingsEnhet.enhet
+                return Promise.resolve(oppfolgingsEnhet.enhet)
             }
         }
-        const navKontor = await hentNavKontor()
+
+        const hentKontorOptions = async (): Promise<NavKontor[]> => {
+            if (brukAoOppfolgingskontor) {
+                return AoOppfolgingskontorApi.hentAlleKontor(
+                    aktivBruker,
+                    aoOppfolgingskontorTokenOrResponse.token,
+                ).then((alleKontorResponse) => {
+                    if (!alleKontorResponse.ok) {
+                        logger.warn(
+                            `Kunne ikke hente alle kontor: ${alleKontorResponse.type}, ${alleKontorResponse.error.message}`,
+                        )
+                        return []
+                    }
+                    const alleKontor = alleKontorResponse.data.data.alleKontor
+
+                    return alleKontor.map((kontor) => ({
+                        id: kontor.kontorId,
+                        navn: kontor.kontorNavn,
+                    }))
+                })
+            } else {
+                return Promise.resolve([])
+            }
+        }
+
+        const navKontor = hentNavKontor()
+        const kontorOptions = hentKontorOptions()
 
         const aktivEnhet = aktivEnhetResult.ok
             ? aktivEnhetResult.data.aktivEnhet
@@ -119,6 +154,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         return {
             status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
             navKontor,
+            kontorOptions,
             aktivtNavKontor: aktivEnhet,
             fnr: aktivBruker,
             kanStarteOppfolging: oppfolging.kanStarteOppfolging,

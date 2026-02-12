@@ -1,47 +1,33 @@
 import { useEffect, useRef } from "react"
-import type { Route } from "../../.react-router/types/app/routes/+types"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ClientOnlyChild } from "~/util/remoteUtil"
-import type { DecoratorProps } from "~/components/DecoratorProps"
-import { logger } from "../../server/logger"
-
-const exportName = "internarbeidsflate-decorator-v3"
-
-declare const window: {
-    NAVSPA: {
-        "internarbeidsflate-decorator-v3": (
-            node: HTMLElement,
-            props: DecoratorProps,
-        ) => React.ReactElement
-    }
-}
-
-export function handleError(
-    error: unknown,
-    { request }: Route.ActionArgs | Route.LoaderArgs,
-) {
-    if (!request.signal.aborted) {
-        logger.error(error)
-    }
-}
+import { useDecorateNavspa } from "~/util/useNAVSPA.tsx"
 
 type OnFnrChanged = (fnr?: string | null | undefined) => void
 
 const env = getEnv()
+
+const DecoratorPlaceholder = () => {
+    return <div className="bg-gray-900 min-h-[48px]"></div>
+}
 
 const InternarbeidsflateDecorator = ({
     onFnrChanged,
 }: {
     onFnrChanged: OnFnrChanged
 }) => {
-    const rootMountRef = useRef(null)
-    const appMountFunction = window.NAVSPA[exportName]
+    const rootMountRef = useRef<HTMLDivElement>(null)
+    const mountFunction = useDecorateNavspa()
+    const hasMountedRef = useRef(false)
 
     useEffect(() => {
-        if (rootMountRef.current) {
+        // Only mount once when NAVSPA becomes available
+        if (rootMountRef.current && mountFunction && !hasMountedRef.current) {
+            hasMountedRef.current = true
             try {
-                appMountFunction(rootMountRef.current, {
+                mountFunction(rootMountRef.current, {
                     fetchActiveUserOnMount: true,
+                    fetchActiveEnhetOnMount: false,
                     onEnhetChanged: () => {},
                     onFnrChanged: onFnrChanged,
                     showSearchArea: true,
@@ -54,23 +40,27 @@ const InternarbeidsflateDecorator = ({
                     proxy: "/api/modiacontextholder",
                 })
             } catch (e) {
-                console.error(e)
+                console.error("Failed to mount NAVSPA decorator:", e)
+                hasMountedRef.current = false // Allow retry on error
             }
         }
-    })
+    }, [mountFunction, onFnrChanged])
 
-    return <div ref={rootMountRef}></div>
-}
+    // Show placeholder while waiting for NAVSPA to load
+    if (!mountFunction) {
+        return <DecoratorPlaceholder />
+    }
 
-const DecoratorPlaceholder = () => {
-    return <div className="bg-gray-900 h-[48px]"></div>
+    return <div className="bg-gray-900 min-h-[48px]" ref={rootMountRef}></div>
 }
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
     return (
-        <ClientOnlyChild placeholder={<DecoratorPlaceholder />}>
-            <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />
-        </ClientOnlyChild>
+        <div className="bg-ax-border-focus min-h-[48px]">
+            <ClientOnlyChild placeholder={<DecoratorPlaceholder />}>
+                <InternarbeidsflateDecorator onFnrChanged={onFnrChanged} />
+            </ClientOnlyChild>
+        </div>
     )
 }
 export default Decorator

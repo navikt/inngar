@@ -1,5 +1,10 @@
 import { type FetchError, resilientFetch } from "~/util/resilientFetch"
-import { contextUrl, generateFnrCodeUrl, retrieveFnrUrl } from "~/config"
+import {
+    aktivBrukerUrl,
+    contextUrl,
+    generateFnrCodeUrl,
+    retrieveFnrUrl,
+} from "~/config"
 import { logger } from "../../server/logger"
 import { getOboToken } from "~/util/tokenExchange.server"
 import { apps } from "~/util/appConstants"
@@ -75,8 +80,14 @@ const generateForFnr = async (fnr: Fnr): Promise<Code | null> => {
     }
 }
 
+const hentAktivBruker = async (request: Request) =>
+    resilientFetch<{ aktivBruker: string | null }>(
+        new Request(aktivBrukerUrl, new Request(request)),
+    )
+
 export const ModiacontextholderApi = {
     getFnrFromCode,
     generateForFnr,
     setFnrIContextHolder,
+    hentAktivBruker,
 }
