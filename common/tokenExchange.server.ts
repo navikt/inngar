@@ -1,5 +1,5 @@
 import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
-import type { App } from "~/util/appConstants"
+import type { App } from "./appConstants.ts"
 import * as process from "node:process"
 
 const scopeFrom = (app: App) =>

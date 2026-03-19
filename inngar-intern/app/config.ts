@@ -1,4 +1,4 @@
-import { apps, toAppUrl } from "~/util/appConstants"
+import { apps, toAppUrl } from "../../common/appConstants.ts"
 
 const contextHolderApiUrl = toAppUrl(apps.modiacontextholder, "")
 export const aktivBrukerUrl = `${contextHolderApiUrl}/api/context/v2/aktivbruker`

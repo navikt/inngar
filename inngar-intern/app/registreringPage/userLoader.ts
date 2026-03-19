@@ -1,13 +1,10 @@
 import { resilientFetch } from "~/util/resilientFetch"
 import { aktivEnhetUrl } from "~/config"
-import { getOboToken } from "~/util/tokenExchange.server"
-import { apps } from "~/util/appConstants"
+import { getOboToken } from "../../../common/tokenExchange.server.ts"
+import { apps } from "../../../common/appConstants.ts"
 import { logger } from "../../server/logger"
 import { dataWithTraceId } from "~/util/errorUtil"
-import {
-    type KanStarteOppfolging,
-    VeilarboppfolgingApi,
-} from "~/api/veilarboppfolging"
+import { type KanStarteOppfolging, VeilarboppfolgingApi } from "~/api/veilarboppfolging"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import { BrukerStatus, finnBrukerStatus } from "~/registreringPage/BrukerStatus"
 import { redirect } from "react-router"

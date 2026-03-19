@@ -1,6 +1,6 @@
 import { logger } from "../../server/logger.ts"
-import { getOboToken } from "~/util/tokenExchange.server.ts"
-import { apps } from "~/util/appConstants.ts"
+import { getOboToken } from "../../../common/tokenExchange.server.ts"
+import { apps } from "../../../common/appConstants.ts"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging.ts"
 import { dataWithTraceId } from "~/util/errorUtil.ts"
 

@@ -1,13 +1,12 @@
-import { type App, apps } from "~/util/appConstants"
+import { apps } from "../../../common/appConstants.ts"
 import { logger } from "../../server/logger"
-import {
-    type FetchError,
-    type HttpError,
-    resilientFetch,
-    type Success,
-} from "~/util/resilientFetch"
-import { toUrl } from "~/api/utils.ts"
-
+import { type FetchError, type HttpError, resilientFetch, type Success } from "~/util/resilientFetch"
+import { toUrl } from "../../../common/utils.ts"
+import type {
+    ArenaResponseKoder,
+    StartOppfolgingErrorResponse,
+    StartOppfolgingSuccess
+} from "../../../common/startOppfolgingResponse.ts"
 
 const reaktiverOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
@@ -24,14 +23,6 @@ const graphqlUrl = toUrl(
     "/veilarboppfolging/api/graphql",
 )
 
-export type ArenaResponseKoder =
-    | "OK_REGISTRERT_I_ARENA"
-    | "FNR_FINNES_IKKE"
-    | "KAN_REAKTIVERES_FORENKLET"
-    | "BRUKER_ALLEREDE_ARBS"
-    | "BRUKER_ALLEREDE_IARBS"
-    | "UKJENT_FEIL"
-
 interface ReaktiverOppfolgingSuccessResponse {
     kode: ArenaResponseKoder
 }
@@ -46,19 +37,6 @@ interface ReaktiverOppfolgingSuccess {
     body: ReaktiverOppfolgingSuccessResponse
 }
 
-interface StartOppfolgingSuccessResponse {
-    kode: ArenaResponseKoder
-}
-
-interface StartOppfolgingErrorResponse {
-    ok: false
-    error: string
-}
-
-interface StartOppfolgingSuccess {
-    ok: true
-    body: StartOppfolgingSuccessResponse
-}
 
 const reaktiverOppfolging = async (
     fnr: string,

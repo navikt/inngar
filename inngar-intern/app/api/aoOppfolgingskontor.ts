@@ -1,11 +1,6 @@
-import { apps } from "~/util/appConstants.ts"
-import { toUrl } from "~/api/utils.ts"
-import {
-    type FetchError,
-    type HttpError,
-    resilientFetch,
-    type Success,
-} from "~/util/resilientFetch.ts"
+import { apps } from "../../../common/appConstants.ts"
+import { toUrl } from "../../../common/utils.ts"
+import { type FetchError, type HttpError, resilientFetch, type Success } from "~/util/resilientFetch.ts"
 
 const finnArbeidsoppfolgingskontorUrl = toUrl(
     apps.aoOppfolgingskontor,

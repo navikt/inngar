@@ -1,13 +1,8 @@
 import { type FetchError, resilientFetch } from "~/util/resilientFetch"
-import {
-    aktivBrukerUrl,
-    contextUrl,
-    generateFnrCodeUrl,
-    retrieveFnrUrl,
-} from "~/config"
+import { aktivBrukerUrl, contextUrl, generateFnrCodeUrl, retrieveFnrUrl } from "~/config"
 import { logger } from "../../server/logger"
-import { getOboToken } from "~/util/tokenExchange.server"
-import { apps } from "~/util/appConstants"
+import { getOboToken } from "../../../common/tokenExchange.server.ts"
+import { apps } from "../../../common/appConstants.ts"
 
 type Fnr = string
 type Code = string
