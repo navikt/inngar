@@ -3,3 +3,5 @@ inngar-intern/node_modules
 inngar-intern/.react-router
 inngar-intern/build
 .npmrc
+/node_modules/
+/build/

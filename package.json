@@ -1,0 +1,8 @@
+{
+  "name": "inngar",
+  "workspaces": [
+    "common",
+    "inngar-intern",
+    "inngar-ekstern"
+  ]
+}

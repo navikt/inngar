@@ -1,12 +1,12 @@
-import { apps } from "../../../common/appConstants.ts"
+import { apps } from "common/appConstants.ts"
 import { logger } from "../../server/logger"
 import { type FetchError, type HttpError, resilientFetch, type Success } from "~/util/resilientFetch"
-import { toUrl } from "../../../common/utils.ts"
+import { toUrl } from "common/utils.ts"
 import type {
     ArenaResponseKoder,
     StartOppfolgingErrorResponse,
     StartOppfolgingSuccess
-} from "../../../common/startOppfolgingResponse.ts"
+} from "common/startOppfolgingResponse.ts"
 
 const reaktiverOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
