@@ -1,8 +1,8 @@
 import { BodyShort, Button, Heading, InlineMessage } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { Route } from "../routes/+types/home"
-import { startOppfolging } from "~/api/veilarboppfolging"
-import { apps } from "../../../common/appConstants"
+import { startOppfolging } from "../api/veilarboppfolging"
+import { apps, getOboToken } from "common"
 
 export function StartOppfolgingForm() {
     const startOppfolgingFetcher = useFetcher()

@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home"
-import { StartOppfolgingForm } from "~/startOppfolging/StartOppfolgingForm"
+import { StartOppfolgingForm } from "../startOppfolging/StartOppfolgingForm"
 
 export function meta({}: Route.MetaArgs) {
   return [

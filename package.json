@@ -1,8 +1,16 @@
 {
   "name": "inngar",
+  "private": true,
   "workspaces": [
     "common",
     "inngar-intern",
     "inngar-ekstern"
-  ]
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev:intern": "npm run dev -w inngar-intern",
+    "dev:ekstern": "npm run dev -w inngar-ekstern",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "install:all": "npm install"
+  }
 }

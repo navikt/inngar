@@ -1,8 +1,8 @@
 {
-    "name": "inngar",
+    "name": "inngar-intern",
     "private": true,
     "engines": {
-        "node": "22.x"
+        "node": "25.x"
     },
     "type": "module",
     "scripts": {

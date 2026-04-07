@@ -1,6 +1,5 @@
-import { apps } from "../../../common/appConstants"
-import { toUrl } from "../../../common/utils"
-import type { StartOppfolgingErrorResponse, StartOppfolgingSuccess } from "../../../common/startOppfolgingResponse"
+import type { StartOppfolgingErrorResponse, StartOppfolgingSuccess } from "common"
+import { toUrl, apps } from "common"
 
 const startOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
