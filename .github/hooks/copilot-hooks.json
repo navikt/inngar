@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "name": "node-version",
+        "run": "node --version"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "name": "typecheck",
+        "run": "npm run typecheck"
+      }
+    ]
+  }
+}
