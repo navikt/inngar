@@ -1,9 +1,17 @@
 {
-  "name": "common",
-  "version": "1.0.0",
-  "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "@navikt/oasis": "^4.1.4"
-  }
+    "name": "common",
+    "version": "1.0.0",
+    "license": "ISC",
+    "type": "module",
+    "exports": {
+        ".": "./index.ts",
+        "./server": "./server.server.ts",
+        "./*.ts": "./*.ts"
+    },
+    "dependencies": {
+        "@navikt/oasis": "^4.1.4"
+    },
+    "scripts": {
+        "build": ""
+    }
 }
