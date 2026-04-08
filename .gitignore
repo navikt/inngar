@@ -5,3 +5,4 @@ inngar-intern/build
 .npmrc
 /node_modules/
 /build/
+.DS_Store
