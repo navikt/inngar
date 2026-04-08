@@ -16,6 +16,7 @@ jobs:
       contents: read
       id-token: write
     strategy:
+      fail-fast: false
       matrix:
         app: [inngar-intern, inngar-ekstern]
     steps:
