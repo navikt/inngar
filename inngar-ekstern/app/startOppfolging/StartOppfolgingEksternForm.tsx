@@ -1,7 +1,7 @@
 import { BodyShort, Button, Heading, InlineMessage } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 
-export function StartOppfolgingForm() {
+export function StartOppfolgingEksternForm() {
     const startOppfolgingFetcher = useFetcher()
 
     return (

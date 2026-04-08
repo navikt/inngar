@@ -2,7 +2,7 @@ import type { Route } from "./+types/home"
 import { startOppfolging } from "~/api/veilarboppfolging"
 import { apps } from "common"
 import { getOboToken } from "common/server"
-import { StartOppfolgingForm } from "~/startOppfolging/StartOppfolgingForm"
+import { StartOppfolgingEksternForm } from "~/startOppfolging/StartOppfolgingEksternForm"
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -12,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-    return <StartOppfolgingForm />
+    return <StartOppfolgingEksternForm />
 }
 
 export const action = async (args: Route.ActionArgs) => {
