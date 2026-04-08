@@ -1,10 +1,10 @@
-import {
-    type Context,
-    type ContextAPI,
-    type Span,
-    type SpanContext,
+import type {
+    Context,
+    ContextAPI,
+    Span,
+    SpanContext,
     SpanKind,
-    type Tracer,
+    Tracer,
 } from "@opentelemetry/api"
 
 interface OtelWrapper {

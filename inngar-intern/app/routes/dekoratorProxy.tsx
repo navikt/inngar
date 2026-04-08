@@ -1,5 +1,5 @@
 import type { Route } from "./+types/dekoratorProxy"
-import { logger } from "../../server/logger"
+import { logger } from "common"
 
 const target = "http://modiacontextholder.personoversikt"
 

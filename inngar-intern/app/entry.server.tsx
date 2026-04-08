@@ -6,7 +6,7 @@ import { createReadableStreamFromReadable } from "@react-router/node"
 import { isbot } from "isbot"
 import type { RenderToPipeableStreamOptions } from "react-dom/server"
 import { renderToPipeableStream } from "react-dom/server"
-import { logger } from "../server/logger"
+import { logger } from "common"
 
 if (import.meta.env.DEV) {
     await import("./mock/setupMockServer.server")

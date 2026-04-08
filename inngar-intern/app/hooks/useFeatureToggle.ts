@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { logger } from "../../server/logger.ts"
+import { logger } from "common"
 
 type FeatureToggles = "inngar.overstyr-kontor"
 type Features = Record<FeatureToggles, boolean>

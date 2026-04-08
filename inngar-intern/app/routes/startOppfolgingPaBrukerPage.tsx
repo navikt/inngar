@@ -5,7 +5,7 @@ import {
     type KanIkkeStarteOppfolgingPgaIkkeTilgang,
     type KanIkkeStartePgaFolkeregisterStatus,
 } from "~/api/veilarboppfolging"
-import { logger } from "../../server/logger"
+import { logger } from "common"
 import { dataWithTraceId } from "~/util/errorUtil"
 import { IkkeTilgangWarning } from "~/registreringPage/IkkeTilgangWarning"
 import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"

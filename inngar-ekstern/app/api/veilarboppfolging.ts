@@ -1,5 +1,8 @@
-import type { StartOppfolgingErrorResponse, StartOppfolgingSuccess } from "common"
-import { toUrl, apps } from "common"
+import type {
+    StartOppfolgingErrorResponse,
+    StartOppfolgingSuccess,
+} from "common"
+import { apps, logger, toUrl } from "common"
 
 const startOppfolgingUrl = toUrl(
     apps.veilarboppfolging,
@@ -9,7 +12,7 @@ const startOppfolgingUrl = toUrl(
 export const startOppfolging = async (
     token: string,
 ): Promise<StartOppfolgingSuccess | StartOppfolgingErrorResponse> => {
-    const body = { henviserSystem: "INNGAR_EKSTERN", }
+    const body = { henviserSystem: "INNGAR_EKSTERN" }
     return await fetch(startOppfolgingUrl, {
         headers: {
             ["Nav-Consumer-Id"]: "inngar",

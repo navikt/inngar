@@ -1,5 +1,5 @@
 import { isRouteErrorResponse } from "react-router"
-import { logger } from "../../server/logger"
+import { logger } from "common"
 import { XMarkOctagonIcon } from "@navikt/aksel-icons"
 import { ReadMore } from "@navikt/ds-react"
 import type { Route } from "../../.react-router/types/app/routes/+types/startOppfolgingPaBrukerPage"

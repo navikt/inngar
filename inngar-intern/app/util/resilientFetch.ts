@@ -1,4 +1,4 @@
-import { logger } from "../../server/logger"
+import { logger } from "common"
 
 const getBodyTypeFromHeaders = (headers: Headers) => {
     const contentType = headers.get("content-type")

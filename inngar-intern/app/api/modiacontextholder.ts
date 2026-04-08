@@ -1,6 +1,11 @@
 import { type FetchError, resilientFetch } from "~/util/resilientFetch"
-import { aktivBrukerUrl, contextUrl, generateFnrCodeUrl, retrieveFnrUrl } from "~/config"
-import { logger } from "../../server/logger"
+import {
+    aktivBrukerUrl,
+    contextUrl,
+    generateFnrCodeUrl,
+    retrieveFnrUrl,
+} from "~/config"
+import { logger } from "common"
 import { getOboToken } from "../../../common/tokenExchange.server.ts"
 import { apps } from "../../../common/appConstants.ts"
 

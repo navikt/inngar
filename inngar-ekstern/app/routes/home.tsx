@@ -16,7 +16,6 @@ export default function Home() {
 }
 
 export const action = async (args: Route.ActionArgs) => {
-    const formdata = await args.request.formData()
     const tokenOrResponse = await getOboToken(
         args.request,
         apps.veilarboppfolging,
@@ -24,5 +23,8 @@ export const action = async (args: Route.ActionArgs) => {
     if (tokenOrResponse.ok == true) {
         return startOppfolging(tokenOrResponse.token)
     } else {
+        throw Error(
+            "Klarte ikke start oppfølging (klarte ikke veksle inn obo-token)",
+        )
     }
 }

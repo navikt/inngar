@@ -1,4 +1,4 @@
-import { logger } from "../../server/logger.ts"
+import { logger } from "common"
 import { getOboToken } from "../../../common/tokenExchange.server.ts"
 import { apps } from "../../../common/appConstants.ts"
 import { VeilarboppfolgingApi } from "~/api/veilarboppfolging.ts"

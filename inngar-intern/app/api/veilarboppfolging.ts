@@ -1,11 +1,16 @@
 import { apps } from "common/appConstants.ts"
-import { logger } from "../../server/logger"
-import { type FetchError, type HttpError, resilientFetch, type Success } from "~/util/resilientFetch"
+import { logger } from "common"
+import {
+    type FetchError,
+    type HttpError,
+    resilientFetch,
+    type Success,
+} from "~/util/resilientFetch"
 import { toUrl } from "common/utils.ts"
 import type {
     ArenaResponseKoder,
     StartOppfolgingErrorResponse,
-    StartOppfolgingSuccess
+    StartOppfolgingSuccess,
 } from "common/startOppfolgingResponse.ts"
 
 const reaktiverOppfolgingUrl = toUrl(
@@ -36,7 +41,6 @@ interface ReaktiverOppfolgingSuccess {
     ok: true
     body: ReaktiverOppfolgingSuccessResponse
 }
-
 
 const reaktiverOppfolging = async (
     fnr: string,
