@@ -21,7 +21,7 @@ let otelWrapper: OtelWrapper = {
     SpanKind: undefined,
 }
 
-if (typeof window === "undefined") {
+/*if (typeof window === "undefined") {
     // Only require OpenTelemetry on the server
     import("@opentelemetry/api").then((otel) => {
         otelWrapper.getSpan = otel.trace.getSpan
@@ -31,7 +31,7 @@ if (typeof window === "undefined") {
             `${process.env.OTEL_SERVICE_NAME}:httpclient`,
         )
     })
-}
+}*/
 
 export const getActiveSpanContext = (): SpanContext | undefined => {
     const { context, getSpan } = otelWrapper
