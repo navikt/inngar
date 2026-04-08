@@ -1,5 +1,7 @@
-/node_modules
-/.idea
-/.react-router
-/build
+inngar-intern/node_modules
+.idea
+inngar-intern/.react-router
+inngar-intern/build
 .npmrc
+/node_modules/
+/build/

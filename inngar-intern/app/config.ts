@@ -1,0 +1,8 @@
+import { apps, toAppUrl } from "../../common/appConstants.ts"
+
+const contextHolderApiUrl = toAppUrl(apps.modiacontextholder, "")
+export const aktivBrukerUrl = `${contextHolderApiUrl}/api/context/v2/aktivbruker`
+export const aktivEnhetUrl = `${contextHolderApiUrl}/api/context/v2/aktivenhet`
+export const generateFnrCodeUrl = `${contextHolderApiUrl}/fnr-code/generate`
+export const retrieveFnrUrl = `${contextHolderApiUrl}/fnr-code/retrieve`
+export const contextUrl = `${contextHolderApiUrl}/api/context`
