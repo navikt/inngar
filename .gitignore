@@ -1,7 +1,10 @@
-inngar-intern/node_modules
 .idea
+inngar-intern/node_modules
 inngar-intern/.react-router
 inngar-intern/build
+inngar-ekstern/node_modules
+inngar-ekstern/.react-router
+inngar-ekstern/build
 .npmrc
 /node_modules/
 /build/
