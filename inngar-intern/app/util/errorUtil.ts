@@ -1,4 +1,4 @@
-import { getActiveSpanContext } from "common/onlyServerOtelUtils.ts.ts"
+import { getActiveSpanContext } from "common"
 import { data } from "react-router"
 
 export const dataWithTraceId = <T extends Record<any, any>>(
