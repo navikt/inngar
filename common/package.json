@@ -15,5 +15,8 @@
     },
     "scripts": {
         "build": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@types/node": "^25"
     }
 }
