@@ -1,7 +1,7 @@
 ## Setup
 - This app has two main apps and one shared dependency using workpaces (like in npm, but also supported by bun)
 - This project uses bun and workspaces
-- run `bun run --workspaced build` in root folder to build all projects
+- run `bun run --workspaces build` in root folder to build all projects
 - The app uses react-router which has loaders and actions which can run on both client and serverside depending on context
   - Code imported from *.server.ts files are automatically removed from loaders and actions if (and only if) its a route which means its referenced directly in the routes.ts file (not imported, but referenced)
 
