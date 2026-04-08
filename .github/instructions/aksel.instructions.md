@@ -2,127 +2,46 @@
 applyTo: "app/**/*.{tsx,ts}"
 ---
 
-# Aksel Design System
+# Aksel Design System – koderegler
 
-Standarder for bruk av Nav Aksel (`@navikt/ds-react` >= v8.x) i inngar (React Router + Vite).
+Bruk `@navikt/ds-react` >= v8. Spør `@aksel-agent` for migrering, ukjente komponenter eller Figma-hjelp.
 
-## Spacing-regler
-
-**VIKTIG**: Bruk alltid Nav DS spacing-tokens, aldri Tailwind padding/margin direkte.
-
-### ✅ Riktig
+## Spacing – aldri Tailwind
 
 ```tsx
-import { Box, VStack, HStack, HGrid } from "@navikt/ds-react";
+// ✅
+<Box paddingBlock={{ xs: "space-16", md: "space-24" }} paddingInline="space-16">
+<VStack gap="4">   <HStack gap="2" align="center">
 
-<Box
-  paddingBlock={{ xs: "space-16", md: "space-24" }}
-  paddingInline={{ xs: "space-16", md: "space-40" }}
->
-  {children}
-</Box>
-
-<Box
-  background="surface-subtle"
-  padding={{ xs: "space-12", sm: "space-16", md: "space-24" }}
-  borderRadius="large"
->
-  <Heading size="large" level="2">Tittel</Heading>
-</Box>
+// ❌
+<div className="p-4">   <Box padding="4">  // mangler space-prefiks
 ```
 
-### ❌ Feil
+Tokens: `space-4` `space-8` `space-12` `space-16` `space-20` `space-24` `space-32` `space-40` `space-48` `space-64`
 
-```tsx
-<div className="p-4 md:p-6">   // ❌ Tailwind padding
-<div className="mx-4 my-2">    // ❌ Tailwind margin
-<Box padding="4">              // ❌ Mangler space-prefiks
-```
-
-## Spacing-tokens
-
-Alltid med `space-`-prefiks:
-
-| Token       | Verdi |
-|-------------|-------|
-| `space-4`   | 4px   |
-| `space-8`   | 8px   |
-| `space-12`  | 12px  |
-| `space-16`  | 16px  |
-| `space-20`  | 20px  |
-| `space-24`  | 24px  |
-| `space-32`  | 32px  |
-| `space-40`  | 40px  |
-| `space-48`  | 48px  |
-| `space-64`  | 64px  |
-
-## Responsiv design
-
-Mobil-først med breakpoints: `xs` (0px) → `sm` (480px) → `md` (768px) → `lg` (1024px) → `xl` (1280px)
+## Layout og responsivitet (mobil-først)
 
 ```tsx
 <HGrid columns={{ xs: 1, md: 2, lg: 3 }} gap="4">
-  {items.map(item => <Card key={item.id} {...item} />)}
-</HGrid>
+<Box background="surface-subtle" borderRadius="large" padding={{ xs: "space-16", md: "space-24" }}>
 ```
 
-## Layout-komponenter
+Breakpoints: `xs` 0px · `sm` 480px · `md` 768px · `lg` 1024px · `xl` 1280px
 
-```tsx
-import { Box, VStack, HStack, HGrid } from "@navikt/ds-react";
-
-// Vertikal stack
-<VStack gap="4">
-  <Komponent1 />
-  <Komponent2 />
-</VStack>
-
-// Horisontal stack
-<HStack gap="4" align="center">
-  <Icon />
-  <Label>Tekst</Label>
-</HStack>
-```
-
-## Typografi
+## Typografi og ikoner
 
 ```tsx
 import { Heading, BodyShort, BodyLong, Label } from "@navikt/ds-react";
+import { ChevronRightIcon } from "@navikt/aksel-icons";
 
-<Heading size="large" level="1">Sidetittel</Heading>
-<Heading size="medium" level="2">Seksjonstitel</Heading>
-<BodyShort>Kortfattet tekst</BodyShort>
-<BodyLong>Lengre tekst med avsnitt</BodyLong>
-<Label>Skjemaetikett</Label>
-```
-
-## Bakgrunnsfarger
-
-```tsx
-<Box background="surface-default">         {/* Hvit */}
-<Box background="surface-subtle">           {/* Lys grå */}
-<Box background="surface-action-subtle">    {/* Lys blå */}
-<Box background="surface-success-subtle">   {/* Lys grønn */}
-<Box background="surface-warning-subtle">   {/* Lys oransje */}
-<Box background="surface-danger-subtle">    {/* Lys rød */}
-```
-
-## Ikoner
-
-```tsx
-import { ChevronRightIcon, CheckmarkIcon } from "@navikt/aksel-icons";
-
+<Heading size="large" level="1">   <BodyShort>   <Label>
 <ChevronRightIcon title="Gå videre" fontSize="1.5rem" />
 ```
 
 ## Tallformatering
 
-Bruk alltid norsk locale:
-
 ```typescript
-// ✅ Riktig
+// ✅ norsk locale
 new Intl.NumberFormat("nb-NO").format(151354); // "151 354"
-
-// ❌ Feil — bruker nettleserens locale
-num.toLocaleString();
+// ❌ num.toLocaleString() – bruker nettleserens locale
 ```
