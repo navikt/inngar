@@ -1,44 +1,50 @@
 {
-    "name": "inngar-ekstern",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "build": "react-router build",
-        "dev": "react-router dev",
-        "start": "node --experimental-strip-types server/server.ts ./build/server/index.js",
-        "typecheck": "react-router typegen && tsc"
-    },
-    "dependencies": {
-        "@navikt/ds-css": "^8.7.0",
-        "@navikt/ds-react": "^8.7.0",
-        "@navikt/nav-dekoratoren-moduler": "^3.6.3",
-        "@react-router/express": "catalog:",
-        "@react-router/node": "7.13.1",
-        "@react-router/serve": "7.13.1",
-        "@types/compression": "catalog:",
-        "@types/morgan": "catalog:",
-        "@types/source-map-support": "catalog:",
-        "common": "*",
-        "compression": "catalog:",
-        "express": "catalog:",
-        "get-port": "catalog:",
-        "isbot": "^5.1.31",
-        "morgan": "catalog:",
-        "react": "^19.2.4",
-        "react-dom": "^19.2.4",
-        "react-router": "7.13.1",
-        "source-map-support": "catalog:"
-    },
-    "devDependencies": {
-        "@react-router/dev": "7.13.1",
-        "@tailwindcss/vite": "^4.2.2",
-        "@types/express": "catalog:",
-        "@types/node": "^25",
-        "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3",
-        "tailwindcss": "^4.1.13",
-        "typescript": "catalog:",
-        "vite": "catalog:",
-        "vite-tsconfig-paths": "^5.1.4"
-    }
+  "name": "inngar-ekstern",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "node --experimental-strip-types server/server.ts ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@navikt/ds-css": "^8.7.0",
+    "@navikt/ds-react": "^8.7.0",
+    "@navikt/nav-dekoratoren-moduler": "^3.6.3",
+    "@react-router/express": "catalog:",
+    "@react-router/node": "7.13.1",
+    "@react-router/serve": "7.13.1",
+    "@types/compression": "catalog:",
+    "@types/morgan": "catalog:",
+    "@types/source-map-support": "catalog:",
+    "common": "*",
+    "compression": "catalog:",
+    "express": "catalog:",
+    "get-port": "catalog:",
+    "isbot": "^5.1.31",
+    "morgan": "catalog:",
+        "react": "catalog:",
+        "react-dom": "catalog:",
+    "react-router": "7.13.1",
+    "source-map-support": "catalog:"
+  },
+  "devDependencies": {
+    "@react-router/dev": "7.13.1",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/express": "catalog:",
+    "@types/node": "^25",
+        "@types/react": "catalog:",
+        "@types/react-dom": "catalog:",
+    "msw": "^2.13.2",
+    "tailwindcss": "^4.1.13",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
 }
