@@ -27,7 +27,7 @@ jobs:
         env:
           BUN_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Build
-        run: bun run --filter '${{ matrix.app }}' build
+        run: bun run --workspaces build
       - name: Remove node_modules and reinstall production dependencies
         run: |
           rm -rf node_modules common/node_modules ${{ matrix.app }}/node_modules
