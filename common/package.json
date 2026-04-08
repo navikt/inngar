@@ -17,6 +17,7 @@
         "build": "tsc --noEmit"
     },
     "devDependencies": {
-        "@types/node": "^25"
+        "@types/node": "^25",
+        "typescript": "catalog:"
     }
 }
