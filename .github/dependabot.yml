@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      aksel:
+        patterns:
+          - "@navikt/ds-*"
+          - "@navikt/aksel-*"
+      react-router:
+        patterns:
+          - "react-router"
+          - "@react-router/*"
+      opentelemetry:
+        patterns:
+          - "@opentelemetry/*"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
