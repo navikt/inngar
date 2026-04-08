@@ -14,7 +14,7 @@
         "pino": "^10.3.1",
       },
       "devDependencies": {
-        "@types/node": "^25.5.2",
+        "@types/node": "^25",
       },
     },
     "inngar-ekstern": {
@@ -39,7 +39,7 @@
         "@types/react-dom": "^19.2.3",
         "tailwindcss": "^4.1.13",
         "typescript": "^5.9.2",
-        "vite": "^6.4.1",
+        "vite": "catalog:",
         "vite-tsconfig-paths": "^5.1.4",
       },
     },
@@ -85,10 +85,13 @@
         "prettier": "3.4.2",
         "tailwindcss": "^4.2.1",
         "typescript": "^5.9.3",
-        "vite": "^6.4.1",
+        "vite": "catalog:",
         "vite-tsconfig-paths": "^5.1.4",
       },
     },
+  },
+  "catalog": {
+    "vite": "^6.4.1",
   },
   "packages": {
     "@babel/code-frame": ["@babel/code-frame@7.29.0", "", { "dependencies": { "@babel/helper-validator-identifier": "^7.28.5", "js-tokens": "^4.0.0", "picocolors": "^1.1.1" } }, "sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw=="],

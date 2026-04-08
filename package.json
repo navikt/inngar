@@ -1,9 +1,14 @@
 {
     "name": "inngar",
     "private": true,
-    "workspaces": [
-        "common",
-        "inngar-intern",
-        "inngar-ekstern"
-    ]
+    "workspaces": {
+        "packages": [
+            "common",
+            "inngar-intern",
+            "inngar-ekstern"
+        ],
+        "catalog": {
+            "vite": "^6.4.1"
+        }
+    }
 }
