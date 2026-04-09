@@ -21,4 +21,4 @@ WORKDIR /app/inngar-ekstern
 
 EXPOSE 3000
 
-CMD ["build/server/index.js"]
+CMD ["node", "--experimental-strip-types", "server/server.ts", "./build/server/index.js"]
