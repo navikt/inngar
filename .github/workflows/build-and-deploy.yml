@@ -46,8 +46,8 @@ jobs:
         with:
           path: '${{ inputs.app }}'
           format: 'cyclonedx-json'
-          artifact-name: 'bom.json'
-          output-file: 'bom.json'
+          artifact-name: '${{ inputs.app }}-bom.json'
+          output-file: '${{ inputs.app }}-bom.json'
           upload-artifact: 'true'
 
       - name: Build and push image and SBOM to OCI registry
@@ -57,7 +57,7 @@ jobs:
           team: dab
           image_suffix: ${{ inputs.app }}
           dockerfile: ${{ inputs.app }}/Dockerfile
-          byosbom: 'bom.json'
+          byosbom: '${{ inputs.app }}-bom.json'
 
       - name: Deploy ${{ inputs.app }} to ${{ inputs.env }}
         uses: nais/deploy/actions/deploy@v2
