@@ -21,4 +21,4 @@ WORKDIR /app/inngar-ekstern
 
 EXPOSE 3000
 
-CMD ["build/server.js"]
+CMD ["build/server/server.js"]
