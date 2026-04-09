@@ -6,14 +6,17 @@ on:
 concurrency:
   group: deploy-feature-branch
   cancel-in-progress: true
-
 jobs:
-  build_and_deploy:
-    name: Build, push and deploy
+  build:
+    name: Build ${{ matrix.app }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [inngar-intern, inngar-ekstern]
     steps:
       - uses: actions/checkout@v6
       - name: Install bun
@@ -22,22 +25,26 @@ jobs:
         run: bun install --frozen-lockfile
         env:
           BUN_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      - name : bun run build
-        run: bun run build
-      - name: delete node_modules
-        run: rm -rf node_modules
-      - name: install dependencies except devDependencies
-        run: bun install --production
+      - name: Build ${{ matrix.app }}
+        run: |
+          bun run --filter 'common' build
+          bun run --filter '${{ matrix.app }}' build
+      - name: Remove node_modules and reinstall production dependencies
+        run: |
+          rm -rf node_modules common/node_modules ${{ matrix.app }}/node_modules
+          cd ${{ matrix.app }} && bun install --production
       - name: Build and push image and SBOM to OCI registry
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
           team: dab
+          docker_context: ${{ matrix.app }}
+          dockerfile: ${{ matrix.app }}/Dockerfile
       - name: Deploy to dev
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
-          RESOURCE: .nais/dev-gcp.yaml
+          RESOURCE: .nais/${{ matrix.app }}/dev-gcp.yaml
           VAR: image=${{ steps.docker-build-push.outputs.image }}
           TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
           DEPLOY_SERVER: deploy.nav.cloud.nais.io:443
