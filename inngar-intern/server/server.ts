@@ -3,7 +3,6 @@ import os from "node:os"
 import path from "node:path"
 import url from "node:url"
 import type { ServerBuild } from "react-router"
-import { createRequestHandler } from "@react-router/express"
 import compression from "compression"
 import express from "express"
 import morgan from "morgan"
@@ -11,6 +10,7 @@ import sourceMapSupport from "source-map-support"
 import getPort from "get-port"
 import process from "node:process"
 import { logger } from "common"
+import { createRequestHandler } from "@react-router/express"
 
 process.on("unhandledRejection", (e) => {
     logger.error(`unhandledRejection: ${e?.toString()}`)

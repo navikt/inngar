@@ -21,8 +21,8 @@
         "@opentelemetry/instrumentation-pino": "^0.46.1",
         "@opentelemetry/sdk-node": "^0.57.2",
         "@react-router/express": "catalog:",
-        "@react-router/node": "7.13.1",
-        "@react-router/serve": "7.13.1",
+        "@react-router/node": "catalog:",
+        "@react-router/serve": "catalog:",
         "@tailwindcss/vite": "^4.2.1",
         "@types/compression": "catalog:",
         "@types/morgan": "catalog:",
@@ -41,9 +41,9 @@
         "source-map-support": "catalog:"
     },
     "devDependencies": {
-        "@react-router/dev": "7.13.1",
+        "@react-router/dev": "catalog:",
         "@types/express": "catalog:",
-        "@types/node": "20.19.34",
+        "@types/node": "^25",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "autoprefixer": "^10.4.27",
