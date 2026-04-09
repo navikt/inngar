@@ -9,8 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build ${{ matrix.app }}
+  build-and-deploy:
+    name: Build and deploy ${{ matrix.app }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -42,48 +42,19 @@ jobs:
           team: dab
           image_suffix: ${{ matrix.app }}
           dockerfile: ${{ matrix.app }}/Dockerfile
-    outputs:
-      image: ${{ steps.docker-build-push.outputs.image }}
-      telemetry: ${{ steps.docker-build-push.outputs.telemetry }}
-
-  deploy-dev:
-    name: Deploy ${{ matrix.app }} to dev
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    strategy:
-      matrix:
-        app: [inngar-intern, inngar-ekstern]
-    steps:
-      - uses: actions/checkout@v6
-      - name: Deploy
+      - name: Deploy ${{ matrix.app }} to dev
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/${{ matrix.app }}/dev-gcp.yaml
-          VAR: image=${{ needs.build.outputs.image }}
-          TELEMETRY: ${{ needs.build.outputs.telemetry }}
+          VAR: image=${{ steps.docker-build-push.outputs.image }}
+          TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
           DEPLOY_SERVER: deploy.nav.cloud.nais.io:443
-
-  deploy-prod:
-    name: Deploy ${{ matrix.app }} to prod
-    needs: [build, deploy-dev]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    strategy:
-      matrix:
-        app: [inngar-intern, inngar-ekstern]
-    steps:
-      - uses: actions/checkout@v6
-      - name: Deploy
+      - name: Deploy ${{ matrix.app }} to prod
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/${{ matrix.app }}/prod-gcp.yaml
-          VAR: image=${{ needs.build.outputs.image }}
-          TELEMETRY: ${{ needs.build.outputs.telemetry }}
+          VAR: image=${{ steps.docker-build-push.outputs.image }}
+          TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
           DEPLOY_SERVER: deploy.nav.cloud.nais.io:443
