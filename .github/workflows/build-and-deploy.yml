@@ -1,0 +1,54 @@
+name: Build and deploy (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      app:
+        required: true
+        type: string
+      env:
+        required: true
+        type: string
+    secrets:
+      READER_TOKEN:
+        required: true
+
+jobs:
+  build-and-deploy:
+    name: Build and deploy ${{ inputs.app }} to ${{ inputs.env }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies (bun)
+        run: bun install --frozen-lockfile
+        env:
+          BUN_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+      - name: Build ${{ inputs.app }}
+        run: |
+          bun run --filter 'common' build
+          bun run --filter '${{ inputs.app }}' build
+      - name: Remove node_modules and reinstall production dependencies
+        run: |
+          rm -rf node_modules common/node_modules ${{ inputs.app }}/node_modules
+          cd ${{ inputs.app }} && bun install --production
+      - name: Build and push image and SBOM to OCI registry
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: dab
+          image_suffix: ${{ inputs.app }}
+          dockerfile: ${{ inputs.app }}/Dockerfile
+      - name: Deploy ${{ inputs.app }} to ${{ inputs.env }}
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: ${{ inputs.env }}-gcp
+          RESOURCE: .nais/${{ inputs.app }}/${{ inputs.env }}-gcp.yaml
+          VAR: image=${{ steps.docker-build-push.outputs.image }}
+          TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
+          DEPLOY_SERVER: deploy.nav.cloud.nais.io:443
+
