@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: [inngar-intern, inngar-ekstern]
+        app: [inngar-intern]
     steps:
       - uses: actions/checkout@v6
       - name: Set timestamp
