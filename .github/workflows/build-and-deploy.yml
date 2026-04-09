@@ -22,20 +22,34 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
+
       - name: Install bun
         uses: oven-sh/setup-bun@v2
+
       - name: Install dependencies (bun)
         run: bun install --frozen-lockfile
         env:
           BUN_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+
       - name: Build ${{ inputs.app }}
         run: |
           bun run --filter 'common' build
           bun run --filter '${{ inputs.app }}' build
+
       - name: Remove node_modules and reinstall production dependencies
         run: |
           rm -rf node_modules common/node_modules ${{ inputs.app }}/node_modules
           cd ${{ inputs.app }} && bun install --production
+
+      - name: Generate and output SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: '${{ inputs.app }}'
+          format: 'cyclonedx-json'
+          artifact-name: 'bom.json'
+          output-file: 'build/reports/bom.json'
+          upload-artifact: 'true'
+
       - name: Build and push image and SBOM to OCI registry
         uses: nais/docker-build-push@v0
         id: docker-build-push
@@ -43,6 +57,8 @@ jobs:
           team: dab
           image_suffix: ${{ inputs.app }}
           dockerfile: ${{ inputs.app }}/Dockerfile
+          byosbom: 'build/reports/bom.json'
+
       - name: Deploy ${{ inputs.app }} to ${{ inputs.env }}
         uses: nais/deploy/actions/deploy@v2
         env:
