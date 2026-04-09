@@ -27,6 +27,8 @@ spec:
       rules:
         - application: veilarboppfolging
           namespace: poao
+        - application: nav-dekoratoren
+          namespace: personbruker
 #      external:
 #        - host: cdn.nav.no
   observability:
