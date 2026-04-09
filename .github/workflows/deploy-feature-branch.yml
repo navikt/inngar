@@ -19,9 +19,6 @@ jobs:
         app: [inngar-intern, inngar-ekstern]
     steps:
       - uses: actions/checkout@v6
-      - name: Set timestamp
-        id: timestamp
-        run: echo "timestamp=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
       - name: Install bun
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies (bun)
