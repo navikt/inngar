@@ -40,6 +40,7 @@ jobs:
         id: docker-build-push
         with:
           team: dab
+          tag: ${{ matrix.app }}-${{ steps.timestamp.outputs.timestamp }}
           dockerfile: ${{ matrix.app }}/Dockerfile
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
