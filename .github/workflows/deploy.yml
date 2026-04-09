@@ -40,7 +40,7 @@ jobs:
         id: docker-build-push
         with:
           team: dab
-          docker_context: ${{ matrix.app }}
+          image_suffix: ${{ matrix.app }}
           dockerfile: ${{ matrix.app }}/Dockerfile
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
