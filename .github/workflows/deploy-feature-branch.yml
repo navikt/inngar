@@ -38,7 +38,6 @@ jobs:
         id: docker-build-push
         with:
           team: dab
-          docker_context: ${{ matrix.app }}
           dockerfile: ${{ matrix.app }}/Dockerfile
       - name: Deploy to dev
         uses: nais/deploy/actions/deploy@v2
