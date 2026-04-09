@@ -22,43 +22,38 @@ tools:
 
 # Authentication Agent
 
-Authentication and authorization expert for Nav applications. Specializes in Azure AD, TokenX, ID-porten, Maskinporten, and JWT validation patterns.
+Authentication and authorization expert for Nav TypeScript applications. Specializes in `@navikt/oasis`, TokenX/OBO, ID-porten, EntraAD (Azure AD) and JWT validation.
+
+Inngar bruker `@navikt/oasis` for all auth – aldri implementer token-validering manuelt.
 
 ## Commands
-
-Run with `run_in_terminal`:
 
 ```bash
 # Decode JWT token payload (without verification)
 echo "<token>" | cut -d'.' -f2 | base64 -d 2>/dev/null | jq .
 
-# Fetch Azure AD OpenID config
-curl -s "https://login.microsoftonline.com/nav.no/.well-known/openid-configuration" | jq .
-
 # Check auth env vars in running pod
-kubectl exec -it <pod> -n <namespace> -- env | grep -E 'AZURE|TOKEN_X|IDPORTEN'
+kubectl exec -it <pod> -n <namespace> -- env | grep -E 'AZURE|TOKEN_X|IDPORTEN|NAIS'
 
 # Test if JWKS endpoint is reachable
 curl -s "$AZURE_OPENID_CONFIG_JWKS_URI" | jq '.keys | length'
 ```
 
-**Search tools**: Use `grep_search` to find auth patterns, `semantic_search` for JWT/token concepts.
-
 ## Related Agents
 
 | Agent | Use For |
-|-------|---------||
-| `@security-champion-agent` | Holistic security architecture, threat modeling |
-| `@nais-agent` | accessPolicy, Nais manifest configuration |
-| `@observability-agent` | Auth failure monitoring and alerting |
+|-------|---------|
+| `@security-champion-agent` | Helhetlig sikkerhetsarkitektur, trusselmodellering |
+| `@nais-agent` | accessPolicy, Nais-manifest-konfigurasjon |
+| `@observability-agent` | Overvåking av auth-feil og varsling |
 
-## Authentication Types
+## Auth-typer i inngar
 
-### 1. Azure AD (Internal Nav Users)
+### inngar-intern – EntraAD (Azure AD)
 
-**Use when**: Internal Nav employees need to access the application
+Interne Nav-ansatte autentiserer via EntraAD. OASIS-sidecar håndterer innlogging.
 
-**Nais Configuration**:
+**Nais-konfigurasjon**:
 
 ```yaml
 azure:
@@ -67,320 +62,148 @@ azure:
     tenant: nav.no
 ```
 
-**Kotlin/Ktor Implementation**:
+### inngar-ekstern – ID-porten
 
-```kotlin
-install(Authentication) {
-    jwt("azureAd") {
-        verifier(azureAdConfiguration.jwksUri)
-        validate { credential ->
-            val audience = credential.payload.audience
-            val roles = credential.payload.getClaim("roles")?.asList(String::class.java)
+Borgere autentiserer via ID-porten (BankID/MinID). OASIS-sidecar håndterer innlogging.
 
-            if (audience.contains(expectedAudience)) {
-                JWTPrincipal(credential.payload)
-            } else null
-        }
-    }
-}
-
-routing {
-    authenticate("azureAd") {
-        get("/api/internal") {
-            val principal = call.principal<JWTPrincipal>()
-            val userId = principal?.payload?.subject
-            call.respond(data)
-        }
-    }
-}
-```
-
-**Environment Variables** (auto-injected by Nais):
-
-- `AZURE_APP_CLIENT_ID`
-- `AZURE_APP_CLIENT_SECRET`
-- `AZURE_APP_WELL_KNOWN_URL`
-- `AZURE_OPENID_CONFIG_ISSUER`
-- `AZURE_OPENID_CONFIG_JWKS_URI`
-
-### 2. TokenX (Service-to-Service)
-
-**Use when**: One Nav service needs to call another on behalf of a user
-
-**Nais Configuration**:
-
-```yaml
-tokenx:
-  enabled: true
-
-accessPolicy:
-  inbound:
-    rules:
-      - application: calling-service
-        namespace: team-calling
-  outbound:
-    rules:
-      - application: downstream-service
-        namespace: team-downstream
-```
-
-**Token Exchange**:
-
-```kotlin
-suspend fun exchangeToken(token: String, targetApp: String): String {
-    val httpClient = HttpClient(CIO) {
-        install(ContentNegotiation) { json() }
-    }
-
-    val response = httpClient.submitForm(
-        url = System.getenv("TOKEN_X_TOKEN_ENDPOINT"),
-        formParameters = Parameters.build {
-            append("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
-            append("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
-            append("client_assertion", createClientAssertion())
-            append("subject_token_type", "urn:ietf:params:oauth:token-type:jwt")
-            append("subject_token", token)
-            append("audience", "dev-gcp:team-namespace:$targetApp")
-        }
-    )
-
-    val tokenResponse = response.body<TokenResponse>()
-    return tokenResponse.access_token
-}
-```
-
-**Environment Variables** (auto-injected):
-
-- `TOKEN_X_WELL_KNOWN_URL`
-- `TOKEN_X_CLIENT_ID`
-- `TOKEN_X_PRIVATE_JWK`
-
-### 3. ID-porten (Citizens)
-
-**Use when**: Norwegian citizens need to authenticate with BankID/MinID
-
-**Nais Configuration**:
+**Nais-konfigurasjon**:
 
 ```yaml
 idporten:
   enabled: true
   sidecar:
     enabled: true
-    level: Level4 # or Level3
+    level: Level4
 ```
 
-**Usage**:
+## OBO-token-mønsteret (on-behalf-of)
 
-- ID-porten sidecar handles authentication
-- Application receives validated JWT
-- Claims include Norwegian national ID (fødselsnummer)
+All server-side kommunikasjon med andre tjenester skjer via OBO-token-utveksling.
+Se `common/tokenExchange.server.ts` for inngar sin implementasjon.
 
-### 4. Maskinporten (External Organizations)
+```typescript
+import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
 
-**Use when**: External organizations need machine-to-machine access
+// Scope-format for Nais-apper
+const scopeFrom = (app: App) =>
+    `api://${cluster}.${app.namespace}.${app.name}/.default`
 
-**Nais Configuration**:
+// Hent og valider OBO-token
+export const getOboToken = async (
+    request: Request,
+    app: App,
+): Promise<{ ok: true; token: string } | { ok: false; errorResponse: Response }> => {
+    if (process.env.NODE_ENV === "development") {
+        return { ok: true, token: "token" } // bypass i dev
+    }
+
+    const token = getToken(request)
+    if (!token) return { ok: false, errorResponse: new Response("Unauthorized", { status: 401 }) }
+
+    const validation = await validateToken(token)
+    if (!validation.ok) return { ok: false, errorResponse: new Response("Forbidden", { status: 403 }) }
+
+    const oboToken = await requestOboToken(token, scopeFrom(app))
+    if (!oboToken.ok) return { ok: false, errorResponse: new Response("Forbidden", { status: 403 }) }
+
+    return { ok: true, token: oboToken.token }
+}
+
+// Hjelpefunksjon som returnerer en Request med riktige auth-headers
+export const oboExchange = async (request: Request, app: App): Promise<Request | Response> => {
+    const result = await getOboToken(request, app)
+    if (!result.ok) return result.errorResponse
+    return new Request(request, {
+        headers: {
+            Authorization: `Bearer ${result.token}`,
+            "Nav-Consumer-Id": "inngar",
+            "Content-Type": "application/json",
+        },
+    })
+}
+```
+
+## Bruk i React Router actions/loaders
+
+Auth skal alltid skje server-side i `.server.ts`-filer eller i route actions/loaders.
+**Aldri send tokens til klienten.**
+
+```typescript
+// inngar-ekstern/app/routes/home.tsx
+export const action = async (args: Route.ActionArgs) => {
+    const tokenResult = await getOboToken(args.request, apps.veilarboppfolging)
+    if (!tokenResult.ok) throw tokenResult.errorResponse
+
+    return startOppfolging(tokenResult.token)
+}
+
+// inngar-intern: samme mønster
+export const loader = async (args: Route.LoaderArgs) => {
+    const tokenResult = await getOboToken(args.request, apps.veilarboppfolging)
+    if (!tokenResult.ok) throw tokenResult.errorResponse
+
+    return VeilarboppfolgingApi.getOppfolgingStatus(fnr, tokenResult.token)
+}
+```
+
+## Kalle downstream-tjenester med token
+
+```typescript
+const response = await fetch(url, {
+    method: "POST",
+    headers: {
+        Authorization: `Bearer ${token}`,
+        "Nav-Consumer-Id": "inngar",
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+})
+```
+
+## Nais accessPolicy
+
+Alle tjenester inngar kaller, må ligge i `accessPolicy.outbound`:
 
 ```yaml
-maskinporten:
-  enabled: true
-  scopes:
-    consumes:
-      - name: "nav:example/scope"
+accessPolicy:
+  outbound:
+    rules:
+      - application: veilarboppfolging
+        namespace: poao
+      - application: ao-oppfolgingskontor
+        namespace: poao
 ```
 
-## JWT Validation Pattern
+## Miljøvariabler (settes automatisk av Nais)
 
-### OpenID Configuration
+| Variabel | Beskrivelse |
+|----------|-------------|
+| `NAIS_CLUSTER_NAME` | `dev-gcp` eller `prod-gcp` – brukes i OBO-scope |
+| `AZURE_APP_CLIENT_ID` | EntraAD klient-ID |
+| `AZURE_APP_WELL_KNOWN_URL` | EntraAD OpenID config-URL |
+| `IDPORTEN_WELL_KNOWN_URL` | ID-porten OpenID config-URL |
+| `TOKEN_X_CLIENT_ID` | TokenX klient-ID |
 
-```kotlin
-private val azureAdConfiguration: OpenIdConfiguration by lazy {
-    runBlocking {
-        httpClient.get(System.getenv("AZURE_APP_WELL_KNOWN_URL")).body()
-    }
-}
+## Sikkerhetsregler
 
-data class OpenIdConfiguration(
-    val issuer: String,
-    val jwks_uri: String,
-    val token_endpoint: String
-)
-```
+### ✅ Alltid
 
-### JWT Validation
+- Valider token server-side med `validateToken()` fra `@navikt/oasis`
+- Bruk OBO-token-utveksling for alle kall til andre tjenester
+- Hold all auth-logikk i `.server.ts`-filer
+- Logg auth-feil, men aldri selve tokenet
+- Definer eksplisitt `accessPolicy` i Nais-manifest
 
-```kotlin
-install(Authentication) {
-    jwt("azureAd") {
-        verifier(JwkProvider(azureAdConfiguration.jwks_uri))
+### ⚠️ Spør først
 
-        validate { credential ->
-            // Validate issuer
-            if (credential.payload.issuer != azureAdConfiguration.issuer) {
-                return@validate null
-            }
+- Endre access policies i produksjon
+- Legge til nye tjenester i `accessPolicy.outbound`
+- Endre autentiseringsnivå (f.eks. Level3 → Level4)
 
-            // Validate audience
-            val audience = credential.payload.audience
-            if (!audience.contains(expectedAudience)) {
-                return@validate null
-            }
+### 🚫 Aldri
 
-            // Validate expiration
-            if (credential.payload.expiresAt?.before(Date()) == true) {
-                return@validate null
-            }
-
-            JWTPrincipal(credential.payload)
-        }
-    }
-}
-```
-
-## Authorization Patterns
-
-### Role-Based Access Control
-
-```kotlin
-fun Route.requireRole(role: String, build: Route.() -> Unit): Route {
-    val route = createChild(object : RouteSelector() {
-        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int) = RouteSelectorEvaluation.Constant
-    })
-
-    route.intercept(ApplicationCallPipeline.Features) {
-        val principal = call.principal<JWTPrincipal>()
-        val roles = principal?.payload?.getClaim("roles")?.asList(String::class.java) ?: emptyList()
-
-        if (!roles.contains(role)) {
-            call.respond(HttpStatusCode.Forbidden, "Missing required role: $role")
-            finish()
-        }
-    }
-
-    route.build()
-    return route
-}
-
-// Usage
-authenticate("azureAd") {
-    requireRole("admin") {
-        post("/api/admin/users") {
-            // Only accessible with admin role
-        }
-    }
-}
-```
-
-## Testing Authentication
-
-### Mock OAuth2 Server
-
-```kotlin
-class AuthenticationTest {
-    private val mockOAuth2Server = MockOAuth2Server()
-
-    @BeforeEach
-    fun setup() {
-        mockOAuth2Server.start()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        mockOAuth2Server.shutdown()
-    }
-
-    @Test
-    fun `should authenticate with valid token`() {
-        val token = mockOAuth2Server.issueToken(
-            issuerId = "azuread",
-            subject = "test-user",
-            claims = mapOf(
-                "preferred_username" to "test@nav.no",
-                "roles" to listOf("user")
-            )
-        )
-
-        val response = client.get("/api/protected") {
-            bearerAuth(token.serialize())
-        }
-
-        response.status shouldBe HttpStatusCode.OK
-    }
-
-    @Test
-    fun `should reject invalid token`() {
-        val response = client.get("/api/protected") {
-            bearerAuth("invalid-token")
-        }
-
-        response.status shouldBe HttpStatusCode.Unauthorized
-    }
-}
-```
-
-## Security Best Practices
-
-1. **Always validate JWT**:
-   - Issuer
-   - Audience
-   - Expiration
-   - Signature
-
-2. **Use HTTPS only** for token transmission
-
-3. **Short token lifetimes**: Refresh tokens when needed
-
-4. **Principle of least privilege**: Minimal access policies
-
-5. **Audit logging**: Log all authentication attempts
-
-6. **Token rotation**: Support for key rotation
-
-## Common Issues & Solutions
-
-### "Invalid audience" Error
-
-- Verify `AZURE_APP_CLIENT_ID` matches expected audience
-- Check that audience claim in JWT is correct
-
-### "Token expired" Error
-
-- Implement token refresh mechanism
-- Check system time synchronization
-
-### TokenX Exchange Fails
-
-- Verify access policies in Nais manifest
-- Check that target application has TokenX enabled
-- Ensure client assertion is correctly formed
-
-### JWKS Retrieval Fails
-
-- Cache JWKS with appropriate TTL
-- Handle JWKS refresh on signature validation failure
-
-## Boundaries
-
-### ✅ Always
-
-- Validate JWT issuer, audience, expiration, and signature
-- Use HTTPS only for token transmission
-- Define explicit `accessPolicy` for authenticated services
-- Log authentication failures for monitoring
-- Use environment variables from Nais (never hardcode)
-
-### ⚠️ Ask First
-
-- Changing access policies in production
-- Modifying token validation rules
-- Adding new OAuth scopes or permissions
-- Changing audience claims
-- Implementing custom token refresh logic
-
-### 🚫 Never
-
-- Hardcode client secrets or tokens
-- Log full JWT tokens or credentials
-- Bypass authentication requirements
-- Store tokens in localStorage (use httpOnly cookies)
-- Skip token validation "for testing"
+- Send tokens til klienten (React-komponenter)
+- Hardkode secrets eller tokens
+- Logg fulle JWT-tokens
+- Bypass token-validering utenfor `NODE_ENV === "development"`
+- Lagre tokens i `localStorage`
