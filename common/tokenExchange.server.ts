@@ -1,6 +1,7 @@
 import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
 import type { App } from "./appConstants.ts"
 import * as process from "node:process"
+import { logger } from "./logger.ts"
 
 const scopeFrom = (app: App) =>
     `api://${cluster}.${app.namespace}.${app.name}/.default`
@@ -46,18 +47,22 @@ export const getOboToken = async (
         }
 
     const validation = await validateToken(token)
-    if (!validation.ok)
+    if (!validation.ok) {
+        logger.error("Validering av token feilet")
         return {
             errorResponse: new Response("Forbidden", { status: 403 }),
             ok: false,
         }
+    }
 
     const oboToken = await requestOboToken(token, scopeFrom(app))
-    if (!oboToken.ok)
+    if (!oboToken.ok) {
+        logger.error("Kunne ikke hente OBO-token")
         return {
             errorResponse: new Response("Forbidden", { status: 403 }),
             ok: false,
         }
+    }
 
     return { token: oboToken.token, ok: true }
 }
