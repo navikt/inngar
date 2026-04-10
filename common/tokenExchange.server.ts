@@ -58,8 +58,12 @@ export const getOboToken = async (
         }
     }
 
-    const isTokenX = validation.payload.iss?.includes("tokenx") ?? false
+    logger.info("Token issuer", { iss: validation.payload.iss })
+
+    const isTokenX = validation.payload.iss?.includes("tokendings") ?? false
     const scope = isTokenX ? tokenXScopeFrom(app) : azureScopeFrom(app)
+
+    logger.info("Valgt scope", { scope, isTokenX })
 
     const oboToken = await requestOboToken(token, scope)
     if (!oboToken.ok) {
