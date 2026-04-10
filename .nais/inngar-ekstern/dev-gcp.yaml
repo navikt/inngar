@@ -45,3 +45,5 @@ spec:
       enabled: true
       level: idporten-loa-high
       autoLogin: true
+  tokenx:
+    enabled: true
