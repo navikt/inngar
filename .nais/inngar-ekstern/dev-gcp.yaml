@@ -16,7 +16,6 @@ spec:
       cpu: 50m
   ingresses:
     - https://start-arbeidsoppfolging.ekstern.dev.nav.no
-    - https://start-arbeidsoppfolging.ansatt.dev.nav.no
   liveness:
     initialDelay: 5
     path: /internal/isAlive
