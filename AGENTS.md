@@ -16,3 +16,7 @@
   - Uses EntraAD auth but implemented via the Nav made library OASIS
 - common
   - A collection of everything that can be reused between the two apps. Some utilities can only be used server-side while other can be used both server-side and client-side
+
+### Kjøremiljø
+Appene kjører på NAIS. Dokumentasjon av NAIS: https://docs.nais.io/. 
+Repository til NAIS på GitHub: https://github.com/nais

@@ -21,4 +21,4 @@ WORKDIR /app/inngar-ekstern
 
 EXPOSE 3000
 
-CMD ["node", "server/server.ts", "./build/server/index.js"]
+CMD ["/usr/local/bin/node", "server/server.ts", "./build/server/index.js"]
