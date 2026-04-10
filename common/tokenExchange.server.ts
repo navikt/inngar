@@ -2,10 +2,13 @@ import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
 import type { App } from "./appConstants.ts"
 import * as process from "node:process"
 
-const scopeFrom = (app: App) =>
+const cluster = process.env.NAIS_CLUSTER_NAME || "local"
+
+const azureScope = (app: App) =>
     `api://${cluster}.${app.namespace}.${app.name}/.default`
 
-const cluster = process.env.NAIS_CLUSTER_NAME || "local"
+const tokenXScope = (app: App) =>
+    `${cluster}:${app.namespace}:${app.name}`
 
 export const headersWithAuth = (token: string) => {
     return {
@@ -52,12 +55,16 @@ export const getOboToken = async (
             ok: false,
         }
 
-    const oboToken = await requestOboToken(token, scopeFrom(app))
-    if (!oboToken.ok)
+    const isIdPortenToken = validation.payload.iss?.includes("idporten") ?? false
+    const scope = isIdPortenToken ? tokenXScope(app) : azureScope(app)
+
+    const oboToken = await requestOboToken(token, scope)
+    if (!oboToken.ok) {
         return {
             errorResponse: new Response("Forbidden", { status: 403 }),
             ok: false,
         }
+    }
 
     return { token: oboToken.token, ok: true }
 }
