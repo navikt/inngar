@@ -31,14 +31,14 @@ spec:
           namespace: personbruker
       external:
         - host: cdn.nav.no
-  observability:
-    autoInstrumentation:
-      enabled: true
-      runtime: nodejs
-    logging:
-      destinations:
-        - id: elastic
-        - id: loki
+#  observability:
+#    autoInstrumentation:
+#      enabled: true
+#      runtime: nodejs
+#    logging:
+#      destinations:
+#        - id: elastic
+#        - id: loki
   idporten:
     enabled: true
     sidecar:
