@@ -1,7 +1,6 @@
 import { getToken, requestOboToken, validateToken } from "@navikt/oasis"
 import type { App } from "./appConstants.ts"
 import * as process from "node:process"
-import { logger } from "./logger.ts"
 
 const cluster = process.env.NAIS_CLUSTER_NAME || "local"
 
@@ -51,7 +50,6 @@ export const getOboToken = async (
 
     const validation = await validateToken(token)
     if (!validation.ok) {
-        logger.error("Validering av token feilet")
         return {
             errorResponse: new Response("Forbidden", { status: 403 }),
             ok: false,
@@ -63,7 +61,6 @@ export const getOboToken = async (
 
     const oboToken = await requestOboToken(token, scope)
     if (!oboToken.ok) {
-        logger.error("Kunne ikke hente OBO-token")
         return {
             errorResponse: new Response("Forbidden", { status: 403 }),
             ok: false,
