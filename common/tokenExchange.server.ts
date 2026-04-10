@@ -4,10 +4,10 @@ import * as process from "node:process"
 
 const cluster = process.env.NAIS_CLUSTER_NAME || "local"
 
-const azureScopeFrom = (app: App) =>
+const azureScope = (app: App) =>
     `api://${cluster}.${app.namespace}.${app.name}/.default`
 
-const tokenXScopeFrom = (app: App) =>
+const tokenXScope = (app: App) =>
     `${cluster}:${app.namespace}:${app.name}`
 
 export const headersWithAuth = (token: string) => {
@@ -56,7 +56,7 @@ export const getOboToken = async (
         }
 
     const isIdPortenToken = validation.payload.iss?.includes("idporten") ?? false
-    const scope = isIdPortenToken ? tokenXScopeFrom(app) : azureScopeFrom(app)
+    const scope = isIdPortenToken ? tokenXScope(app) : azureScope(app)
 
     const oboToken = await requestOboToken(token, scope)
     if (!oboToken.ok) {
