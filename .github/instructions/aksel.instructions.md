@@ -1,5 +1,5 @@
 ---
-applyTo: "app/**/*.{tsx,ts}"
+applyTo: "inngar-*/app/**/*.{ts,tsx}"
 ---
 
 # Aksel Design System – koderegler

@@ -50,8 +50,7 @@ kubectl logs -n <namespace> <pod> --tail=20 | jq .
 ## Related Agents
 
 | Agent | Use For |
-|-------|---------||
-| `@nais-agent` | Nais manifest config for observability |
+|-------|---------|
 | `@security-champion-agent` | Security monitoring and audit logging |
 | `@kafka-agent` | Kafka consumer lag monitoring |
 

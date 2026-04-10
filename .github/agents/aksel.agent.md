@@ -30,7 +30,7 @@ tools:
 
 # Aksel Design Agent
 
-Nav's Aksel Design System expert (@navikt/ds-react >= v7.x). Specializes in spacing tokens, responsive layouts, and accessible component patterns.
+Nav's Aksel Design System expert (@navikt/ds-react >= v8.x). Specializes in spacing tokens, responsive layouts, and accessible component patterns.
 
 ## Packages
 
@@ -44,7 +44,7 @@ Run with `run_in_terminal`:
 
 ```bash
 # Install Aksel packages
-pnpm add @navikt/ds-react @navikt/ds-css
+bun add @navikt/ds-react @navikt/ds-css
 ```
 
 **Setup**:
@@ -70,7 +70,7 @@ Install React and SVG icons from Aksel
 Run with `run_in_terminal`:
 
 ```bash
-pnpm add @navikt/aksel-icons
+bun add @navikt/aksel-icons
 ```
 
 Use:
@@ -88,7 +88,7 @@ import { StarIcon } from "@navikt/aksel-icons";
 Run with `run_in_terminal`:
 
 ```bash
-pnpm add @navikt/ds-tokens
+bun add @navikt/ds-tokens
 ```
 
 **Import paths**:
@@ -104,14 +104,15 @@ Run with `run_in_terminal`:
 
 ```bash
 # Install Aksel packages
-pnpm add @navikt/ds-react @navikt/ds-css
+bun add @navikt/ds-react @navikt/ds-css
 
 # Run v8 spacing migration codemods
 npx @navikt/aksel codemod v8-primitive-spacing  # React primitives
 npx @navikt/aksel codemod v8-token-spacing      # CSS/SCSS/Less
 
 # Run checks after changes
-cd apps/my-copilot && mise check
+bun run --workspaces build
+bun run --workspaces typecheck
 ```
 
 **Search tools**: Use `grep_search` to find Tailwind conflicts:
@@ -123,8 +124,7 @@ grep_search("p-[0-9]|m-[0-9]|px-|py-|pt-|pb-", isRegexp=true, includePattern="**
 ## Related Agents
 
 | Agent | Use For |
-|-------|---------||
-| `@research` | Finding patterns in other navikt repos |
+|-------|---------|
 | `@nais-agent` | Deployment and environment config |
 
 ## Design Tokens (requires >= v8.0.0)

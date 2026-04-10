@@ -36,7 +36,7 @@ Run with `run_in_terminal`:
 
 ```bash
 # Run all checks (includes security lints)
-cd apps/<app-name> && mise check
+bun run --workspaces build && bun run --workspaces typecheck
 
 # Scan repo for secrets and vulnerabilities
 trivy repo .
