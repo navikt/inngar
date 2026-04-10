@@ -49,12 +49,11 @@ export const getOboToken = async (
         }
 
     const validation = await validateToken(token)
-    if (!validation.ok) {
+    if (!validation.ok)
         return {
             errorResponse: new Response("Forbidden", { status: 403 }),
             ok: false,
         }
-    }
 
     const isIdPortenToken = validation.payload.iss?.includes("idporten") ?? false
     const scope = isIdPortenToken ? tokenXScopeFrom(app) : azureScopeFrom(app)
