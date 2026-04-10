@@ -21,10 +21,11 @@ export const action = async (args: Route.ActionArgs) => {
         apps.veilarboppfolging,
     )
     if (tokenOrResponse.ok == true) {
-        return startOppfolging(tokenOrResponse.token)
+        return startOppfolging(tokenOrResponse.token);
     } else {
-        throw Error(
-            "Klarte ikke start oppfølging (klarte ikke veksle inn obo-token)",
-        )
+        throw Error(`Klarte ikke start oppfølging: 
+            Status: ${tokenOrResponse.errorResponse.status}, 
+            StatusText: ${tokenOrResponse.errorResponse.statusText}`,
+        );
     }
 }
