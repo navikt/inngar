@@ -1,26 +1,33 @@
-import { isRouteErrorResponse, Links, Outlet, Scripts, ScrollRestoration, useRouteLoaderData } from "react-router"
-import type { Route } from "./+types/root"
-import "./app.css"
-import "@navikt/ds-css"
-import { MockSettingsFormEkstern } from "~/mock/MockSettingsFormEkstern"
-import { mockSettings } from "~/mock/mockSettings"
-import { fetchDecoratorHtml } from "@navikt/nav-dekoratoren-moduler/ssr"
+import {
+  isRouteErrorResponse,
+  Links,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useRouteLoaderData,
+} from "react-router";
+import type { Route } from "./+types/root";
+import "./app.css";
+import "@navikt/ds-css";
+import { MockSettingsFormEkstern } from "~/mock/MockSettingsFormEkstern";
+import { mockSettings } from "~/mock/mockSettings";
+import { fetchDecoratorHtml } from "@navikt/nav-dekoratoren-moduler/ssr";
 
 function parseDecoratorLinks(html: string) {
-  const links: Record<string, string>[] = []
-  const tagRegex = /<link\s+([^>]*?)\/?>/gi
-  let tagMatch
+  const links: Record<string, string>[] = [];
+  const tagRegex = /<link\s+([^>]*?)\/?>/gi;
+  let tagMatch;
   while ((tagMatch = tagRegex.exec(html)) !== null) {
-    const attrs: Record<string, string> = {}
-    const attrRegex = /([\w-]+)="([^"]*)"/g
-    let attrMatch
+    const attrs: Record<string, string> = {};
+    const attrRegex = /([\w-]+)="([^"]*)"/g;
+    let attrMatch;
     while ((attrMatch = attrRegex.exec(tagMatch[1])) !== null) {
-      const key = attrMatch[1] === "crossorigin" ? "crossOrigin" : attrMatch[1]
-      attrs[key] = attrMatch[2]
+      const key = attrMatch[1] === "crossorigin" ? "crossOrigin" : attrMatch[1];
+      attrs[key] = attrMatch[2];
     }
-    links.push(attrs)
+    links.push(attrs);
   }
-  return links
+  return links;
 }
 
 export const loader = async () => {
@@ -31,10 +38,10 @@ export const loader = async () => {
       language: "nb",
       chatbot: false,
     },
-  })
-  let other = {}
+  });
+  let other = {};
   if (import.meta.env.DEV) {
-    other = { mockSettings: mockSettings }
+    other = { mockSettings: mockSettings };
   }
 
   return { decorator, ...other };
@@ -56,21 +63,40 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   const loaderData = useRouteLoaderData("root");
   const decorator = loaderData?.decorator;
-  const headLinks = decorator ? parseDecoratorLinks(decorator.DECORATOR_HEAD_ASSETS) : [];
+  const headLinks = decorator
+    ? parseDecoratorLinks(decorator.DECORATOR_HEAD_ASSETS)
+    : [];
 
   return (
     <html lang="nb">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {headLinks.map((attrs, i) => <link key={i} {...attrs} />)}
+        {headLinks.map((attrs, i) => (
+          <link key={i} {...attrs} />
+        ))}
         <Links />
       </head>
       <body>
-        {decorator && <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: decorator.DECORATOR_HEADER }} />}
+        {decorator && (
+          <div
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{ __html: decorator.DECORATOR_HEADER }}
+          />
+        )}
         {children}
-        {decorator && <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: decorator.DECORATOR_FOOTER }} />}
-        {decorator && <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: decorator.DECORATOR_SCRIPTS }} />}
+        {decorator && (
+          <div
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{ __html: decorator.DECORATOR_FOOTER }}
+          />
+        )}
+        {decorator && (
+          <div
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{ __html: decorator.DECORATOR_SCRIPTS }}
+          />
+        )}
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -83,11 +109,13 @@ export default function App({ loaderData }: Route.ComponentProps) {
     return (
       <>
         <Outlet />
-        <MockSettingsFormEkstern mockSettings={(loaderData as any).mockSettings} />
+        <MockSettingsFormEkstern
+          mockSettings={(loaderData as any).mockSettings}
+        />
       </>
-    )
+    );
   }
-  return <Outlet />
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
