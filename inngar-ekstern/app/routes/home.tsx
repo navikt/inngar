@@ -1,11 +1,9 @@
-import type { Route } from "./+types/home";
-import {
-  getKanStarteOppfolgingEkstern,
-  startOppfolging,
-} from "~/api/veilarboppfolging";
-import { apps } from "common";
-import { getOboToken } from "common/server";
-import { KanStarteOppfolgingPage } from "~/startOppfolging/KanStarteOppfolgingPage";
+import type { Route } from "./+types/home"
+import { getKanStarteOppfolgingEkstern, startOppfolging } from "~/api/veilarboppfolging"
+import { apps } from "common"
+import { getOboToken } from "common/server"
+import { KanStarteOppfolgingPage } from "~/startOppfolging/KanStarteOppfolgingPage"
+import { redirect } from "react-router"
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -38,7 +36,12 @@ export const action = async (args: Route.ActionArgs) => {
     apps.veilarboppfolging,
   );
   if (tokenOrResponse.ok == true) {
-    return startOppfolging(tokenOrResponse.token);
+    const result = await startOppfolging(tokenOrResponse.token);
+    if (result.ok) {
+      return redirect("/oppfolging-startet")
+    } else {
+      throw Error(`Klarte ikke start oppfølging: ${result.error}`)
+    }
   } else {
     throw Error(`Klarte ikke start oppfølging: 
             Status: ${tokenOrResponse.errorResponse.status}, 
