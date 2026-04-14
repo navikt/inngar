@@ -1,4 +1,4 @@
-import { BodyShort, Button, Heading, InlineMessage, LinkCard } from "@navikt/ds-react"
+import { BodyShort, Button, Heading, InlineMessage, LinkCard, LocalAlert } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging"
 
@@ -18,9 +18,18 @@ export function KanStarteOppfolgingPage({ kanStarteOppfolging }: { kanStarteOppf
     if ("error" in kanStarteOppfolging) {
         return <main className="flex items-center justify-center pt-4 md:pt-12 pb-4 p-4">
             <div className="max-w-[500px] flex-1 flex flex-col gap-8 min-h-96 min-h-0">
-                <InlineMessage status={"error"} >
-            Noe gikk galt: { kanStarteOppfolging.error.message }
-                </InlineMessage></div></main>
+                <LocalAlert status={"error"} >
+                    <LocalAlert.Header>
+                        <LocalAlert.Title>
+                            Noe gikk galt
+                        </LocalAlert.Title>
+                    </LocalAlert.Header>
+                    <LocalAlert.Content>
+                        { kanStarteOppfolging?.error?.message }
+                    </LocalAlert.Content>
+                </LocalAlert>
+            </div>
+        </main>
     } else {
         return (
             <main className="flex items-center justify-center pt-4 md:pt-12 pb-4 p-4">
