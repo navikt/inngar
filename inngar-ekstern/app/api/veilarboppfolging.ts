@@ -8,7 +8,7 @@ const graphqlUrl = toUrl(
 
 const oppfolgingQuery = `
   query {
-    oppfolging {
+    oppfolgingoppfolging(fnr: $fnr) {
         kanStarteOppfolgingEkstern
     }
   }
