@@ -1,7 +1,4 @@
-import type {
-    StartOppfolgingErrorResponse,
-    StartOppfolgingSuccess,
-} from "common"
+import type { StartOppfolgingErrorResponse, StartOppfolgingSuccess } from "common"
 import { apps, logger, toUrl } from "common"
 
 const graphqlUrl = toUrl(
@@ -54,7 +51,7 @@ export const getKanStarteOppfolgingEkstern = async (
             Authorization: `Bearer ${token}`,
             ["Content-Type"]: "application/json",
         },
-        body: JSON.stringify({ query: oppfolgingQuery }),
+        body: JSON.stringify({ query: oppfolgingQuery, variables: { fnr: undefined, } }),
     })
         .then(async (response) => {
             if (!response.ok) {
