@@ -1,15 +1,15 @@
-import { http, HttpResponse } from "msw";
-import { mockSettings } from "~/mock/mockSettings";
+import { http, HttpResponse } from "msw"
+import { mockSettings } from "~/mock/mockSettings"
 
-const veilarboppfolging = `http://veilarboppfolging.poao`;
-const dekoratoren = `https://dekoratoren.ekstern.dev.nav.no`;
+const veilarboppfolging = `http://veilarboppfolging.poao`
+const dekoratoren = `https://dekoratoren.ekstern.dev.nav.no`
 
 export const handlers = [
   http.get(`${dekoratoren}/api/version`, () => {
     return HttpResponse.json({
       name: "dekoratoren-moduler",
       version: "3.6.3",
-    });
+    })
   }),
   http.post(`${veilarboppfolging}/veilarboppfolging/api/graphql`, async () => {
     if (mockSettings.kanStarteOppfolgingEkstern === "Error") {
@@ -19,7 +19,7 @@ export const handlers = [
             message: "Dette er en mock-feilmelding i graphql reponsen",
           },
         ],
-      });
+      })
     }
 
     return HttpResponse.json({
@@ -30,7 +30,7 @@ export const handlers = [
           message: "LOL asdas",
         },
       ],
-    });
+    })
 
     return HttpResponse.json({
       data: {
@@ -38,18 +38,18 @@ export const handlers = [
           kanStarteOppfolgingEkstern: mockSettings.kanStarteOppfolgingEkstern,
         },
       },
-    });
+    })
   }),
   http.post(
     `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`,
     async ({ request }) => {
-      const body = await request.json();
-      console.log("Mock: startOppfolgingsperiode called with:", body);
+      const body = await request.json()
+      console.log("Mock: startOppfolgingsperiode called with:", body)
 
       return HttpResponse.json({
         resultat: "Bruker registrert",
         kode: "OK_REGISTRERT_I_ARENA",
-      });
+      })
     },
   ),
   http.get("https://login.ekstern.dev.nav.no/oauth2/session", () => {
@@ -70,6 +70,6 @@ export const handlers = [
         refresh_cooldown: false,
         refresh_cooldown_seconds: 0,
       },
-    });
+    })
   }),
-];
+]

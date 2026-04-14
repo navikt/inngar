@@ -3,34 +3,34 @@ import {
   Button,
   Heading,
   InlineMessage,
-  LinkCard,
   LocalAlert,
-} from "@navikt/ds-react";
-import { useFetcher } from "react-router";
-import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging";
+} from "@navikt/ds-react"
+import { useFetcher } from "react-router"
+import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging"
+import { InnholdForDegUnderOppfolging } from "~/startOppfolging/InnholdForDegUnderOppfolging"
 
 type KanStarteOppfolgingResponse =
   | {
       data: {
         oppfolging: {
-          kanStarteOppfolgingEkstern: KanStarteOppfolgingEkstern;
-        };
-      };
+          kanStarteOppfolgingEkstern: KanStarteOppfolgingEkstern
+        }
+      }
     }
   | {
-      ok: false;
-      error: Error;
-    };
+      ok: false
+      error: Error
+    }
 
 export function KanStarteOppfolgingPage({
   kanStarteOppfolging,
 }: {
-  kanStarteOppfolging: KanStarteOppfolgingResponse;
+  kanStarteOppfolging: KanStarteOppfolgingResponse
 }) {
   if ("error" in kanStarteOppfolging) {
     return (
       <main className="flex items-center justify-center pt-4 md:pt-12 pb-4 p-4">
-        <div className="max-w-[500px] flex-1 flex flex-col gap-8 min-h-96 min-h-0">
+        <div className="max-w-[600px] flex-1 flex flex-col gap-8 min-h-96 min-h-0">
           <LocalAlert status={"error"}>
             <LocalAlert.Header>
               <LocalAlert.Title>Noe gikk galt</LocalAlert.Title>
@@ -41,11 +41,11 @@ export function KanStarteOppfolgingPage({
           </LocalAlert>
         </div>
       </main>
-    );
+    )
   } else {
     return (
       <main className="flex items-center justify-center pt-4 md:pt-12 pb-4 p-4">
-        <div className="max-w-[500px] flex-1 flex flex-col gap-8 min-h-96 min-h-0">
+        <div className="max-w-[600px] flex-1 flex flex-col gap-8 min-h-96 min-h-0">
           <KanStarteOppfolgingForm
             kanStarteOppfolging={
               kanStarteOppfolging.data.oppfolging.kanStarteOppfolgingEkstern
@@ -53,40 +53,40 @@ export function KanStarteOppfolgingPage({
           />
         </div>
       </main>
-    );
+    )
   }
 }
 
 const KanStarteOppfolgingForm = ({
   kanStarteOppfolging,
 }: {
-  kanStarteOppfolging: KanStarteOppfolgingEkstern;
+  kanStarteOppfolging: KanStarteOppfolgingEkstern
 }) => {
   switch (kanStarteOppfolging) {
     case "JA":
-      return <StartOppfolgingForm />;
-      break;
+      return <StartOppfolgingForm />
+      break
     case "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
     case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR":
     case "IKKE_LOVLIG_OPPHOLD":
-      return <KreverManuellGodkjenningAvVeileder />;
-      break;
+      return <KreverManuellGodkjenningAvVeileder />
+      break
     case "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT":
     case "ALLEREDE_UNDER_OPPFOLGING":
     case "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
     case "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR":
-      return <AlleredeUnderOppfolging />;
-      break;
+      return <AlleredeUnderOppfolging />
+      break
     case "DOD":
     case "UKJENT_STATUS_FOLKEREGISTERET":
     case "INGEN_STATUS_FOLKEREGISTERET":
-      return <IkkeMuligÅStarteOppfolging />;
-      break;
+      return <IkkeMuligÅStarteOppfolging />
+      break
   }
-};
+}
 
 const StartOppfolgingForm = () => {
-  const startOppfolgingFetcher = useFetcher();
+  const startOppfolgingFetcher = useFetcher()
 
   return (
     <div className="space-y-4 pb-40">
@@ -109,8 +109,8 @@ const StartOppfolgingForm = () => {
         </startOppfolgingFetcher.Form>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const AlleredeUnderOppfolging = () => {
   return (
@@ -123,28 +123,10 @@ const AlleredeUnderOppfolging = () => {
         etterhvert bli kontakt av en veilederDu vil etterhvert bli kontakt av en
         veilederDu vil etterhvert bli kontakt av en veileder
       </BodyShort>
-      <Heading size={"small"}>Innhold for deg som er under oppfølging</Heading>
-      <div className="gap-2 flex flex-col">
-        <LinkCard>
-          <LinkCard.Title>Aktivitetsplan</LinkCard.Title>
-          <LinkCard.Description>
-            Planlegg aktiviteter alene eller sammen med veileder
-          </LinkCard.Description>
-        </LinkCard>
-        <LinkCard>
-          <LinkCard.Title>Min side</LinkCard.Title>
-          <LinkCard.Description>
-            Oversikt over tjenester og pengestøtte du får fra Nav
-          </LinkCard.Description>
-        </LinkCard>
-        <LinkCard>
-          <LinkCard.Title>Dialogen</LinkCard.Title>
-          <LinkCard.Description>Snakk med veilederen din</LinkCard.Description>
-        </LinkCard>
-      </div>
+      <InnholdForDegUnderOppfolging />
     </div>
-  );
-};
+  )
+}
 
 const KreverManuellGodkjenningAvVeileder = () => {
   return (
@@ -152,8 +134,8 @@ const KreverManuellGodkjenningAvVeileder = () => {
       <Heading size={"large"}>Uavklart folkereigsterstatus</Heading>
       <BodyShort>Ikke riktig status</BodyShort>
     </div>
-  );
-};
+  )
+}
 
 const IkkeMuligÅStarteOppfolging = () => {
   return (
@@ -161,5 +143,5 @@ const IkkeMuligÅStarteOppfolging = () => {
       <Heading size={"large"}>Uavklart folkereigsterstatus</Heading>
       <BodyShort>Ikke mulig å starte oppfølging</BodyShort>
     </div>
-  );
-};
+  )
+}

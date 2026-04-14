@@ -1,3 +1,3 @@
 export const loader = () => {
-  return new Response("{}");
-};
+  return new Response("{}")
+}

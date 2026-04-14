@@ -1,9 +1,9 @@
-import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging";
+import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging"
 
 export interface MockSettings {
-  kanStarteOppfolgingEkstern: KanStarteOppfolgingEkstern | "Error";
+  kanStarteOppfolgingEkstern: KanStarteOppfolgingEkstern | "Error"
 }
 
 export const mockSettings: MockSettings = {
   kanStarteOppfolgingEkstern: "ALLEREDE_UNDER_OPPFOLGING",
-};
+}

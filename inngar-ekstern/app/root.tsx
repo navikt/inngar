@@ -5,29 +5,29 @@ import {
   Scripts,
   ScrollRestoration,
   useRouteLoaderData,
-} from "react-router";
-import type { Route } from "./+types/root";
-import "./app.css";
-import "@navikt/ds-css";
-import { MockSettingsFormEkstern } from "~/mock/MockSettingsFormEkstern";
-import { mockSettings } from "~/mock/mockSettings";
-import { fetchDecoratorHtml } from "@navikt/nav-dekoratoren-moduler/ssr";
+} from "react-router"
+import type { Route } from "./+types/root"
+import "./app.css"
+import "@navikt/ds-css"
+import { MockSettingsFormEkstern } from "~/mock/MockSettingsFormEkstern"
+import { mockSettings } from "~/mock/mockSettings"
+import { fetchDecoratorHtml } from "@navikt/nav-dekoratoren-moduler/ssr"
 
 function parseDecoratorLinks(html: string) {
-  const links: Record<string, string>[] = [];
-  const tagRegex = /<link\s+([^>]*?)\/?>/gi;
-  let tagMatch;
+  const links: Record<string, string>[] = []
+  const tagRegex = /<link\s+([^>]*?)\/?>/gi
+  let tagMatch
   while ((tagMatch = tagRegex.exec(html)) !== null) {
-    const attrs: Record<string, string> = {};
-    const attrRegex = /([\w-]+)="([^"]*)"/g;
-    let attrMatch;
+    const attrs: Record<string, string> = {}
+    const attrRegex = /([\w-]+)="([^"]*)"/g
+    let attrMatch
     while ((attrMatch = attrRegex.exec(tagMatch[1])) !== null) {
-      const key = attrMatch[1] === "crossorigin" ? "crossOrigin" : attrMatch[1];
-      attrs[key] = attrMatch[2];
+      const key = attrMatch[1] === "crossorigin" ? "crossOrigin" : attrMatch[1]
+      attrs[key] = attrMatch[2]
     }
-    links.push(attrs);
+    links.push(attrs)
   }
-  return links;
+  return links
 }
 
 export const loader = async () => {
@@ -38,14 +38,14 @@ export const loader = async () => {
       language: "nb",
       chatbot: false,
     },
-  });
-  let other = {};
+  })
+  let other = {}
   if (import.meta.env.DEV) {
-    other = { mockSettings: mockSettings };
+    other = { mockSettings: mockSettings }
   }
 
-  return { decorator, ...other };
-};
+  return { decorator, ...other }
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -58,14 +58,14 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
-];
+]
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const loaderData = useRouteLoaderData("root");
-  const decorator = loaderData?.decorator;
+  const loaderData = useRouteLoaderData("root")
+  const decorator = loaderData?.decorator
   const headLinks = decorator
     ? parseDecoratorLinks(decorator.DECORATOR_HEAD_ASSETS)
-    : [];
+    : []
 
   return (
     <html lang="nb">
@@ -101,7 +101,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
@@ -113,25 +113,25 @@ export default function App({ loaderData }: Route.ComponentProps) {
           mockSettings={(loaderData as any).mockSettings}
         />
       </>
-    );
+    )
   }
-  return <Outlet />;
+  return <Outlet />
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
+  let message = "Oops!"
+  let details = "An unexpected error occurred."
+  let stack: string | undefined
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? "404" : "Error"
     details =
       error.status === 404
         ? "The requested page could not be found."
-        : error.statusText || details;
+        : error.statusText || details
   } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+    details = error.message
+    stack = error.stack
   }
 
   return (
@@ -144,5 +144,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
-  );
+  )
 }

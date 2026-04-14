@@ -1,7 +1,7 @@
-import { Button, Select } from "@navikt/ds-react";
-import { useFetcher } from "react-router";
-import type { MockSettings } from "~/mock/mockSettings";
-import { useState } from "react";
+import { Button, Select } from "@navikt/ds-react"
+import { useFetcher } from "react-router"
+import type { MockSettings } from "~/mock/mockSettings"
+import { useState } from "react"
 
 const kanStarteOppfolgingEksternOptions: MockSettings["kanStarteOppfolgingEkstern"][] =
   [
@@ -17,32 +17,32 @@ const kanStarteOppfolgingEksternOptions: MockSettings["kanStarteOppfolgingEkster
     "UKJENT_STATUS_FOLKEREGISTERET",
     "INGEN_STATUS_FOLKEREGISTERET",
     "Error",
-  ];
+  ]
 
 export const MockSettingsFormEkstern = ({
   mockSettings,
 }: {
-  mockSettings?: MockSettings;
+  mockSettings?: MockSettings
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const [kanStarteOppfolgingEkstern, setKanStarteOppfolgingEkstern] = useState(
     mockSettings?.kanStarteOppfolgingEkstern ?? "JA",
-  );
-  const fetcher = useFetcher();
+  )
+  const fetcher = useFetcher()
 
   if (!isOpen)
     return (
       <Button
         onClick={() => {
-          console.log("isOpen", isOpen);
-          setIsOpen(!isOpen);
+          console.log("isOpen", isOpen)
+          setIsOpen(!isOpen)
         }}
         id={"knapp"}
         className="bg-white p-2 rounded-2xl hover:bg-amber-100 cursor-pointer drop-shadow-2xl absolute bottom-6 right-6"
       >
         Mock settings ekstern
       </Button>
-    );
+    )
 
   return (
     <div className="bg-white border rounded-lg drop-shadow-2xl p-4 absolute bottom-6 right-6">
@@ -55,15 +55,15 @@ export const MockSettingsFormEkstern = ({
           value={kanStarteOppfolgingEkstern}
           onChange={(event) => {
             const value = event.target
-              .value as MockSettings["kanStarteOppfolgingEkstern"];
-            setKanStarteOppfolgingEkstern(value);
+              .value as MockSettings["kanStarteOppfolgingEkstern"]
+            setKanStarteOppfolgingEkstern(value)
             fetcher.submit(
               { kanStarteOppfolgingEkstern: value },
               {
                 action: "/mock-settings",
                 method: "POST",
               },
-            );
+            )
           }}
         >
           {kanStarteOppfolgingEksternOptions.map((svar) => (
@@ -74,5 +74,5 @@ export const MockSettingsFormEkstern = ({
         </Select>
       </div>
     </div>
-  );
-};
+  )
+}
