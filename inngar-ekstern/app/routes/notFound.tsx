@@ -1,3 +1,3 @@
-export default function Home() {
-    return new Response(null, { status: 404 });
+export default function NotFound() {
+    return <div>Her var det tomt</div>;
 }
