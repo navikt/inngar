@@ -43,10 +43,10 @@ export const action = async (args: Route.ActionArgs) => {
     if (result.ok) {
       return redirect("/oppfolging-startet")
     } else {
-      throw Error(`Klarte ikke start oppfølging: ${result.error}`)
+      throw Error(`Klarte ikke starte oppfølging: ${result.error}`)
     }
   } else {
-    throw Error(`Klarte ikke start oppfølging: 
+    throw Error(`Klarte ikke starte oppfølging: 
             Status: ${tokenOrResponse.errorResponse.status}, 
             StatusText: ${tokenOrResponse.errorResponse.statusText}`)
   }

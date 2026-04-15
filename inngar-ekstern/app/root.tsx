@@ -12,6 +12,7 @@ import "@navikt/ds-css"
 import { MockSettingsFormEkstern } from "~/mock/MockSettingsFormEkstern"
 import { mockSettings } from "~/mock/mockSettings"
 import { fetchDecoratorHtml } from "@navikt/nav-dekoratoren-moduler/ssr"
+import { LocalAlert } from "@navikt/ds-react"
 
 function parseDecoratorLinks(html: string) {
   const links: Record<string, string>[] = []
@@ -135,9 +136,14 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
+    <main className="pt-16 p-4 container flex flex-col items-center mx-auto">
+      <LocalAlert status="error" className="max-w-paragraph-width">
+        <LocalAlert.Header>
+          <LocalAlert.Title>{message}</LocalAlert.Title>
+        </LocalAlert.Header>
+        <LocalAlert.Content>{details}</LocalAlert.Content>
+      </LocalAlert>
+
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
           <code>{stack}</code>
