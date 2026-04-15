@@ -27,7 +27,8 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "catalog:",
-    "source-map-support": "catalog:"
+    "source-map-support": "catalog:",
+    "vite-plugin-svgr": "^5.2.0"
   },
   "devDependencies": {
     "@react-router/dev": "catalog:",

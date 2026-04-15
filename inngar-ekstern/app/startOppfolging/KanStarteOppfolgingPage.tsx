@@ -1,7 +1,15 @@
-import { BodyShort, Button, Heading, InlineMessage, LocalAlert } from "@navikt/ds-react"
+import {
+  BodyShort,
+  Button,
+  Heading,
+  InfoCard,
+  InlineMessage,
+  LocalAlert,
+} from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging"
 import { InnholdForDegUnderOppfolging } from "~/startOppfolging/InnholdForDegUnderOppfolging"
+import SkjemaIkon from "./skjema-ikon.svg?react"
 
 type KanStarteOppfolgingResponse =
   | {
@@ -38,7 +46,8 @@ export function KanStarteOppfolgingPage({
     )
   } else {
     return (
-      <main className="flex items-center justify-center pt-4 md:pt-12 pb-4 p-4">
+      <main className="flex justify-center gap-8 pt-4 md:pt-12 pb-4 p-4">
+        <SkjemaIkon />
         <div className="max-w-paragraph-width flex-1 flex flex-col gap-8 min-h-96 min-h-0">
           <KanStarteOppfolgingForm
             kanStarteOppfolging={
@@ -81,11 +90,11 @@ const StartOppfolgingForm = () => {
   const startOppfolgingFetcher = useFetcher()
 
   return (
-    <div className="space-y-4 pb-40">
+    <div className="flex flex-col gap-8 pb-40">
       <Heading size={"large"}>
         Hjelp til å komme i eller tilbake til jobb
       </Heading>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <BodyShort>Dette kan vi tilby:</BodyShort>
         <InlineMessage status="info">Samtaler med veileder</InlineMessage>
         <InlineMessage status="info">
@@ -122,9 +131,25 @@ const AlleredeUnderOppfolging = () => {
 
 const KreverManuellGodkjenningAvVeileder = () => {
   return (
-    <div>
+    <div className="gap-8 flex flex-col">
       <Heading size={"large"}>Uavklart folkereigsterstatus</Heading>
-      <BodyShort>Ikke riktig status</BodyShort>
+      <InfoCard data-color="info">
+        <InfoCard.Header>
+          <InfoCard.Title>
+            Du må registreres for oppfolging av en veileder
+          </InfoCard.Title>
+        </InfoCard.Header>
+        <InfoCard.Content>
+          <BodyShort>
+            Noen av opplysningene vi har hentet om deg må kontrolleres manuelt.
+          </BodyShort>
+          <br />
+          <BodyShort>
+            {" "}
+            Ta kontakt med Nav for å bli registrert for oppfølging
+          </BodyShort>
+        </InfoCard.Content>
+      </InfoCard>
     </div>
   )
 }
