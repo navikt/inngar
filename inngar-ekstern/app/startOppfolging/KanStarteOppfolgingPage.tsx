@@ -106,7 +106,12 @@ const StartOppfolgingForm = () => {
       </div>
       <div>
         <startOppfolgingFetcher.Form method="post">
-          <Button>Registrer meg</Button>
+          <Button
+            loading={startOppfolgingFetcher.state !== "idle"}
+            disabled={startOppfolgingFetcher.state !== "idle"}
+          >
+            Registrer meg
+          </Button>
         </startOppfolgingFetcher.Form>
       </div>
     </div>
