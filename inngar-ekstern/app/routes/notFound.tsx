@@ -1,3 +1,5 @@
-export default function NotFound() {
-  return <div>Her var det tomt</div>
+import { redirect } from "react-router"
+
+export const loader = () => {
+  return redirect("/")
 }
