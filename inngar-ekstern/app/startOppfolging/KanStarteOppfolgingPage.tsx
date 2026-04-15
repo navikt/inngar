@@ -95,7 +95,7 @@ const StartOppfolgingForm = () => {
     <div className="flex flex-col gap-8 pb-40">
       <Heading size={"large"}>Be om arbeidsrettet oppfølging</Heading>
       <div className="flex flex-col gap-2">
-        <BodyShort>Dette kan du har rett til:</BodyShort>
+        <BodyShort weight="semibold">Dette kan du har rett til:</BodyShort>
         <List as="ul">
           <List.Item>Samtaler med veileder</List.Item>
           <List.Item>Arbeidsmarkedstiltak som kurs etc</List.Item>
