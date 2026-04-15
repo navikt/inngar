@@ -3,13 +3,14 @@ import {
   Button,
   Heading,
   InfoCard,
-  InlineMessage,
+  List,
   LocalAlert,
 } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging"
 import { InnholdForDegUnderOppfolging } from "~/startOppfolging/InnholdForDegUnderOppfolging"
 import SkjemaIkon from "./skjema-ikon.svg?react"
+import { PaperplaneIcon } from "@navikt/aksel-icons"
 
 type KanStarteOppfolgingResponse =
   | {
@@ -91,26 +92,24 @@ const StartOppfolgingForm = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-40">
-      <Heading size={"large"}>
-        Hjelp til å komme i eller tilbake til jobb
-      </Heading>
+      <Heading size={"large"}>Be om arbeidsrettet oppfølging</Heading>
       <div className="flex flex-col gap-2">
-        <BodyShort>Dette kan vi tilby:</BodyShort>
-        <InlineMessage status="info">Samtaler med veileder</InlineMessage>
-        <InlineMessage status="info">
-          Arbeidsmarkedstiltak som kurs etc
-        </InlineMessage>
-        <InlineMessage status="info">
-          Du trenger ikke levere meldekort
-        </InlineMessage>
+        <BodyShort>Dette kan du har rett til:</BodyShort>
+        <List as="ul">
+          <List.Item>Samtaler med veileder</List.Item>
+          <List.Item>Arbeidsmarkedstiltak som kurs etc</List.Item>
+          <List.Item>Du trenger ikke levere meldekort</List.Item>
+        </List>
       </div>
       <div>
         <startOppfolgingFetcher.Form method="post">
           <Button
+            iconPosition={"right"}
+            icon={<PaperplaneIcon />}
             loading={startOppfolgingFetcher.state !== "idle"}
             disabled={startOppfolgingFetcher.state !== "idle"}
           >
-            Registrer meg
+            Jeg ønsker arbeidsrettet oppfølging fra Nav
           </Button>
         </startOppfolgingFetcher.Form>
       </div>
