@@ -1,10 +1,4 @@
-import {
-  BodyShort,
-  Button,
-  Heading,
-  InlineMessage,
-  LocalAlert,
-} from "@navikt/ds-react"
+import { BodyShort, Button, Heading, InlineMessage, LocalAlert } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging"
 import { InnholdForDegUnderOppfolging } from "~/startOppfolging/InnholdForDegUnderOppfolging"

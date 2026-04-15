@@ -23,16 +23,6 @@ export const handlers = [
     }
 
     return HttpResponse.json({
-      data: undefined,
-      errors: [
-        {
-          title: "error title",
-          message: "LOL asdas",
-        },
-      ],
-    })
-
-    return HttpResponse.json({
       data: {
         oppfolging: {
           kanStarteOppfolgingEkstern: mockSettings.kanStarteOppfolgingEkstern,
