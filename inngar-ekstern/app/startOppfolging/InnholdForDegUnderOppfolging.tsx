@@ -10,7 +10,7 @@ const urls = {
     [Env.local]: "/",
   },
   minside: {
-    [Env.dev]: "https://ansatt.dev.nav.no/minside",
+    [Env.dev]: "https://www.ansatt.dev.nav.no/minside",
     [Env.prod]: "https://nav.no/minside",
     [Env.local]: "/",
   },

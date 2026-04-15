@@ -8,6 +8,7 @@ import {
 } from "react-router"
 import type { Route } from "./+types/root"
 import "./app.css"
+// @ts-ignore
 import "@navikt/ds-css"
 import { MockSettingsFormEkstern } from "~/mock/MockSettingsFormEkstern"
 import { mockSettings } from "~/mock/mockSettings"

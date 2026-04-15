@@ -1,4 +1,5 @@
 import {
+  BodyLong,
   BodyShort,
   Button,
   Heading,
@@ -120,14 +121,14 @@ const StartOppfolgingForm = () => {
 const AlleredeUnderOppfolging = () => {
   return (
     <div className="gap-4 flex flex-col pb-40">
-      <Heading size={"large"}>Du er registrert for oppfølging</Heading>
+      <Heading size={"large"}>Du er allerede registrert for oppfølging</Heading>
       <BodyShort>Du vil etterhvert bli kontakt av en veileder</BodyShort>
-      <BodyShort>
+      <BodyLong>
         Du vil etterhvert bli kontakt av en veileder Du vil etterhvert bli
         kontakt av en veilederDu vil etterhvert bli kontakt av en veilederDu vil
         etterhvert bli kontakt av en veilederDu vil etterhvert bli kontakt av en
         veilederDu vil etterhvert bli kontakt av en veileder
-      </BodyShort>
+      </BodyLong>
       <InnholdForDegUnderOppfolging />
     </div>
   )
