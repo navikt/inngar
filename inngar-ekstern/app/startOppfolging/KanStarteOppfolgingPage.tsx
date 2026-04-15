@@ -183,11 +183,13 @@ const Under18Advarsel = () => {
         </InfoCard.Header>
         <InfoCard.Content>
           <BodyShort>
-            Noen av opplysningene vi har hentet om deg må kontrolleres manuelt.
+            Du er under 18 år og trenger samtykke fra foresatte for å få kunne
+            motta oppfølging fra Nav
           </BodyShort>
           <br />
           <BodyShort>
-            Ta kontakt med Nav for å bli registrert for oppfølging
+            En veileder vil kontakte deg snart. Veilederen vil hjelpe deg videre
+            med samtykke og registrering
           </BodyShort>
         </InfoCard.Content>
       </InfoCard>
