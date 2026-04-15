@@ -66,15 +66,13 @@ const KanStarteOppfolgingForm = ({
     case "JA":
       return <StartOppfolgingForm />
       break
+    case "JA_MED_MANUELL_GODKJENNING_PGA_UNDER_18":
     case "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
     case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR":
     case "IKKE_LOVLIG_OPPHOLD":
       return <KreverManuellGodkjenningAvVeileder />
       break
-    case "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT":
     case "ALLEREDE_UNDER_OPPFOLGING":
-    case "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
-    case "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR":
       return <AlleredeUnderOppfolging />
       break
     case "DOD":
