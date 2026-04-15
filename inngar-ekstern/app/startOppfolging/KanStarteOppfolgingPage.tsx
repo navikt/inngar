@@ -24,7 +24,7 @@ export function KanStarteOppfolgingPage({
   if ("error" in kanStarteOppfolging) {
     return (
       <main className="flex items-center justify-center pt-4 md:pt-12 pb-4 p-4">
-        <div className="max-w-[600px] flex-1 flex flex-col gap-8 min-h-96 min-h-0">
+        <div className="max-w-paragraph-width flex-1 flex flex-col gap-8 min-h-96 min-h-0">
           <LocalAlert status={"error"}>
             <LocalAlert.Header>
               <LocalAlert.Title>Noe gikk galt</LocalAlert.Title>
@@ -39,7 +39,7 @@ export function KanStarteOppfolgingPage({
   } else {
     return (
       <main className="flex items-center justify-center pt-4 md:pt-12 pb-4 p-4">
-        <div className="max-w-[600px] flex-1 flex flex-col gap-8 min-h-96 min-h-0">
+        <div className="max-w-paragraph-width flex-1 flex flex-col gap-8 min-h-96 min-h-0">
           <KanStarteOppfolgingForm
             kanStarteOppfolging={
               kanStarteOppfolging.data.oppfolging.kanStarteOppfolgingEkstern
