@@ -38,9 +38,7 @@ export const InnholdForDegUnderOppfolging = () => {
         </LinkCard>
         <LinkCard>
           <LinkCard.Title>
-            <LinkCard.Anchor href={urls.minside[env]}>
-              Aktivitetsplan
-            </LinkCard.Anchor>
+            <LinkCard.Anchor href={urls.minside[env]}>Min side</LinkCard.Anchor>
           </LinkCard.Title>
           <LinkCard.Description>
             Oversikt over tjenester og pengestøtte du får fra Nav

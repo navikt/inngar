@@ -72,14 +72,15 @@ const KanStarteOppfolgingForm = ({
       return <StartOppfolgingForm />
       break
     case "JA_MED_MANUELL_GODKJENNING_PGA_UNDER_18":
+      return <Under18Advarsel />
     case "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
     case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR":
-    case "IKKE_LOVLIG_OPPHOLD":
       return <KreverManuellGodkjenningAvVeileder />
       break
     case "ALLEREDE_UNDER_OPPFOLGING":
       return <AlleredeUnderOppfolging />
       break
+    case "IKKE_LOVLIG_OPPHOLD":
     case "DOD":
     case "UKJENT_STATUS_FOLKEREGISTERET":
     case "INGEN_STATUS_FOLKEREGISTERET":
@@ -137,7 +138,7 @@ const AlleredeUnderOppfolging = () => {
 const KreverManuellGodkjenningAvVeileder = () => {
   return (
     <div className="gap-8 flex flex-col">
-      <Heading size={"large"}>Uavklart folkereigsterstatus</Heading>
+      <Heading size={"large"}>Mangler informasjon om lovlig opphold</Heading>
       <InfoCard data-color="info">
         <InfoCard.Header>
           <InfoCard.Title>
@@ -161,9 +162,35 @@ const KreverManuellGodkjenningAvVeileder = () => {
 
 const IkkeMuligÅStarteOppfolging = () => {
   return (
-    <div>
-      <Heading size={"large"}>Uavklart folkereigsterstatus</Heading>
-      <BodyShort>Ikke mulig å starte oppfølging</BodyShort>
+    <div className="flex flex-col gap-8">
+      <Heading size={"large"}>Feil i folkereigsterstatus</Heading>
+      <BodyShort>
+        Du kan ikke være registrert død og få arbeidsoppfølging
+      </BodyShort>
+    </div>
+  )
+}
+
+const Under18Advarsel = () => {
+  return (
+    <div className="gap-8 flex flex-col">
+      <Heading size={"large"}>Under 18 år</Heading>
+      <InfoCard data-color="info">
+        <InfoCard.Header>
+          <InfoCard.Title>
+            Du må registreres for oppfolging av en veileder
+          </InfoCard.Title>
+        </InfoCard.Header>
+        <InfoCard.Content>
+          <BodyShort>
+            Noen av opplysningene vi har hentet om deg må kontrolleres manuelt.
+          </BodyShort>
+          <br />
+          <BodyShort>
+            Ta kontakt med Nav for å bli registrert for oppfølging
+          </BodyShort>
+        </InfoCard.Content>
+      </InfoCard>
     </div>
   )
 }
