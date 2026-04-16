@@ -1,31 +1,53 @@
 import type { Route } from "./+types/home"
-import { startOppfolging } from "~/api/veilarboppfolging"
+import {
+  getKanStarteOppfolgingEkstern,
+  startOppfolging,
+} from "~/api/veilarboppfolging"
 import { apps } from "common"
 import { getOboToken } from "common/server"
-import { StartOppfolgingEksternForm } from "~/startOppfolging/StartOppfolgingEksternForm"
+import { KanStarteOppfolgingPage } from "~/startOppfolging/KanStarteOppfolgingPage"
+import { redirect } from "react-router"
 
 export function meta({}: Route.MetaArgs) {
-    return [
-        { title: "New React Router App" },
-        { name: "description", content: "Welcome to React Router!" },
-    ]
+  return [
+    { title: "New React Router App" },
+    { name: "description", content: "Welcome to React Router!" },
+  ]
 }
 
-export default function Home() {
-    return <StartOppfolgingEksternForm />
+export const loader = async (args: Route.LoaderArgs) => {
+  const tokenOrResponse = await getOboToken(
+    args.request,
+    apps.veilarboppfolging,
+  )
+  if (tokenOrResponse.ok == true) {
+    return getKanStarteOppfolgingEkstern(tokenOrResponse.token)
+  } else {
+    throw Error(`Klarte ikke hente oppfølgingsstatus: 
+            Status: ${tokenOrResponse.errorResponse.status}, 
+            StatusText: ${tokenOrResponse.errorResponse.statusText}`)
+  }
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+  return <KanStarteOppfolgingPage kanStarteOppfolging={loaderData} />
 }
 
 export const action = async (args: Route.ActionArgs) => {
-    const tokenOrResponse = await getOboToken(
-        args.request,
-        apps.veilarboppfolging,
-    )
-    if (tokenOrResponse.ok == true) {
-        return startOppfolging(tokenOrResponse.token);
+  const tokenOrResponse = await getOboToken(
+    args.request,
+    apps.veilarboppfolging,
+  )
+  if (tokenOrResponse.ok == true) {
+    const result = await startOppfolging(tokenOrResponse.token)
+    if (result.ok) {
+      return redirect("/oppfolging-startet")
     } else {
-        throw Error(`Klarte ikke start oppfølging: 
-            Status: ${tokenOrResponse.errorResponse.status}, 
-            StatusText: ${tokenOrResponse.errorResponse.statusText}`,
-        );
+      throw Error(`Klarte ikke starte oppfølging: ${result.error}`)
     }
+  } else {
+    throw Error(`Klarte ikke starte oppfølging: 
+            Status: ${tokenOrResponse.errorResponse.status}, 
+            StatusText: ${tokenOrResponse.errorResponse.statusText}`)
+  }
 }

@@ -7,7 +7,7 @@ import {
     ScrollRestoration,
     useFetcher,
     useLoaderData,
-    useParams,
+    useParams
 } from "react-router"
 import "@navikt/ds-css"
 
@@ -15,7 +15,6 @@ import type { Route } from "./+types/root"
 import stylesheet from "./app.css?url"
 import Decorator from "~/components/Decorator"
 import { importSubApp } from "~/util/importUtil"
-import { MockSettingsForm } from "~/mock/MockSettingsForm"
 import { mockSettings } from "~/mock/mockSettings"
 import { startActiveSpan } from "common"
 import { useEffect } from "react"
@@ -24,6 +23,7 @@ import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
 import { getEnv } from "~/util/envUtil.ts"
 import { Theme } from "@navikt/ds-react"
+import { MockSettingsForm } from "~/mock/MockSettingsForm.tsx"
 
 const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 

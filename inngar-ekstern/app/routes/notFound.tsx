@@ -1,3 +1,5 @@
-export default function Home() {
-    return new Response(null, { status: 404 });
+import { redirect } from "react-router"
+
+export const loader = () => {
+  return redirect("/")
 }
