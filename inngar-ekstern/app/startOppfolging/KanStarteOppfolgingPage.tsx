@@ -3,6 +3,7 @@ import {
   Button,
   Heading,
   InfoCard,
+  Link,
   List,
   LocalAlert,
 } from "@navikt/ds-react"
@@ -11,6 +12,7 @@ import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging"
 import { InnholdForDegUnderOppfolging } from "~/startOppfolging/InnholdForDegUnderOppfolging"
 import SkjemaIkon from "./skjema-ikon.svg?react"
 import { PaperplaneIcon } from "@navikt/aksel-icons"
+import { Env, getEnv } from "~/util/getEnv"
 
 type KanStarteOppfolgingResponse =
   | {
@@ -163,6 +165,13 @@ const IkkeMuligÅStarteOppfolging = () => {
   )
 }
 
+const env = getEnv()
+const samtykkeSkjemaUrl = {
+  [Env.prod]: "https://www.nav.no/samtykke-foresatte",
+  [Env.dev]: "https://www.nav.no/samtykke-foresatte",
+  [Env.local]: "https://www.nav.no/samtykke-foresatte",
+}
+
 const Under18Advarsel = () => {
   return (
     <div className="gap-8 flex flex-col">
@@ -180,8 +189,9 @@ const Under18Advarsel = () => {
           </BodyShort>
           <br />
           <BodyShort>
-            En veileder vil kontakte deg snart. Veilederen vil hjelpe deg videre
-            med samtykke og registrering
+            Du kan få tak i{" "}
+            <Link href={samtykkeSkjemaUrl[env]}>samtykkeskjema her</Link> som
+            dine foresatte må fylle ut og sende inn til Nav
           </BodyShort>
         </InfoCard.Content>
       </InfoCard>
