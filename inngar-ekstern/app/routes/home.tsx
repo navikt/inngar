@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home"
 import {
+  bliKontaktet,
   getKanStarteOppfolgingEkstern,
   startOppfolging,
 } from "~/api/veilarboppfolging"
@@ -34,20 +35,32 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 }
 
 export const action = async (args: Route.ActionArgs) => {
+  const formData = await args.request.formData()
+  const intent = formData.get("intent")
+
   const tokenOrResponse = await getOboToken(
     args.request,
     apps.veilarboppfolging,
   )
-  if (tokenOrResponse.ok == true) {
+  if (tokenOrResponse.ok != true) {
+    throw Error(`Token-utveksling feilet: 
+            Status: ${tokenOrResponse.errorResponse.status}, 
+            StatusText: ${tokenOrResponse.errorResponse.statusText}`)
+  }
+
+  if (intent === "bliKontaktet") {
+    const result = await bliKontaktet(tokenOrResponse.token)
+    if (result.ok) {
+      return redirect(`/blir-kontaktet?frist=${encodeURIComponent(result.body.frist)}`)
+    } else {
+      throw Error(`Klarte ikke sende bli-kontaktet-forespørsel: ${result.error}`)
+    }
+  } else {
     const result = await startOppfolging(tokenOrResponse.token)
     if (result.ok) {
       return redirect("/oppfolging-startet")
     } else {
       throw Error(`Klarte ikke starte oppfølging: ${result.error}`)
     }
-  } else {
-    throw Error(`Klarte ikke starte oppfølging: 
-            Status: ${tokenOrResponse.errorResponse.status}, 
-            StatusText: ${tokenOrResponse.errorResponse.statusText}`)
   }
 }

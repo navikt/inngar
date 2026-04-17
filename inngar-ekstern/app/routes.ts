@@ -7,6 +7,7 @@ const devRoutes = import.meta.env.DEV
 export default [
   index("routes/home.tsx"),
   route("/oppfolging-startet", "routes/oppfolgingStartetPage.tsx"),
+  route("/blir-kontaktet", "routes/blirKontaktetPage.tsx"),
   route("/internal/isAlive", "routes/isAlive.tsx"),
   route("/internal/isReady", "routes/isReady.tsx"),
   route("*", "routes/notFound.tsx"),

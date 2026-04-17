@@ -12,7 +12,7 @@ const OppfolgingStartetPage = () => {
         <BodyLong>
           Nav vil vurdere du har gitt oss mot opplysningene vi har om andre i
           omtrent samme situasjon. Basert på dette vil veileder fatte et
-          oppfølgingsvedtak som sendes til deg. Vedtaked forteller hvordan Nav
+          oppfølgingsvedtak som sendes til deg. Vedtaket forteller hvordan Nav
           vurderer din situasjon i arbeidsmarkedet og hvilken hjelp du får av
           Nav.
         </BodyLong>
