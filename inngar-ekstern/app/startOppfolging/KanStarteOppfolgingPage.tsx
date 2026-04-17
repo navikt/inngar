@@ -173,6 +173,7 @@ const samtykkeSkjemaUrl = {
 }
 
 const Under18Advarsel = () => {
+  const bliKontaktetFetcher = useFetcher()
   return (
     <div className="gap-8 flex flex-col">
       <Heading size={"large"}>Under 18 år</Heading>
@@ -185,14 +186,31 @@ const Under18Advarsel = () => {
         <InfoCard.Content>
           <BodyShort>
             Du er under 18 år og trenger samtykke fra foresatte for å få kunne
-            motta oppfølging fra Nav
+            motta oppfølging fra Nav.
           </BodyShort>
           <br />
           <BodyShort>
             Du kan få tak i{" "}
             <Link href={samtykkeSkjemaUrl[env]}>samtykkeskjema her</Link> som
-            dine foresatte må fylle ut og sende inn til Nav
+            dine foresatte må fylle ut og sende inn til Nav.
           </BodyShort>
+          <br />
+          <BodyShort>
+            Ønsker du at en veileder hos oss skal kontakte deg?
+          </BodyShort>
+          <br />
+          <div>
+            <bliKontaktetFetcher.Form method="post">
+              <input type="hidden" name="intent" value="bliKontaktet" />
+              <Button
+                iconPosition={"right"}
+                loading={bliKontaktetFetcher.state !== "idle"}
+                disabled={bliKontaktetFetcher.state !== "idle"}
+              >
+                Ja, kontakt meg
+              </Button>
+            </bliKontaktetFetcher.Form>
+          </div>
         </InfoCard.Content>
       </InfoCard>
     </div>

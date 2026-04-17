@@ -3,6 +3,7 @@ import type {
   StartOppfolgingSuccess,
 } from "common"
 import { apps, logger, toUrl } from "common"
+import type { BliKontaktetErrorResponse, BliKontaktetResponse, BliKontaktetSuccess } from "~/api/bliKontaktetResponse"
 
 const graphqlUrl = toUrl(
   apps.veilarboppfolging,
@@ -144,4 +145,50 @@ export const startOppfolging = async (
         error: "Start oppfølging feilet",
       } as StartOppfolgingErrorResponse
     })
+}
+
+const bliKontaktetUrl = toUrl(
+    apps.veilarboppfolging,
+    "/veilarboppfolging/api/v3/oppfolging/bliKontaktet",
+)
+
+export const bliKontaktet = async (
+    token: string,
+): Promise<BliKontaktetSuccess | BliKontaktetErrorResponse> => {
+    return await fetch(bliKontaktetUrl, {
+        headers: {
+            ["Nav-Consumer-Id"]: "inngar",
+            Authorization: `Bearer ${token}`,
+            ["Content-Type"]: "application/json",
+        },
+        method: "POST",
+    })
+        .then(async (proxyResponse: Response) => {
+            if (!proxyResponse.ok) {
+                const body = !proxyResponse.bodyUsed ? await proxyResponse.text() : ""
+                logger.error(
+                    `Bli kontaktet feilet med http-status: ${proxyResponse.status}`,
+                )
+                logger.error(`Bli kontaktet feilet med melding ${body}`)
+                return {
+                    ok: false as const,
+                    error: body,
+                } as BliKontaktetErrorResponse
+            } else {
+                logger.info("Blir kontaktet")
+                return {
+                    ok: true as const,
+                    body: await proxyResponse.json(),
+                } as BliKontaktetSuccess
+            }
+        })
+        .catch((e: Error) => {
+            logger.error(
+                `Bli kontaktet feilet (http kall feilet): ${e.toString()}`,
+            )
+            return {
+                ok: false as const,
+                error: "Bli kontaktet feilet",
+            } as BliKontaktetErrorResponse
+        })
 }

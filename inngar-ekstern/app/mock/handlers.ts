@@ -42,6 +42,14 @@ export const handlers = [
       })
     },
   ),
+  http.post(
+      `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/bliKontaktet`, () => {
+        console.log("Mock: bliKontaktet called")
+        return HttpResponse.json({
+            frist: "2026-04-16",
+        })
+      },
+    ),
   http.get("https://login.ekstern.dev.nav.no/oauth2/session", () => {
     return HttpResponse.json({
       session: {
