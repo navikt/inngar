@@ -13,7 +13,7 @@ spec:
     max: 1
   resources:
     requests:
-      cpu: 50m
+      cpu: 20m
   ingresses:
     - https://inngar.intern.dev.nav.no
     - https://start-arbeidsoppfolging.ansatt.dev.nav.no
