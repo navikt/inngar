@@ -15,9 +15,9 @@ const isBrowser = typeof window !== "undefined"
 const env = getEnv()
 
 const umamiSettings: Record<EnvType, { sporingskode: string, host: string, scriptSrc: string }> = {
-    [EnvType.local]: "",
-    [EnvType.dev]: "41187a92-9c2f-420e-a55d-32f63d0f42c6",
-    [EnvType.prod]: "c95a40cb-8c0f-43a5-9768-dfff0c21c037"
+    [EnvType.local]: { sporingskode: "", host: "", scriptSrc: "" },
+    [EnvType.dev]: {sporingskode: "41187a92-9c2f-420e-a55d-32f63d0f42c6", host: "https://reops-event-proxy.ekstern.dev.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing-dev.js"},
+    [EnvType.prod]: {sporingskode: "c95a40cb-8c0f-43a5-9768-dfff0c21c037", host: "https://reops-event-proxy.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing.js"},
 }
 
 export const umamiWebsiteId = umamiSettings[env.type].sporingskode ?? ""
