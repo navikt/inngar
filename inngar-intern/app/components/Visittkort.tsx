@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { type FnrState } from "~/root"
 import { getOversiktenLink } from "~/config.client.ts"
@@ -60,10 +59,6 @@ const Visittkort = ({
     fnrState: FnrState
     navKontor: string | null | undefined
 }) => {
-    useEffect(() => {
-        console.log("On mount Visittkort")
-    }, [])
-
     if (fnrState.loading || !fnrState.fnr) return null
     return (
         <div className="bg-ax-bg-default min-h-[76.8px]">
