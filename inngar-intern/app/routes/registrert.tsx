@@ -5,11 +5,7 @@ import { Alert, List } from "@navikt/ds-react"
 import { getVeilarbpersonflateUrl } from "~/config.client"
 import type { Route } from "./+types/registrert"
 import { useEffect } from "react"
-import {
-    loggLenkeKlikket,
-    loggSkjemaFeilet,
-    loggSkjemaFullført,
-} from "~/umami.client"
+import { loggLenkeKlikket, loggSkjemaFeilet, loggSkjemaFullført } from "common"
 
 export const clientLoader = () => {
     return {

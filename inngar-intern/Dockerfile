@@ -1,4 +1,4 @@
-FROM node:24-alpine AS base
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:24-slim AS base
 
 ENV NODE_ENV=production
 ENV PORT="3000"
@@ -21,4 +21,5 @@ WORKDIR /app/inngar-intern
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+ENTRYPOINT []
+CMD ["node", "--experimental-strip-types", "--experimental-transform-types", "server/server.ts", "./build/server/index.js"]

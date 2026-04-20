@@ -1,4 +1,4 @@
-import { EnvType, getEnv } from "~/util/envUtil"
+import { EnvType, getEnv } from "common"
 
 export const getOversiktenLink = () => {
     const env = getEnv()

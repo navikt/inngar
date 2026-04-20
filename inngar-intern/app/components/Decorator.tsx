@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
-import { EnvType, getEnv } from "~/util/envUtil"
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { useDecorateNavspa } from "~/util/useNAVSPA.tsx"
+import { EnvType, getEnv } from "common"
 
 type OnFnrChanged = (fnr?: string | null | undefined) => void
 

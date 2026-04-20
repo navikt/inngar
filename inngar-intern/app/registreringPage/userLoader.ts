@@ -2,7 +2,7 @@ import { resilientFetch } from "~/util/resilientFetch"
 import { aktivEnhetUrl } from "~/config"
 import { getOboToken } from "../../../common/tokenExchange.server.ts"
 import { apps } from "../../../common/appConstants.ts"
-import { logger } from "common"
+import { EnvType, getEnv, logger } from "common"
 import { dataWithTraceId } from "~/util/errorUtil"
 import {
     type KanStarteOppfolging,
@@ -13,7 +13,6 @@ import { BrukerStatus, finnBrukerStatus } from "~/registreringPage/BrukerStatus"
 import { redirect } from "react-router"
 import type { NavKontor } from "~/registreringPage/StartOppfolgingForm.tsx"
 import { AoOppfolgingskontorApi } from "~/api/aoOppfolgingskontor.ts"
-import { EnvType, getEnv } from "~/util/envUtil.ts"
 
 export interface UserLoaderSuccessResponse {
     status: BrukerStatus
