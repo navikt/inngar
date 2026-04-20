@@ -7,7 +7,7 @@ import {
     ScrollRestoration,
     useFetcher,
     useLoaderData,
-    useParams,
+    useParams
 } from "react-router"
 import "@navikt/ds-css"
 
@@ -94,7 +94,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
                 <script src={jsUrl} type="module" />
                 <script
-                    src={`https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/${isProd ? "prod" : "dev"}/latest/dist/internarbeidsflate-decorator.wc.js`}
+                    src={`https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/${isProd ? "prod" : "dev"}/latest/dist/bundle.js`}
                     defer
                 />
                 <link
@@ -105,7 +105,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <body>
                 <Decorator
                     onFnrChanged={(fnr) => {
-                        console.log("onFnrChanged", fnr)
                         redirectToChangedUser(fnr)
                     }}
                 />

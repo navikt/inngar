@@ -17,7 +17,6 @@ const veilarbveileder = `http://veilarbveileder.obo`
 const aoOppfolgingskontor = `http://ao-oppfolgingskontor.dab`
 const oboUnleash = `http://obo-unleash.obo`
 const veilarbaktivitet = `http://veilarbaktivitet.dab`
-const veilarbvedtakstotte = `http://veilarbvedtaksstotte.obo`
 
 const getAktivBrukerMock = () => {
     const over18Mocking = mockSettings.over18
@@ -225,7 +224,8 @@ export const handlers = [
     }),
     http.get(`${oboUnleash}/api/feature`, () => {
         return HttpResponse.json({
-            "veilarbvisittkortfs.vis-ny-inngang-til-arbeidsrettet-oppfolging": true,
+            "veilarbvisittkortfs.vis-ny-inngang-til-arbeidsrettet-oppfolging":
+                true,
         })
     }),
     http.get(
@@ -239,12 +239,6 @@ export const handlers = [
             }
 
             return HttpResponse.json(features)
-        },
-    ),
-    http.post(
-        `${veilarbvedtakstotte}/veilarbvedtaksstotte/api/hent-gjeldende-14a-vedtak`,
-        () => {
-            return new HttpResponse()
         },
     ),
 ]

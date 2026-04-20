@@ -1,5 +1,7 @@
+import { useEffect, useRef } from "react"
 import { EnvType, getEnv } from "~/util/envUtil"
 import { ClientOnlyChild } from "~/util/remoteUtil"
+import { useDecorateNavspa } from "~/util/useNAVSPA.tsx"
 
 type OnFnrChanged = (fnr?: string | null | undefined) => void
 
@@ -14,25 +16,42 @@ const InternarbeidsflateDecorator = ({
 }: {
     onFnrChanged: OnFnrChanged
 }) => {
-    return (
-        <internarbeidsflate-decorator
-            app-name="Arbeidsrettet oppfølging"
-            environment={env.type == EnvType.prod ? "prod" : "q2"}
-            url-format={env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO"}
-            show-enheter={false}
-            show-search-area={true}
-            fetch-active-enhet-on-mount={false}
-            fetch-active-user-on-mount
-            // onEnhetChanged={() => {}}
-            onFnrChanged={onFnrChanged}
-            show-hotkeys={false}
-            proxy={"/api/modiacontextholder"}
-        >
-            <DecoratorPlaceholder />
-        </internarbeidsflate-decorator>
-    )
+    const rootMountRef = useRef<HTMLDivElement>(null)
+    const mountFunction = useDecorateNavspa()
+    const hasMountedRef = useRef(false)
 
-    // return <div className="bg-gray-900 min-h-[48px]" ref={rootMountRef}></div>
+    useEffect(() => {
+        // Only mount once when NAVSPA becomes available
+        if (rootMountRef.current && mountFunction && !hasMountedRef.current) {
+            hasMountedRef.current = true
+            try {
+                mountFunction(rootMountRef.current, {
+                    fetchActiveUserOnMount: true,
+                    fetchActiveEnhetOnMount: false,
+                    onEnhetChanged: () => {},
+                    onFnrChanged: onFnrChanged,
+                    showSearchArea: true,
+                    showEnheter: false,
+                    appName: "Arbeidsrettet oppfølging",
+                    environment: env.type == EnvType.prod ? "prod" : "q2",
+                    urlFormat:
+                        env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO",
+                    showHotkeys: false,
+                    proxy: "/api/modiacontextholder",
+                })
+            } catch (e) {
+                console.error("Failed to mount NAVSPA decorator:", e)
+                hasMountedRef.current = false // Allow retry on error
+            }
+        }
+    }, [mountFunction, onFnrChanged])
+
+    // Show placeholder while waiting for NAVSPA to load
+    if (!mountFunction) {
+        return <DecoratorPlaceholder />
+    }
+
+    return <div className="bg-gray-900 min-h-[48px]" ref={rootMountRef}></div>
 }
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
