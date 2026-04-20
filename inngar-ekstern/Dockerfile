@@ -22,4 +22,4 @@ WORKDIR /app/inngar-ekstern
 EXPOSE 3000
 
 ENTRYPOINT []
-CMD ["node", "server/server.ts", "./build/server/index.js"]
+CMD ["node", "--experimental-transform-types", "server/server.ts", "./build/server/index.js"]
