@@ -1,6 +1,9 @@
 {
   "name": "inngar-ekstern",
   "private": true,
+  "engines": {
+    "node": "25.x"
+  },
   "type": "module",
   "scripts": {
     "build": "react-router build",
