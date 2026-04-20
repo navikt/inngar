@@ -5,7 +5,7 @@ import {
     type KanIkkeStarteOppfolgingPgaIkkeTilgang,
     type KanIkkeStartePgaFolkeregisterStatus,
 } from "~/api/veilarboppfolging"
-import { logger } from "common"
+import { loggAlertVist, logger } from "common"
 import { dataWithTraceId } from "~/util/errorUtil"
 import { IkkeTilgangWarning } from "~/registreringPage/IkkeTilgangWarning"
 import { StartOppfolgingForm } from "~/registreringPage/StartOppfolgingForm"
@@ -18,7 +18,6 @@ import {
 import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
 import { useEffect } from "react"
-import { loggAlertVist } from "~/umami.client"
 import { ReaktiveringsForm } from "~/registreringPage/ReaktiveringsForm.tsx"
 import { startOppfolging } from "~/server/oppfolging.ts"
 import { reaktiverOppfolging } from "~/server/reaktiver.ts"
