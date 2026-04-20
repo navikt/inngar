@@ -16,6 +16,8 @@ const Env = {
     local: { ingressType: "intern", type: EnvType.local },
 } as const
 
+declare const window: { location: any } | undefined
+
 export const getEnv = (): EnvConfig => {
     if (typeof window === "undefined") {
         // Server-side

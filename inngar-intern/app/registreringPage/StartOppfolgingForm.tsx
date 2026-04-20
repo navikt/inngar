@@ -11,10 +11,10 @@ import {
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import { EnvType, getEnv } from "~/util/envUtil"
-import { loggKnappKlikket } from "~/umami.client.ts"
 import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
 import ManuellGodkjenningMidlertidigBosattAlert from "~/registreringPage/ManuellGodkjenningMidlertidigBosattAlert.tsx"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo.tsx"
+import { loggKnappKlikket } from "common"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod

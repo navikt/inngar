@@ -1,4 +1,4 @@
-import { EnvType, getEnv } from "~/util/envUtil"
+import { EnvType, getEnv } from "./envUtil.ts"
 
 declare global {
     interface Window {
@@ -8,6 +8,10 @@ declare global {
     }
 }
 
+declare const window: any
+declare const document: any
+
+const isBrowser = typeof window !== "undefined"
 const env = getEnv()
 
 const umamiWebsiteIds: Record<EnvType, string> = {
@@ -20,7 +24,7 @@ export const umamiWebsiteId = umamiWebsiteIds[env.type] ?? ""
 
 
 export async function loadUmami(): Promise<void> {
-    if (env.type === EnvType.local) return
+    if (!isBrowser || env.type === EnvType.local) return
     if (window.umami) return
 
     return new Promise((resolve, reject) => {
@@ -53,6 +57,8 @@ export const logEvent = (
     eventName: string,
     eventProperties: Record<string, any> = {}
 ) => {
+    if (!isBrowser) return
+
     if (env.type === EnvType.local) {
         console.log("Umami localhost event:", eventName, eventProperties)
         return
