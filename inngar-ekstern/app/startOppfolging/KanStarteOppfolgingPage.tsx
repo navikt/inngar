@@ -1,18 +1,12 @@
-import {
-  BodyShort,
-  Button,
-  Heading,
-  InfoCard,
-  Link,
-  List,
-  LocalAlert,
-} from "@navikt/ds-react"
+import { BodyShort, Button, Heading, List, LocalAlert } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { KanStarteOppfolgingEkstern } from "~/api/veilarboppfolging"
-import { InnholdForDegUnderOppfolging } from "~/startOppfolging/InnholdForDegUnderOppfolging"
 import SkjemaIkon from "./skjema-ikon.svg?react"
 import { PaperplaneIcon } from "@navikt/aksel-icons"
-import { Env, getEnv } from "~/util/getEnv"
+import { IkkeMuligÅStarteOppfolging } from "~/startOppfolging/tilfeller/IkkeMuligÅStarteOppfolging"
+import { AlleredeUnderOppfolging } from "~/startOppfolging/tilfeller/AlleredeUnderOppfolging"
+import { Under18Advarsel } from "~/startOppfolging/tilfeller/Under18Advarsel"
+import { KreverManuellGodkjenningAvVeileder } from "~/startOppfolging/tilfeller/KreverManuellGodkjenningAvVeileder"
 
 type KanStarteOppfolgingResponse =
   | {
@@ -97,11 +91,11 @@ const StartOppfolgingForm = () => {
     <div className="flex flex-col gap-8 pb-40">
       <Heading size={"large"}>Be om arbeidsrettet oppfølging</Heading>
       <div className="flex flex-col gap-2">
-        <BodyShort weight="semibold">Dette kan du har rett til:</BodyShort>
+        <BodyShort weight="semibold">Dette kan du få:</BodyShort>
         <List as="ul">
           <List.Item>Samtaler med veileder</List.Item>
-          <List.Item>Arbeidsmarkedstiltak som kurs etc</List.Item>
-          <List.Item>Du trenger ikke levere meldekort</List.Item>
+          <List.Item>Arbeidsrettede tiltak eller kurs</List.Item>
+          <List.Item>Veiledning og hjelp tilpasset din situasjon</List.Item>
         </List>
       </div>
       <div>
@@ -116,103 +110,6 @@ const StartOppfolgingForm = () => {
           </Button>
         </startOppfolgingFetcher.Form>
       </div>
-    </div>
-  )
-}
-
-const AlleredeUnderOppfolging = () => {
-  return (
-    <div className="gap-4 flex flex-col pb-40">
-      <Heading size={"large"}>Du er allerede registrert for oppfølging</Heading>
-      <InnholdForDegUnderOppfolging />
-    </div>
-  )
-}
-
-const KreverManuellGodkjenningAvVeileder = () => {
-  return (
-    <div className="gap-8 flex flex-col">
-      <Heading size={"large"}>Mangler informasjon om lovlig opphold</Heading>
-      <InfoCard data-color="info">
-        <InfoCard.Header>
-          <InfoCard.Title>
-            Du må registreres for oppfolging av en veileder
-          </InfoCard.Title>
-        </InfoCard.Header>
-        <InfoCard.Content>
-          <BodyShort>
-            Noen av opplysningene vi har hentet om deg må kontrolleres manuelt.
-          </BodyShort>
-          <br />
-          <BodyShort>
-            {" "}
-            Ta kontakt med Nav for å bli registrert for oppfølging
-          </BodyShort>
-        </InfoCard.Content>
-      </InfoCard>
-    </div>
-  )
-}
-
-const IkkeMuligÅStarteOppfolging = () => {
-  return (
-    <div className="flex flex-col gap-8">
-      <Heading size={"large"}>Feil i folkereigsterstatus</Heading>
-      <BodyShort>
-        Du kan ikke være registrert død og få arbeidsoppfølging
-      </BodyShort>
-    </div>
-  )
-}
-
-const env = getEnv()
-const samtykkeSkjemaUrl = {
-  [Env.prod]: "https://www.nav.no/samtykke-foresatte",
-  [Env.dev]: "https://www.nav.no/samtykke-foresatte",
-  [Env.local]: "https://www.nav.no/samtykke-foresatte",
-}
-
-const Under18Advarsel = () => {
-  const bliKontaktetFetcher = useFetcher()
-  return (
-    <div className="gap-8 flex flex-col">
-      <Heading size={"large"}>Under 18 år</Heading>
-      <InfoCard data-color="info">
-        <InfoCard.Header>
-          <InfoCard.Title>
-            Du må registreres for oppfolging av en veileder
-          </InfoCard.Title>
-        </InfoCard.Header>
-        <InfoCard.Content>
-          <BodyShort>
-            Du er under 18 år og trenger samtykke fra foresatte for å få kunne
-            motta oppfølging fra Nav.
-          </BodyShort>
-          <br />
-          <BodyShort>
-            Du kan få tak i{" "}
-            <Link href={samtykkeSkjemaUrl[env]}>samtykkeskjema her</Link> som
-            dine foresatte må fylle ut og sende inn til Nav.
-          </BodyShort>
-          <br />
-          <BodyShort>
-            Ønsker du at en veileder hos oss skal kontakte deg?
-          </BodyShort>
-          <br />
-          <div>
-            <bliKontaktetFetcher.Form method="post">
-              <input type="hidden" name="intent" value="bliKontaktet" />
-              <Button
-                iconPosition={"right"}
-                loading={bliKontaktetFetcher.state !== "idle"}
-                disabled={bliKontaktetFetcher.state !== "idle"}
-              >
-                Ja, kontakt meg
-              </Button>
-            </bliKontaktetFetcher.Form>
-          </div>
-        </InfoCard.Content>
-      </InfoCard>
     </div>
   )
 }

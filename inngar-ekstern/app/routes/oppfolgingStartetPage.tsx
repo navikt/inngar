@@ -7,14 +7,15 @@ const OppfolgingStartetPage = () => {
     <main className="flex gap-8 justify-center pt-4 md:pt-12 pb-4 p-4 pb-20">
       <KvitteringIkon />
       <div className="max-w-paragraph-width flex-1 flex flex-col gap-4 min-h-96 min-h-0">
-        <Heading size={"large"}>Du er innskrevet for oppfølging</Heading>
-        <BodyShort>Du vil snart bli kontaktet av en veileder</BodyShort>
+        <Heading size={"large"}>
+          Du har bedt om arbeidsrettet oppfølging
+        </Heading>
+        <BodyShort>Du vil etterhvert bli kontaktet av en veileder</BodyShort>
         <BodyLong>
-          Nav vil vurdere du har gitt oss mot opplysningene vi har om andre i
-          omtrent samme situasjon. Basert på dette vil veileder fatte et
-          oppfølgingsvedtak som sendes til deg. Vedtaket forteller hvordan Nav
-          vurderer din situasjon i arbeidsmarkedet og hvilken hjelp du får av
-          Nav.
+          Dere vil ha en samtale om din situasjon og sammen lage en plan for
+          veien videre. Det vil bli fattet et oppfølgingsvedtak som sendes til
+          deg. Vedtaket forteller hvordan Nav vurderer din situasjon i
+          arbeidsmarkedet og hvilken hjelp du kan få fra Nav.
         </BodyLong>
         <div className="mt-4">
           <InnholdForDegUnderOppfolging />

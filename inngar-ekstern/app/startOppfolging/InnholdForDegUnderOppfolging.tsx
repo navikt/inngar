@@ -1,25 +1,5 @@
 import { Heading, LinkCard } from "@navikt/ds-react"
-import { Env, getEnv } from "~/util/getEnv"
-
-const env = getEnv()
-
-const urls = {
-  aktivitetsplan: {
-    [Env.dev]: "https://aktivitetsplan.ekstern.dev.nav.no/",
-    [Env.prod]: "https://aktivitetsplan.nav.no",
-    [Env.local]: "/",
-  },
-  minside: {
-    [Env.dev]: "https://www.ansatt.dev.nav.no/minside",
-    [Env.prod]: "https://nav.no/minside",
-    [Env.local]: "/",
-  },
-  dialog: {
-    [Env.dev]: "https://pto.ekstern.dev.nav.no/arbeid/dialog/",
-    [Env.prod]: "https://nav.no/arbeid/dialog",
-    [Env.local]: "/",
-  },
-}
+import { env, urls } from "./urls"
 
 export const InnholdForDegUnderOppfolging = () => {
   return (
@@ -33,7 +13,7 @@ export const InnholdForDegUnderOppfolging = () => {
             </LinkCard.Anchor>
           </LinkCard.Title>
           <LinkCard.Description>
-            Planlegg aktiviteter alene eller sammen med veileder
+            Oversikt over dine aktiviteter, møter og samtalereferat
           </LinkCard.Description>
         </LinkCard>
         <LinkCard>
@@ -48,7 +28,9 @@ export const InnholdForDegUnderOppfolging = () => {
           <LinkCard.Title>
             <LinkCard.Anchor href={urls.dialog[env]}>Dialogen</LinkCard.Anchor>
           </LinkCard.Title>
-          <LinkCard.Description>Snakk med veilederen din</LinkCard.Description>
+          <LinkCard.Description>
+            Spør f.eks. om avtalte møter og tiltak
+          </LinkCard.Description>
         </LinkCard>
       </div>
     </>
