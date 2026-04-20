@@ -14,13 +14,13 @@ declare const document: any
 const isBrowser = typeof window !== "undefined"
 const env = getEnv()
 
-const umamiWebsiteIds: Record<EnvType, string> = {
+const umamiSettings: Record<EnvType, { sporingskode: string, host: string, scriptSrc: string }> = {
     [EnvType.local]: "",
     [EnvType.dev]: "41187a92-9c2f-420e-a55d-32f63d0f42c6",
     [EnvType.prod]: "c95a40cb-8c0f-43a5-9768-dfff0c21c037"
 }
 
-export const umamiWebsiteId = umamiWebsiteIds[env.type] ?? ""
+export const umamiWebsiteId = umamiSettings[env.type].sporingskode ?? ""
 
 
 export async function loadUmami(): Promise<void> {
@@ -30,10 +30,10 @@ export async function loadUmami(): Promise<void> {
     return new Promise((resolve, reject) => {
         const script = document.createElement("script")
         script.defer = true
-        script.setAttribute("data-host-url", "https://umami.nav.no")
+        script.setAttribute("data-host-url", umamiSettings[env.type].host)
         script.setAttribute("data-website-id", umamiWebsiteId)
         script.setAttribute("data-tag", "start-arbeidsoppfolging")
-        script.src = "https://cdn.nav.no/team-researchops/sporing/sporing.js"
+        script.src = umamiSettings[env.type].scriptSrc
 
         script.onload = () => {
             if (window.umami) {
