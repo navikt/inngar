@@ -8,7 +8,6 @@ export function useFeatureToggle(featureName: FeatureToggles): boolean {
     const [enabled, setEnabled] = useState(false)
 
     useEffect(() => {
-        logger.info("Henter toggle...")
         fetch(`/veilarbaktivitet/api/feature?feature=${featureName}`)
             .then((res) => {
                 if (res.ok) {
