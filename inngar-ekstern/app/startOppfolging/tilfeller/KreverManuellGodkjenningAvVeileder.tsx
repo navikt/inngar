@@ -4,11 +4,9 @@ export const KreverManuellGodkjenningAvVeileder = () => {
   return (
     <div className="gap-8 flex flex-col">
       <Heading size={"large"}>Mangler informasjon om lovlig opphold</Heading>
-      <InfoCard data-color="info">
+      <InfoCard data-color="warning">
         <InfoCard.Header>
-          <InfoCard.Title>
-            Du må registreres for oppfolging av en veileder
-          </InfoCard.Title>
+          <InfoCard.Title>Du må hjelpes videre av en veileder</InfoCard.Title>
         </InfoCard.Header>
         <InfoCard.Content>
           <BodyShort>
@@ -16,7 +14,6 @@ export const KreverManuellGodkjenningAvVeileder = () => {
           </BodyShort>
           <br />
           <BodyShort>
-            {" "}
             Ta kontakt med Nav for å bli registrert for oppfølging
           </BodyShort>
         </InfoCard.Content>
