@@ -27,7 +27,7 @@ export const Under18Advarsel = () => {
       <InfoCard data-color="warning">
         <InfoCard.Header>
           <InfoCard.Title>
-            Du må registreres for oppfolging av en veileder
+            Du må registreres for oppfølging av en veileder
           </InfoCard.Title>
         </InfoCard.Header>
         <InfoCard.Content>
