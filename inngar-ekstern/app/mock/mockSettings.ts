@@ -5,5 +5,5 @@ export interface MockSettings {
 }
 
 export const mockSettings: MockSettings = {
-  kanStarteOppfolgingEkstern: "ALLEREDE_UNDER_OPPFOLGING",
+  kanStarteOppfolgingEkstern: "JA",
 }

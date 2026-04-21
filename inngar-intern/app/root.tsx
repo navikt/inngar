@@ -7,7 +7,7 @@ import {
     ScrollRestoration,
     useFetcher,
     useLoaderData,
-    useParams
+    useParams,
 } from "react-router"
 import "@navikt/ds-css"
 
@@ -16,12 +16,13 @@ import stylesheet from "./app.css?url"
 import Decorator from "~/components/Decorator"
 import { importSubApp } from "~/util/importUtil"
 import { mockSettings } from "~/mock/mockSettings"
-import { startActiveSpan, loadUmami, loggBesok, getEnv } from "common"
+import { startActiveSpan, loadUmami, loggBesok } from "common"
 import { useEffect } from "react"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
 import { Theme } from "@navikt/ds-react"
 import { MockSettingsForm } from "~/mock/MockSettingsForm.tsx"
+import { getEnv } from "~/util/envUtil.ts"
 
 const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 
@@ -71,7 +72,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }
 
     useEffect(() => {
-        loadUmami()
+        loadUmami(getEnv().type)
             .then(() => {
                 loggBesok()
             })

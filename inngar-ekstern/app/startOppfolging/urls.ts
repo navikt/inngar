@@ -1,31 +1,32 @@
-import { Env, getEnv } from "~/util/getEnv"
+import { EnvType } from "common"
+import { getEnv } from "~/util/envUtil.ts"
 
 export const env = getEnv()
 
 export const urls = {
   aktivitetsplan: {
-    [Env.dev]: "https://aktivitetsplan.ekstern.dev.nav.no/",
-    [Env.prod]: "https://aktivitetsplan.nav.no",
-    [Env.local]: "/",
+    [EnvType.dev]: "https://aktivitetsplan.ekstern.dev.nav.no/",
+    [EnvType.prod]: "https://aktivitetsplan.nav.no",
+    [EnvType.local]: "/",
   },
   minside: {
-    [Env.dev]: "https://www.ansatt.dev.nav.no/minside",
-    [Env.prod]: "https://nav.no/minside",
-    [Env.local]: "/",
+    [EnvType.dev]: "https://www.ansatt.dev.nav.no/minside",
+    [EnvType.prod]: "https://nav.no/minside",
+    [EnvType.local]: "/",
   },
   dialog: {
-    [Env.dev]: "https://pto.ekstern.dev.nav.no/arbeid/dialog/",
-    [Env.prod]: "https://nav.no/arbeid/dialog",
-    [Env.local]: "/",
+    [EnvType.dev]: "https://pto.ekstern.dev.nav.no/arbeid/dialog/",
+    [EnvType.prod]: "https://nav.no/arbeid/dialog",
+    [EnvType.local]: "/",
   },
   samtykkeSkjemaUrl: {
-    [Env.prod]: "https://www.nav.no/samtykke-foresatte",
-    [Env.dev]: "https://www.nav.no/samtykke-foresatte",
-    [Env.local]: "https://www.nav.no/samtykke-foresatte",
+    [EnvType.prod]: "https://www.nav.no/samtykke-foresatte",
+    [EnvType.dev]: "https://www.nav.no/samtykke-foresatte",
+    [EnvType.local]: "https://www.nav.no/samtykke-foresatte",
   },
   kontaktOss: {
-    [Env.prod]: "https://www.nav.no/kontaktoss",
-    [Env.dev]: "https://www.nav.no/kontaktoss",
-    [Env.local]: "https://www.nav.no/kontaktoss",
+    [EnvType.prod]: "https://www.nav.no/kontaktoss",
+    [EnvType.dev]: "https://www.nav.no/kontaktoss",
+    [EnvType.local]: "https://www.nav.no/kontaktoss",
   },
 }

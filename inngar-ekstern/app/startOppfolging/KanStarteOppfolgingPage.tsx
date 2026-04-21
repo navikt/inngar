@@ -7,6 +7,7 @@ import { IkkeMuligÅStarteOppfolging } from "~/startOppfolging/tilfeller/IkkeMul
 import { AlleredeUnderOppfolging } from "~/startOppfolging/tilfeller/AlleredeUnderOppfolging"
 import { Under18Advarsel } from "~/startOppfolging/tilfeller/Under18Advarsel"
 import { KreverManuellGodkjenningAvVeileder } from "~/startOppfolging/tilfeller/KreverManuellGodkjenningAvVeileder"
+import { loggKnappKlikket } from "common"
 
 type KanStarteOppfolgingResponse =
   | {
@@ -105,6 +106,9 @@ const StartOppfolgingForm = () => {
             icon={<PaperplaneIcon />}
             loading={startOppfolgingFetcher.state !== "idle"}
             disabled={startOppfolgingFetcher.state !== "idle"}
+            onClick={() =>
+              loggKnappKlikket("Jeg ønsker arbeidsrettet oppfølging fra Nav")
+            }
           >
             Jeg ønsker arbeidsrettet oppfølging fra Nav
           </Button>

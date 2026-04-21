@@ -13,7 +13,8 @@ import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
 import ManuellGodkjenningMidlertidigBosattAlert from "~/registreringPage/ManuellGodkjenningMidlertidigBosattAlert.tsx"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo.tsx"
-import { EnvType, getEnv, loggKnappKlikket } from "common"
+import { EnvType, loggKnappKlikket } from "common"
+import { getEnv } from "~/util/envUtil.ts"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod

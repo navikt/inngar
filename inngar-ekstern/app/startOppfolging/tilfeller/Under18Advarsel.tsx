@@ -7,18 +7,37 @@ import {
   LinkCard,
 } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
-import { Env, getEnv } from "~/util/getEnv"
 import { urls } from "~/startOppfolging/urls"
+import {
+  EnvType,
+  loadUmami,
+  loggBesok,
+  loggBesokUnder18,
+  loggKnappKlikket,
+} from "common"
+import { getEnv } from "~/util/envUtil.ts"
+import { useEffect } from "react"
 
 const env = getEnv()
 const samtykkeSkjemaUrl = {
-  [Env.prod]: "https://www.nav.no/samtykke-foresatte",
-  [Env.dev]: "https://www.nav.no/samtykke-foresatte",
-  [Env.local]: "https://www.nav.no/samtykke-foresatte",
+  [EnvType.prod]: "https://www.nav.no/samtykke-foresatte",
+  [EnvType.dev]: "https://www.nav.no/samtykke-foresatte",
+  [EnvType.local]: "https://www.nav.no/samtykke-foresatte",
 }
 
 export const Under18Advarsel = () => {
   const bliKontaktetFetcher = useFetcher()
+
+  useEffect(() => {
+    loadUmami(getEnv())
+      .then(() => {
+        loggBesokUnder18()
+      })
+      .catch((e) => {
+        console.warn("Kunne ikke laste Umami-scriptet:", e)
+      })
+  }, [])
+
   return (
     <div className="gap-8 flex flex-col">
       <Heading size={"large"}>
@@ -54,6 +73,11 @@ export const Under18Advarsel = () => {
                 iconPosition={"right"}
                 loading={bliKontaktetFetcher.state !== "idle"}
                 disabled={bliKontaktetFetcher.state !== "idle"}
+                onClick={() =>
+                  loggKnappKlikket(
+                    "Jeg er under 18 år og ønsker at en veileder tar kontakt",
+                  )
+                }
               >
                 Ja, kontakt meg
               </Button>
