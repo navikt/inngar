@@ -25,7 +25,7 @@ const sporingskode = (): string => {
             return intern ? "41187a92-9c2f-420e-a55d-32f63d0f42c6" : "LEGG-INN"
         } else if (env.type === EnvType.prod) {
             const intern = hostname.includes("intern.nav.no")
-            return intern ? "c95a40cb-8c0f-43a5-9768-dfff0c21c037" : "LEGG-INN"
+            return intern ? "c95a40cb-8c0f-43a5-9768-dfff0c21c037" : "3c28efee-60ed-44f7-94fb-b8a5e82f0216"
         } else {
             return ""
         }
