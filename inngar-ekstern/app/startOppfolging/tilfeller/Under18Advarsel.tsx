@@ -8,7 +8,7 @@ import {
 } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import { urls } from "~/startOppfolging/urls"
-import { EnvType, loggBesokUnder18, loggKnappKlikket } from "common"
+import { EnvType, loadUmami, loggBesok, loggBesokUnder18, loggKnappKlikket } from "common"
 import { getEnv } from "~/util/envUtil.ts"
 import { useEffect } from "react"
 
@@ -23,7 +23,13 @@ export const Under18Advarsel = () => {
   const bliKontaktetFetcher = useFetcher()
 
   useEffect(() => {
-    loggBesokUnder18();
+    loadUmami(getEnv().type)
+      .then(() => {
+        loggBesokUnder18();
+      })
+      .catch((e) => {
+        console.warn("Kunne ikke laste Umami-scriptet:", e)
+      })
   }, [])
 
   return (
