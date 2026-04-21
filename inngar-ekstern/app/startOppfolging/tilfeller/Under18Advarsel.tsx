@@ -13,9 +13,9 @@ import { getEnv } from "~/util/envUtil.ts"
 
 const env = getEnv()
 const samtykkeSkjemaUrl = {
-  [Env.prod]: "https://www.nav.no/samtykke-foresatte",
-  [Env.dev]: "https://www.nav.no/samtykke-foresatte",
-  [Env.local]: "https://www.nav.no/samtykke-foresatte",
+  [EnvType.prod]: "https://www.nav.no/samtykke-foresatte",
+  [EnvType.dev]: "https://www.nav.no/samtykke-foresatte",
+  [EnvType.local]: "https://www.nav.no/samtykke-foresatte",
 }
 
 export const Under18Advarsel = () => {
