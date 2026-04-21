@@ -8,7 +8,13 @@ import {
 } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import { urls } from "~/startOppfolging/urls"
-import { EnvType, loadUmami, loggBesok, loggBesokUnder18, loggKnappKlikket } from "common"
+import {
+  EnvType,
+  loadUmami,
+  loggBesok,
+  loggBesokUnder18,
+  loggKnappKlikket,
+} from "common"
 import { getEnv } from "~/util/envUtil.ts"
 import { useEffect } from "react"
 
@@ -23,9 +29,9 @@ export const Under18Advarsel = () => {
   const bliKontaktetFetcher = useFetcher()
 
   useEffect(() => {
-    loadUmami(getEnv().type)
+    loadUmami(getEnv())
       .then(() => {
-        loggBesokUnder18();
+        loggBesokUnder18()
       })
       .catch((e) => {
         console.warn("Kunne ikke laste Umami-scriptet:", e)
@@ -67,7 +73,11 @@ export const Under18Advarsel = () => {
                 iconPosition={"right"}
                 loading={bliKontaktetFetcher.state !== "idle"}
                 disabled={bliKontaktetFetcher.state !== "idle"}
-                onClick={() => loggKnappKlikket("Jeg er under 18 år og ønsker at en veileder tar kontakt")}
+                onClick={() =>
+                  loggKnappKlikket(
+                    "Jeg er under 18 år og ønsker at en veileder tar kontakt",
+                  )
+                }
               >
                 Ja, kontakt meg
               </Button>
