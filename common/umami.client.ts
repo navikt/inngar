@@ -38,9 +38,6 @@ const umamiSettings: Record<EnvType, { sporingskode: string, host: string, scrip
     [EnvType.prod]: {sporingskode: sporingskode(), host: "https://reops-event-proxy.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing.js"},
 }
 
-export const umamiWebsiteId = umamiSettings[env.type].sporingskode ?? ""
-
-
 export async function loadUmami(): Promise<void> {
     if (!isBrowser || env.type === EnvType.local) return
     if (window.umami) return
@@ -49,7 +46,7 @@ export async function loadUmami(): Promise<void> {
         const script = document.createElement("script")
         script.defer = true
         script.setAttribute("data-host-url", umamiSettings[env.type].host)
-        script.setAttribute("data-website-id", umamiWebsiteId)
+        script.setAttribute("data-website-id", umamiSettings[env.type].sporingskode)
         script.setAttribute("data-tag", "start-arbeidsoppfolging")
         script.src = umamiSettings[env.type].scriptSrc
 
