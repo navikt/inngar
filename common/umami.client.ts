@@ -14,10 +14,28 @@ declare const document: any
 const isBrowser = typeof window !== "undefined"
 const env = getEnv()
 
+const sporingskode = (): string => {
+    if (typeof window === "undefined") {
+        return ""
+    } else {
+        const { hostname } = window.location
+
+        if (env.type === EnvType.dev) {
+            const intern = hostname.includes("intern.dev.nav.no") || hostname.includes("ansatt.dev.nav.no")
+            return intern ? "41187a92-9c2f-420e-a55d-32f63d0f42c6" : "LEGG-INN"
+        } else if (env.type === EnvType.prod) {
+            const intern = hostname.includes("intern.nav.no")
+            return intern ? "c95a40cb-8c0f-43a5-9768-dfff0c21c037" : "LEGG-INN"
+        } else {
+            return ""
+        }
+    }
+}
+
 const umamiSettings: Record<EnvType, { sporingskode: string, host: string, scriptSrc: string }> = {
     [EnvType.local]: { sporingskode: "", host: "", scriptSrc: "" },
-    [EnvType.dev]: {sporingskode: "41187a92-9c2f-420e-a55d-32f63d0f42c6", host: "https://reops-event-proxy.ekstern.dev.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing-dev.js"},
-    [EnvType.prod]: {sporingskode: "c95a40cb-8c0f-43a5-9768-dfff0c21c037", host: "https://reops-event-proxy.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing.js"},
+    [EnvType.dev]: {sporingskode: sporingskode(), host: "https://reops-event-proxy.ekstern.dev.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing-dev.js"},
+    [EnvType.prod]: {sporingskode: sporingskode(), host: "https://reops-event-proxy.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing.js"},
 }
 
 export const umamiWebsiteId = umamiSettings[env.type].sporingskode ?? ""
