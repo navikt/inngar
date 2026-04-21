@@ -22,7 +22,7 @@ const sporingskode = (): string => {
 
         if (env.type === EnvType.dev) {
             const intern = hostname.includes("intern.dev.nav.no") || hostname.includes("ansatt.dev.nav.no")
-            return intern ? "41187a92-9c2f-420e-a55d-32f63d0f42c6" : "LEGG-INN"
+            return intern ? "41187a92-9c2f-420e-a55d-32f63d0f42c6" : "8b1f90af-0a2a-4b75-b486-ca24a277dfb5"
         } else if (env.type === EnvType.prod) {
             const intern = hostname.includes("intern.nav.no")
             return intern ? "c95a40cb-8c0f-43a5-9768-dfff0c21c037" : "3c28efee-60ed-44f7-94fb-b8a5e82f0216"
