@@ -3,7 +3,7 @@ import { EnvType } from "./env.ts"
 declare global {
     interface Window {
         umami?: {
-            track: (eventName: string, data?: Record<string, any>) => void;
+            track: (eventName: string, data?: Record<string, any>) => void
         }
     }
 }
@@ -20,30 +20,50 @@ const sporingskode = (env: EnvType): string => {
         const { hostname } = window.location
 
         if (env === EnvType.dev) {
-            const intern = hostname.includes("intern.dev.nav.no") || hostname.includes("ansatt.dev.nav.no")
-            return intern ? "41187a92-9c2f-420e-a55d-32f63d0f42c6" : "8b1f90af-0a2a-4b75-b486-ca24a277dfb5"
+            const intern =
+                hostname.includes("intern.dev.nav.no") ||
+                hostname.includes("ansatt.dev.nav.no")
+            return intern
+                ? "41187a92-9c2f-420e-a55d-32f63d0f42c6"
+                : "8b1f90af-0a2a-4b75-b486-ca24a277dfb5"
         } else if (env === EnvType.prod) {
             const intern = hostname.includes("intern.nav.no")
-            return intern ? "c95a40cb-8c0f-43a5-9768-dfff0c21c037" : "3c28efee-60ed-44f7-94fb-b8a5e82f0216"
+            return intern
+                ? "c95a40cb-8c0f-43a5-9768-dfff0c21c037"
+                : "3c28efee-60ed-44f7-94fb-b8a5e82f0216"
         } else {
             return ""
         }
     }
 }
 
-const umamiSettings = (env: EnvType): Record<EnvType, { sporingskode: string, host: string, scriptSrc: string }> => ({
+const umamiSettings = (
+    env: EnvType,
+): Record<
+    EnvType,
+    { sporingskode: string; host: string; scriptSrc: string }
+> => ({
     [EnvType.local]: { sporingskode: "", host: "", scriptSrc: "" },
-    [EnvType.dev]: {sporingskode: sporingskode(env), host: "https://reops-event-proxy.ekstern.dev.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing-dev.js"},
-    [EnvType.prod]: {sporingskode: sporingskode(env), host: "https://reops-event-proxy.nav.no", scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing.js"},
+    [EnvType.dev]: {
+        sporingskode: sporingskode(env),
+        host: "https://reops-event-proxy.ekstern.dev.nav.no",
+        scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing-dev.js",
+    },
+    [EnvType.prod]: {
+        sporingskode: sporingskode(env),
+        host: "https://reops-event-proxy.nav.no",
+        scriptSrc: "https://cdn.nav.no/team-researchops/sporing/sporing.js",
+    },
 })
 
 let env: EnvType = EnvType.local
 
 export async function loadUmami(envType: EnvType): Promise<void> {
-    env = envType;
+    env = envType
     if (!isBrowser || env === EnvType.local) return
     if (window.umami) return
-    const settings = umamiSettings(env);
+    console.log(`Laster Umami script for env ${env}...`)
+    const settings = umamiSettings(env)
 
     return new Promise((resolve, reject) => {
         const script = document.createElement("script")
@@ -59,13 +79,18 @@ export async function loadUmami(envType: EnvType): Promise<void> {
             } else {
                 console.debug(
                     "Umami script lastet, men window.umami er undefined.",
-                    document.querySelector("script[src*=\"sporing.js\"]")
+                    document.querySelector('script[src*="sporing.js"]'),
                 )
-                reject(new Error("Umami script lastet, men window.umami er undefined"))
+                reject(
+                    new Error(
+                        "Umami script lastet, men window.umami er undefined",
+                    ),
+                )
             }
         }
 
-        script.onerror = () => reject(new Error("Feil ved lasting av umami script"))
+        script.onerror = () =>
+            reject(new Error("Feil ved lasting av umami script"))
 
         document.head.appendChild(script)
     })
@@ -73,7 +98,7 @@ export async function loadUmami(envType: EnvType): Promise<void> {
 
 export const logEvent = (
     eventName: string,
-    eventProperties: Record<string, any> = {}
+    eventProperties: Record<string, any> = {},
 ) => {
     if (!isBrowser) return
 
@@ -87,7 +112,7 @@ export const logEvent = (
         window.umami?.track(eventName, {
             ...eventProperties,
             app: "start-arbeidsoppfolging",
-            appNavn: "inngar"
+            appNavn: "inngar",
         })
     } catch (e) {
         console.warn("Feil ved Umami tracking:", e)
@@ -102,7 +127,7 @@ export const loggSkjemaFullført = (arenaStatus: string) => {
     logEvent("skjema fullført", {
         skjemanavn: "start-arbeidsoppfolging",
         skjemaId: "start-arbeidsoppfolging",
-        arenaStatus
+        arenaStatus,
     })
 }
 
@@ -110,7 +135,7 @@ export const loggSkjemaFeilet = (arenaStatus: string) => {
     logEvent("skjema innsending feilet", {
         skjemanavn: "start-arbeidsoppfolging",
         skjemaId: "start-arbeidsoppfolging",
-        arenaStatus
+        arenaStatus,
     })
 }
 
@@ -119,7 +144,7 @@ export const loggLenkeKlikket = (lenketekst: string) =>
 
 export const loggAlertVist = (
     variant: string,
-    kanStarteOppfolging: string | "INGEN_BRUKER_VALGT"
+    kanStarteOppfolging: string | "INGEN_BRUKER_VALGT",
 ) => {
     logEvent("alert vist", { variant, tekst: kanStarteOppfolging })
 }
