@@ -7,8 +7,9 @@ import {
   LinkCard,
 } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
-import { Env, getEnv } from "~/util/envUtil"
 import { urls } from "~/startOppfolging/urls"
+import { EnvType, loggKnappKlikket } from "common"
+import { getEnv } from "~/util/envUtil.ts"
 
 const env = getEnv()
 const samtykkeSkjemaUrl = {

@@ -1,6 +1,6 @@
 import { EnvType } from "common"
 
-export const envUtil = (): EnvType => {
+export const getEnv = (): EnvType => {
   if (typeof window === "undefined") {
     // Server-side
     const cluster = process.env.NAIS_CLUSTER_NAME
