@@ -16,6 +16,7 @@ import { fetchDecoratorHtml } from "@navikt/nav-dekoratoren-moduler/ssr"
 import { LocalAlert } from "@navikt/ds-react"
 import { loadUmami, loggBesok } from "common"
 import { useEffect } from "react"
+import { getEnv } from "~/util/envUtil"
 
 function parseDecoratorLinks(html: string) {
   const links: Record<string, string>[] = []
@@ -72,7 +73,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     : []
 
   useEffect(() => {
-    loadUmami()
+    loadUmami(getEnv())
       .then(() => {
         loggBesok()
       })
