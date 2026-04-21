@@ -14,6 +14,8 @@ import { MockSettingsFormEkstern } from "~/mock/MockSettingsFormEkstern"
 import { mockSettings } from "~/mock/mockSettings"
 import { fetchDecoratorHtml } from "@navikt/nav-dekoratoren-moduler/ssr"
 import { LocalAlert } from "@navikt/ds-react"
+import { loadUmami, loggBesok } from "common"
+import { useEffect } from "react"
 
 function parseDecoratorLinks(html: string) {
   const links: Record<string, string>[] = []
@@ -68,6 +70,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const headLinks = decorator
     ? parseDecoratorLinks(decorator.DECORATOR_HEAD_ASSETS)
     : []
+
+  useEffect(() => {
+    loadUmami()
+      .then(() => {
+        loggBesok()
+      })
+      .catch((e) => {
+        console.warn("Kunne ikke laste Umami-scriptet:", e)
+      })
+  }, [])
 
   return (
     <html lang="nb">
