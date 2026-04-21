@@ -105,6 +105,9 @@ const StartOppfolgingForm = () => {
             icon={<PaperplaneIcon />}
             loading={startOppfolgingFetcher.state !== "idle"}
             disabled={startOppfolgingFetcher.state !== "idle"}
+            onClick={() =>
+              loggKnappKlikket("Jeg ønsker arbeidsrettet oppfølging fra Nav")
+            }
           >
             Jeg ønsker arbeidsrettet oppfølging fra Nav
           </Button>
