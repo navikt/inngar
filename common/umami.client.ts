@@ -111,8 +111,6 @@ export const logEvent = (
         console.log("Sender event til Umami:", eventName, eventProperties)
         window.umami?.track(eventName, {
             ...eventProperties,
-            app: "start-arbeidsoppfolging",
-            appNavn: "inngar",
         })
     } catch (e) {
         console.warn("Feil ved Umami tracking:", e)
@@ -120,7 +118,7 @@ export const logEvent = (
 }
 
 export const loggBesok = () => {
-    logEvent("besok", { appNavn: "inngar" })
+    logEvent("besok")
 }
 
 export const loggSkjemaFullført = (arenaStatus: string) => {
