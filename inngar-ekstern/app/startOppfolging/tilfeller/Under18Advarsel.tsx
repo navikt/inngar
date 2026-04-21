@@ -7,7 +7,7 @@ import {
   LinkCard,
 } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
-import { Env, getEnv } from "~/util/getEnv"
+import { Env, getEnv } from "~/util/envUtil"
 import { urls } from "~/startOppfolging/urls"
 
 const env = getEnv()

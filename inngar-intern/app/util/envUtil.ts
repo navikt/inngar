@@ -1,12 +1,8 @@
+import { EnvType } from "common"
+
 interface EnvConfig {
     ingressType: "ansatt" | "intern"
     type: EnvType
-}
-
-export enum EnvType {
-    prod = "prod",
-    dev = "dev",
-    local = "local",
 }
 
 const Env = {

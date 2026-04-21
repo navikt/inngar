@@ -1,4 +1,4 @@
-import { Env, getEnv } from "~/util/getEnv"
+import { Env, getEnv } from "~/util/envUtil"
 
 export const env = getEnv()
 
