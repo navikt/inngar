@@ -96,7 +96,7 @@ export async function loadUmami(envType: EnvType): Promise<void> {
     })
 }
 
-export const logEvent = (
+const logEvent = (
     eventName: string,
     eventProperties: Record<string, any> = {},
 ) => {
@@ -119,6 +119,10 @@ export const logEvent = (
 
 export const loggBesok = () => {
     logEvent("besok")
+}
+
+export const loggBesokUnder18 = () => {
+    logEvent("besøk av bruker under 18 år")
 }
 
 export const loggSkjemaFullført = (arenaStatus: string) => {

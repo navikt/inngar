@@ -8,8 +8,9 @@ import {
 } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import { urls } from "~/startOppfolging/urls"
-import { EnvType, loggKnappKlikket } from "common"
+import { EnvType, loggBesokUnder18, loggKnappKlikket } from "common"
 import { getEnv } from "~/util/envUtil.ts"
+import { useEffect } from "react"
 
 const env = getEnv()
 const samtykkeSkjemaUrl = {
@@ -20,6 +21,11 @@ const samtykkeSkjemaUrl = {
 
 export const Under18Advarsel = () => {
   const bliKontaktetFetcher = useFetcher()
+
+  useEffect(() => {
+    loggBesokUnder18();
+  }, [])
+
   return (
     <div className="gap-8 flex flex-col">
       <Heading size={"large"}>
@@ -55,6 +61,7 @@ export const Under18Advarsel = () => {
                 iconPosition={"right"}
                 loading={bliKontaktetFetcher.state !== "idle"}
                 disabled={bliKontaktetFetcher.state !== "idle"}
+                onClick={() => loggKnappKlikket("Jeg er under 18 år og ønsker at en veileder tar kontakt")}
               >
                 Ja, kontakt meg
               </Button>
