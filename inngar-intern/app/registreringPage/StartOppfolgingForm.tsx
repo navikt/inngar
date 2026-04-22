@@ -2,12 +2,13 @@ import { useFetcher } from "react-router"
 import { isUnder18 } from "~/util/erUnder18Helper"
 import { useState } from "react"
 import {
+    Accordion,
     Alert,
     BodyShort,
     Button,
     ErrorSummary,
-    Heading,
-    Link,
+    Heading, InfoCard,
+    Link
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
@@ -113,6 +114,15 @@ export const StartOppfolgingForm = ({
                     name="actionType"
                     value="startOppfolging"
                 />
+                <Accordion className="my-8">
+                    <Accordion.Item>
+                        <Accordion.Header>Arbeidssøker eller kun arbeidsrettet oppfølging?</Accordion.Header>
+                        <Accordion.Content>
+                            Det er laget en veiviser for brukere som er usikre på om de skal registrere seg
+                            som arbeidssøker eller kun be om arbeidsrettet oppfølging. Du kan bruke <Link href="#">veiviseren</Link> som en guide for å avgjøre hva som er riktig for brukeren.
+                        </Accordion.Content>
+                    </Accordion.Item>
+                </Accordion>
                 <Button
                     disabled={
                         (brukerErUnder18 && !erSamtykkeBekreftet) ||
