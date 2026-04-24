@@ -47,7 +47,6 @@ const InternarbeidsflateDecorator = ({
             <DecoratorPlaceholder />
         </internarbeidsflate-decorator>
     )
-    return <div className="bg-gray-900 min-h-[48px]" ref={rootMountRef}></div>
 }
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
