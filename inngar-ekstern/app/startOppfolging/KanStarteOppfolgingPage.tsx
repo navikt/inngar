@@ -72,9 +72,6 @@ const KanStarteOppfolgingForm = ({
       return (
         <KreverManuellGodkjenningAvVeileder årsak="JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT" />
       )
-      return (
-        <KreverManuellGodkjenningAvVeileder årsak="JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT" />
-      )
     case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS":
       return (
         <KreverManuellGodkjenningAvVeileder årsak="JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS" />
