@@ -37,7 +37,7 @@ const InternarbeidsflateDecorator = ({
             ref={decoratorRef}
             app-name="Arbeidsrettet oppfølging"
             environment={env.type == EnvType.prod ? "prod" : "q2"}
-            url-format={env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO"}
+            url-format={env.type === EnvType.local ? "LOCAL" : "ANSATT"}
             show-enheter={false}
             show-search-area={true}
             fetch-active-enhet-on-mount={false}
