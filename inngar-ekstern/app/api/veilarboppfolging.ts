@@ -3,7 +3,11 @@ import type {
   StartOppfolgingSuccess,
 } from "common"
 import { apps, logger, toUrl } from "common"
-import type { BliKontaktetErrorResponse, BliKontaktetResponse, BliKontaktetSuccess } from "~/api/bliKontaktetResponse"
+import type {
+  BliKontaktetErrorResponse,
+  BliKontaktetResponse,
+  BliKontaktetSuccess,
+} from "~/api/bliKontaktetResponse"
 
 const graphqlUrl = toUrl(
   apps.veilarboppfolging,
@@ -22,7 +26,7 @@ export type KanStarteOppfolgingEkstern =
   | "JA"
   | "JA_MED_MANUELL_GODKJENNING_PGA_UNDER_18"
   | "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT"
-  | "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR"
+  | "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS"
   | "ALLEREDE_UNDER_OPPFOLGING"
   | "DOD"
   | "IKKE_LOVLIG_OPPHOLD"
@@ -148,47 +152,45 @@ export const startOppfolging = async (
 }
 
 const bliKontaktetUrl = toUrl(
-    apps.veilarboppfolging,
-    "/veilarboppfolging/api/v3/oppfolging/bliKontaktet",
+  apps.veilarboppfolging,
+  "/veilarboppfolging/api/v3/oppfolging/bliKontaktet",
 )
 
 export const bliKontaktet = async (
-    token: string,
+  token: string,
 ): Promise<BliKontaktetSuccess | BliKontaktetErrorResponse> => {
-    return await fetch(bliKontaktetUrl, {
-        headers: {
-            ["Nav-Consumer-Id"]: "inngar",
-            Authorization: `Bearer ${token}`,
-            ["Content-Type"]: "application/json",
-        },
-        method: "POST",
+  return await fetch(bliKontaktetUrl, {
+    headers: {
+      ["Nav-Consumer-Id"]: "inngar",
+      Authorization: `Bearer ${token}`,
+      ["Content-Type"]: "application/json",
+    },
+    method: "POST",
+  })
+    .then(async (proxyResponse: Response) => {
+      if (!proxyResponse.ok) {
+        const body = !proxyResponse.bodyUsed ? await proxyResponse.text() : ""
+        logger.error(
+          `Bli kontaktet feilet med http-status: ${proxyResponse.status}`,
+        )
+        logger.error(`Bli kontaktet feilet med melding ${body}`)
+        return {
+          ok: false as const,
+          error: body,
+        } as BliKontaktetErrorResponse
+      } else {
+        logger.info("Blir kontaktet")
+        return {
+          ok: true as const,
+          body: await proxyResponse.json(),
+        } as BliKontaktetSuccess
+      }
     })
-        .then(async (proxyResponse: Response) => {
-            if (!proxyResponse.ok) {
-                const body = !proxyResponse.bodyUsed ? await proxyResponse.text() : ""
-                logger.error(
-                    `Bli kontaktet feilet med http-status: ${proxyResponse.status}`,
-                )
-                logger.error(`Bli kontaktet feilet med melding ${body}`)
-                return {
-                    ok: false as const,
-                    error: body,
-                } as BliKontaktetErrorResponse
-            } else {
-                logger.info("Blir kontaktet")
-                return {
-                    ok: true as const,
-                    body: await proxyResponse.json(),
-                } as BliKontaktetSuccess
-            }
-        })
-        .catch((e: Error) => {
-            logger.error(
-                `Bli kontaktet feilet (http kall feilet): ${e.toString()}`,
-            )
-            return {
-                ok: false as const,
-                error: "Bli kontaktet feilet",
-            } as BliKontaktetErrorResponse
-        })
+    .catch((e: Error) => {
+      logger.error(`Bli kontaktet feilet (http kall feilet): ${e.toString()}`)
+      return {
+        ok: false as const,
+        error: "Bli kontaktet feilet",
+      } as BliKontaktetErrorResponse
+    })
 }

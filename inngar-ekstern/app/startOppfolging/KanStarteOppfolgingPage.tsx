@@ -70,7 +70,7 @@ const KanStarteOppfolgingForm = ({
     case "JA_MED_MANUELL_GODKJENNING_PGA_UNDER_18":
       return <Under18Advarsel />
     case "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
-    case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR":
+    case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS":
       return <KreverManuellGodkjenningAvVeileder />
       break
     case "ALLEREDE_UNDER_OPPFOLGING":
