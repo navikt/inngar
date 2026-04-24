@@ -16,20 +16,20 @@ const InternarbeidsflateDecorator = ({
 }: {
     onFnrChanged: OnFnrChanged
 }) => {
-    const decoratorRef = useRef<HTMLElement>(null);
+    const decoratorRef = useRef<HTMLElement>(null)
 
     useLayoutEffect(() => {
-        const decoratorElement = decoratorRef.current;
-        if (!decoratorElement) return;
+        const decoratorElement = decoratorRef.current
+        if (!decoratorElement) return
         const handleFnrChanged = (e: Event) => {
-            const { fnr } = (e as CustomEvent).detail;
-            onFnrChanged(fnr);
-        };
-        decoratorElement.addEventListener('fnr-changed', handleFnrChanged);
+            const { fnr } = (e as CustomEvent).detail
+            onFnrChanged(fnr)
+        }
+        decoratorElement.addEventListener('fnr-changed', handleFnrChanged)
         return () => {
-            decoratorElement.removeEventListener('fnr-changed', handleFnrChanged);
-        };
-    }, []);
+            decoratorElement.removeEventListener('fnr-changed', handleFnrChanged)
+        }
+    }, [])
 
 
     return (
