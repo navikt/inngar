@@ -66,22 +66,30 @@ const KanStarteOppfolgingForm = ({
   switch (kanStarteOppfolging) {
     case "JA":
       return <StartOppfolgingForm />
-      break
     case "JA_MED_MANUELL_GODKJENNING_PGA_UNDER_18":
       return <Under18Advarsel />
     case "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
+      return (
+        <KreverManuellGodkjenningAvVeileder årsak="JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT" />
+      )
     case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR":
-      return <KreverManuellGodkjenningAvVeileder />
-      break
+      return (
+        <KreverManuellGodkjenningAvVeileder årsak="JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR" />
+      )
     case "ALLEREDE_UNDER_OPPFOLGING":
       return <AlleredeUnderOppfolging />
-      break
     case "IKKE_LOVLIG_OPPHOLD":
+      return <KreverManuellGodkjenningAvVeileder årsak="IKKE_LOVLIG_OPPHOLD" />
     case "DOD":
-    case "UKJENT_STATUS_FOLKEREGISTERET":
-    case "INGEN_STATUS_FOLKEREGISTERET":
       return <IkkeMuligÅStarteOppfolging />
-      break
+    case "UKJENT_STATUS_FOLKEREGISTERET":
+      return (
+        <KreverManuellGodkjenningAvVeileder årsak="UKJENT_STATUS_FOLKEREGISTERET" />
+      )
+    case "INGEN_STATUS_FOLKEREGISTERET":
+      return (
+        <KreverManuellGodkjenningAvVeileder årsak="INGEN_STATUS_FOLKEREGISTERET" />
+      )
   }
 }
 
