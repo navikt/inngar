@@ -19,10 +19,13 @@ const InternarbeidsflateDecorator = ({
     const decoratorRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
+        console.log("Kjører useLayoutEffect")
         const el = decoratorRef.current;
         if (!el) return;
+        console.log("Kan sette opp lyttere");
         const handleFnrChanged = (e: Event) => {
             const { fnr } = (e as CustomEvent).detail;
+            console.log("onFnrChanged", fnr);
             onFnrChanged(fnr);
         };
         el.addEventListener('fnr-changed', handleFnrChanged);
@@ -34,17 +37,18 @@ const InternarbeidsflateDecorator = ({
 
     return (
         <internarbeidsflate-decorator
-                app-name="Arbeidsrettet oppfølging"
-                environment={env.type == EnvType.prod ? "prod" : "q2"}
-                url-format={env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO"}
-                show-enheter={false}
-                show-search-area={true}
-                fetch-active-enhet-on-mount={false}
-                fetch-active-user-on-mount={true}
-                // onEnhetChanged={() => {}}
-                // onFnrChanged={onFnrChanged}
-                show-hotkeys={false}
-                proxy={"/api/modiacontextholder"}>
+            ref={decoratorRef}
+            app-name="Arbeidsrettet oppfølging"
+            environment={env.type == EnvType.prod ? "prod" : "q2"}
+            url-format={env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO"}
+            show-enheter={false}
+            show-search-area={true}
+            fetch-active-enhet-on-mount={false}
+            fetch-active-user-on-mount={true}
+            // onEnhetChanged={() => {}}
+            // onFnrChanged={onFnrChanged}
+            show-hotkeys={false}
+            proxy={"/api/modiacontextholder"}>
             <DecoratorPlaceholder />
         </internarbeidsflate-decorator>
     )
