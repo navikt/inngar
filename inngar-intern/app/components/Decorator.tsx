@@ -38,11 +38,11 @@ const InternarbeidsflateDecorator = ({
             app-name="Arbeidsrettet oppfølging"
             environment={env.type == EnvType.prod ? "prod" : "q2"}
             url-format={env.type === EnvType.local ? "LOCAL" : "ANSATT"}
-            show-enheter={false}
-            show-search-area={true}
-            fetch-active-enhet-on-mount={false}
-            fetch-active-user-on-mount={true}
-            show-hotkeys={false}
+            show-enheter="false"
+            show-search-area="true"
+            fetch-active-enhet-on-mount="false"
+            fetch-active-user-on-mount="true"
+            show-hotkeys="false"
             proxy={"/api/modiacontextholder"}>
             <DecoratorPlaceholder />
         </internarbeidsflate-decorator>
