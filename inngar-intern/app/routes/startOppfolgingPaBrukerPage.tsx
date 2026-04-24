@@ -107,7 +107,7 @@ const getTittel = (brukerStatus: BrukerStatus) => {
         brukerStatus ===
             BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT ||
         brukerStatus ===
-            BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR
+            BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS
     ) {
         return "Reaktiver arbeidsrettet oppfølging"
     } else {
@@ -178,7 +178,7 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                 </Alert>
             )
         case BrukerStatus.IKKE_UNDER_OPPFOLGING:
-        case BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR:
+        case BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS:
         case BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT:
             return (
                 <StartOppfolgingForm
@@ -191,12 +191,12 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                     }
                     kreverManuellGodkjenningPgaDnummerIkkeEosGbr={
                         props.status ===
-                        BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR
+                        BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS
                     }
                 />
             )
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT:
-        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR:
+        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS:
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT:
             return <ReaktiveringsForm fnr={props.fnr} />
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
