@@ -62,7 +62,6 @@ export async function loadUmami(envType: EnvType): Promise<void> {
     env = envType
     if (!isBrowser || env === EnvType.local) return
     if (window.umami) return
-    console.log(`Laster Umami script for env ${env}...`)
     const settings = umamiSettings(env)
 
     return new Promise((resolve, reject) => {

@@ -19,18 +19,15 @@ const InternarbeidsflateDecorator = ({
     const decoratorRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
-        console.log("Kjører useLayoutEffect")
-        const el = decoratorRef.current;
-        if (!el) return;
-        console.log("Kan sette opp lyttere");
+        const decoratorElement = decoratorRef.current;
+        if (!decoratorElement) return;
         const handleFnrChanged = (e: Event) => {
             const { fnr } = (e as CustomEvent).detail;
-            console.log("onFnrChanged", fnr);
             onFnrChanged(fnr);
         };
-        el.addEventListener('fnr-changed', handleFnrChanged);
+        decoratorElement.addEventListener('fnr-changed', handleFnrChanged);
         return () => {
-            el.removeEventListener('fnr-changed', handleFnrChanged);
+            decoratorElement.removeEventListener('fnr-changed', handleFnrChanged);
         };
     }, []);
 
@@ -45,14 +42,12 @@ const InternarbeidsflateDecorator = ({
             show-search-area={true}
             fetch-active-enhet-on-mount={false}
             fetch-active-user-on-mount={true}
-            // onEnhetChanged={() => {}}
-            // onFnrChanged={onFnrChanged}
             show-hotkeys={false}
             proxy={"/api/modiacontextholder"}>
             <DecoratorPlaceholder />
         </internarbeidsflate-decorator>
     )
-    // return <div className="bg-gray-900 min-h-[48px]" ref={rootMountRef}></div>
+    return <div className="bg-gray-900 min-h-[48px]" ref={rootMountRef}></div>
 }
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
