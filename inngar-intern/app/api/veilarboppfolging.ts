@@ -180,7 +180,8 @@ export type KanIkkeStartePgaFolkeregisterStatus =
 export type KanStarteOppfolging =
     | "JA"
     | "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT" // Manuell dokumentering/godkjenning på at bruker har lovlig opphold
-    | "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR" // Manuell dokumentering/godkjenning på at bruker har lovlig opphold
+    | "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_GBR" // Skal fjernes
+    | "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS" // Manuell dokumentering/godkjenning på at bruker har lovlig opphold
     | "ALLEREDE_UNDER_OPPFOLGING"
     | "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT" // Disse kan reaktiveres (foreløpig)
     | "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT"
