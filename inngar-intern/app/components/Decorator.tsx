@@ -1,6 +1,7 @@
 import { ClientOnlyChild } from "~/util/remoteUtil"
 import { EnvType } from "common"
 import { getEnv } from "~/util/envUtil.ts"
+import { useLayoutEffect, useRef } from "react"
 
 type OnFnrChanged = (fnr?: string | null | undefined) => void
 
@@ -15,6 +16,22 @@ const InternarbeidsflateDecorator = ({
 }: {
     onFnrChanged: OnFnrChanged
 }) => {
+    const decoratorRef = useRef<HTMLElement>(null);
+
+    useLayoutEffect(() => {
+        const el = decoratorRef.current;
+        if (!el) return;
+        const handleFnrChanged = (e: Event) => {
+            const { fnr } = (e as CustomEvent).detail;
+            onFnrChanged(fnr);
+        };
+        el.addEventListener('fnr-changed', handleFnrChanged);
+        return () => {
+            el.removeEventListener('fnr-changed', handleFnrChanged);
+        };
+    }, []);
+
+
     return (
         <internarbeidsflate-decorator
                 app-name="Arbeidsrettet oppfølging"
@@ -23,9 +40,9 @@ const InternarbeidsflateDecorator = ({
                 show-enheter={false}
                 show-search-area={true}
                 fetch-active-enhet-on-mount={false}
-                fetch-active-user-on-mount
+                fetch-active-user-on-mount={true}
                 // onEnhetChanged={() => {}}
-                onFnrChanged={onFnrChanged}
+                // onFnrChanged={onFnrChanged}
                 show-hotkeys={false}
                 proxy={"/api/modiacontextholder"}>
             <DecoratorPlaceholder />
