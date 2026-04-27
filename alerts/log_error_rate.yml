@@ -16,7 +16,7 @@ spec:
               /
               sum(loki:service:loglevel:count1m{service_name="inngar|inngar-ekstern"})
             ) > 0.05
-          for: 10m
+          for: 5m
           annotations:
             summary: "High log error rate detected"
             consequence: "Users may be experiencing errors when using the application."
@@ -26,3 +26,15 @@ spec:
           labels:
             severity: warning
             namespace: dab
+    - alert: app-down
+      expr: |
+        kube_deployment_status_replicas_available{deployment=~"inngar|inngar-ekstern", namespace="dab"} == 0
+      for: 2m
+      annotations:
+        summary: "Application is down"
+        consequence: "Users cannot access the application."
+        action: "Check deployment status and pod logs in the dab namespace."
+        message: "Deployment {{ $labels.deployment }} has 0 available replicas for the last 2 minutes."
+      labels:
+        severity: critical
+        namespace: dab
