@@ -16,7 +16,7 @@ import stylesheet from "./app.css?url"
 import Decorator from "~/components/Decorator"
 import { importSubApp } from "~/util/importUtil"
 import { mockSettings } from "~/mock/mockSettings"
-import { loadUmami, loggBesok, startActiveSpan } from "common"
+import { startActiveSpan, loadUmami, loggBesok } from "common"
 import { useEffect } from "react"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
 import process from "node:process"
@@ -93,7 +93,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
                 <script src={jsUrl} type="module" />
                 <script
-                    src={`https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/${isProd ? "prod" : "dev"}/latest/dist/internarbeidsflate-decorator.wc.js`}
+                    src={`https://cdn.nav.no/personoversikt/internarbeidsflate-decorator-v3/${isProd ? "prod" : "dev"}/latest/dist/bundle.js`}
                     defer
                 />
                 <link
