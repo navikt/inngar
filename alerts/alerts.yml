@@ -31,7 +31,7 @@ spec:
             kube_deployment_status_replicas_available{deployment=~"inngar|inngar-ekstern", namespace="dab"} == 0
           for: 2m
           annotations:
-            summary: "Application is down"
+            summary: "Inngar eller inngar-ekstern er nede 😱"
             consequence: "Users cannot access the application."
             action: "Check deployment status and pod logs in the dab namespace."
             message: "Deployment {{ $labels.deployment }} has 0 available replicas for the last 2 minutes."
