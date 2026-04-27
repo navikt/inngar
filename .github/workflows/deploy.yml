@@ -44,7 +44,6 @@ jobs:
       id-token: write
 
   prod-ekstern:
-    if: false
     needs: dev-ekstern
     uses: ./.github/workflows/build-and-deploy.yml
     with:
