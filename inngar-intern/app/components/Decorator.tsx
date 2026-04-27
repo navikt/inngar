@@ -1,7 +1,8 @@
+import { useEffect, useRef } from "react"
 import { ClientOnlyChild } from "~/util/remoteUtil"
+import { useDecorateNavspa } from "~/util/useNAVSPA.tsx"
 import { EnvType } from "common"
 import { getEnv } from "~/util/envUtil.ts"
-import { useLayoutEffect, useRef } from "react"
 
 type OnFnrChanged = (fnr?: string | null | undefined) => void
 
@@ -16,37 +17,42 @@ const InternarbeidsflateDecorator = ({
 }: {
     onFnrChanged: OnFnrChanged
 }) => {
-    const decoratorRef = useRef<HTMLElement>(null)
+    const rootMountRef = useRef<HTMLDivElement>(null)
+    const mountFunction = useDecorateNavspa()
+    const hasMountedRef = useRef(false)
 
-    useLayoutEffect(() => {
-        const decoratorElement = decoratorRef.current
-        if (!decoratorElement) return
-        const handleFnrChanged = (e: Event) => {
-            const { fnr } = (e as CustomEvent).detail
-            onFnrChanged(fnr)
+    useEffect(() => {
+        // Only mount once when NAVSPA becomes available
+        if (rootMountRef.current && mountFunction && !hasMountedRef.current) {
+            hasMountedRef.current = true
+            try {
+                mountFunction(rootMountRef.current, {
+                    fetchActiveUserOnMount: true,
+                    fetchActiveEnhetOnMount: false,
+                    onEnhetChanged: () => {},
+                    onFnrChanged: onFnrChanged,
+                    showSearchArea: true,
+                    showEnheter: false,
+                    appName: "Arbeidsrettet oppfølging",
+                    environment: env.type == EnvType.prod ? "prod" : "q2",
+                    urlFormat:
+                        env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO",
+                    showHotkeys: false,
+                    proxy: "/api/modiacontextholder",
+                })
+            } catch (e) {
+                console.error("Failed to mount NAVSPA decorator:", e)
+                hasMountedRef.current = false // Allow retry on error
+            }
         }
-        decoratorElement.addEventListener('fnr-changed', handleFnrChanged)
-        return () => {
-            decoratorElement.removeEventListener('fnr-changed', handleFnrChanged)
-        }
-    }, [])
+    }, [mountFunction, onFnrChanged])
 
+    // Show placeholder while waiting for NAVSPA to load
+    if (!mountFunction) {
+        return <DecoratorPlaceholder />
+    }
 
-    return (
-        <internarbeidsflate-decorator
-            ref={decoratorRef}
-            app-name="Arbeidsrettet oppfølging"
-            environment={env.type == EnvType.prod ? "prod" : "q2"}
-            url-format={env.ingressType === "ansatt" ? "ANSATT" : "NAV_NO"}
-            show-enheter="false"
-            show-search-area="true"
-            fetch-active-enhet-on-mount="false"
-            fetch-active-user-on-mount="true"
-            show-hotkeys="false"
-            proxy={"/api/modiacontextholder"}>
-            <DecoratorPlaceholder />
-        </internarbeidsflate-decorator>
-    )
+    return <div className="bg-gray-900 min-h-[48px]" ref={rootMountRef}></div>
 }
 
 const Decorator = ({ onFnrChanged }: { onFnrChanged: OnFnrChanged }) => {
