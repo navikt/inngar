@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'alerts/log_error_rate.yaml'
+      - 'alerts/alerts.yml'
       - '.github/workflows/alerts.yml'
 
 concurrency:
