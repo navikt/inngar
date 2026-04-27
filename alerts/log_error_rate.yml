@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    team: dab
+  name: log-error-alerts
+  namespace: dab
+spec:
+  groups:
+    - name: log-error-alerts
+      rules:
+        - alert: HighErrorLogRate
+          expr: |
+            (
+              sum(loki:service:loglevel:count1m{service_name="inngar|inngar-ekstern", detected_level="error"})
+              /
+              sum(loki:service:loglevel:count1m{service_name="inngar|inngar-ekstern"})
+            ) > 0.05
+          for: 10m
+          annotations:
+            summary: "High log error rate detected"
+            consequence: "Users may be experiencing errors when using the application."
+            action: "Check logs for error messages and investigate affected services."
+            message: "Service {{ $labels.service_name }} has {{ $value | humanizePercentage }} error logs over the last 10 minutes."
+            runbook_url: "https://github.com/navikt/my-app-runbook/blob/main/HighErrorLogRate.md"
+          labels:
+            severity: warning
+            namespace: dab
