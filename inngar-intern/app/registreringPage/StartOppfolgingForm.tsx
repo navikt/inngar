@@ -1,6 +1,6 @@
 import { useFetcher } from "react-router"
 import { isUnder18 } from "~/util/erUnder18Helper"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
     Accordion,
     Alert,
@@ -14,7 +14,7 @@ import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
 import ManuellGodkjenningMidlertidigBosattAlert from "~/registreringPage/ManuellGodkjenningMidlertidigBosattAlert.tsx"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo.tsx"
-import { EnvType, loggKnappKlikket } from "common"
+import { EnvType, loggKnappKlikket, loggBesokUnder18 } from "common"
 import { getEnv } from "~/util/envUtil.ts"
 
 export const arbeidssokerRegistreringUrl =
@@ -58,6 +58,12 @@ export const StartOppfolgingForm = ({
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
     const viseInformasjonOmVeiviser = getEnv().type !== EnvType.prod
+
+    useEffect(() => {
+        if (brukerErUnder18) {
+            loggBesokUnder18()
+        }
+    }, [])
 
     return (
         <div className="flex flex-col mt-4 space-y-8 mx-auto">
@@ -149,9 +155,14 @@ export const StartOppfolgingForm = ({
                         startOppfolgingFetcher.state != "idle"
                     }
                     loading={startOppfolgingFetcher.state != "idle"}
-                    onClick={() =>
+                    onClick={() => {
                         loggKnappKlikket("Start arbeidsrettet oppfølging")
-                    }
+                        if (brukerErUnder18) {
+                            loggKnappKlikket(
+                                "Start arbeidsrettet oppfølging for bruker under 18",
+                            )
+                        }
+                    }}
                 >
                     Start arbeidsrettet oppfølging
                 </Button>
