@@ -57,7 +57,6 @@ export const StartOppfolgingForm = ({
     const brukerErUnder18 = under18 || isUnder18(fnr)
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
-    const viseInformasjonOmVeiviser = getEnv().type !== EnvType.prod
 
     useEffect(() => {
         if (brukerErUnder18) {
@@ -123,29 +122,28 @@ export const StartOppfolgingForm = ({
                     name="actionType"
                     value="startOppfolging"
                 />
-                {viseInformasjonOmVeiviser && (
-                    <Accordion className="my-8">
-                        <Accordion.Item>
-                            <Accordion.Header>
-                                Arbeidssøker eller kun arbeidsrettet oppfølging?
-                            </Accordion.Header>
-                            <Accordion.Content>
-                                Det er laget en veiviser for brukere på nav.no
-                                som er usikre på om de skal registrere seg som
-                                arbeidssøker eller kun be om arbeidsrettet
-                                oppfølging. Du kan bruke{" "}
-                                <Link
-                                    href="https://www.nav.no/arbeid/veiviser"
-                                    target="_blank"
-                                >
-                                    veiviseren
-                                </Link>{" "}
-                                som en guide for å avgjøre hva som er riktig for
-                                brukeren.
-                            </Accordion.Content>
-                        </Accordion.Item>
-                    </Accordion>
-                )}
+                <Accordion className="my-8">
+                    <Accordion.Item>
+                        <Accordion.Header>
+                            Arbeidssøker eller kun arbeidsrettet oppfølging?
+                        </Accordion.Header>
+                        <Accordion.Content>
+                            Det er laget en veiviser for brukere på nav.no
+                            som er usikre på om de skal registrere seg som
+                            arbeidssøker eller kun be om arbeidsrettet
+                            oppfølging. Du kan bruke{" "}
+                            <Link
+                                href="https://www.nav.no/arbeid/veiviser"
+                                target="_blank"
+                                onClick={() => loggKnappKlikket("Trykket på lenke til veiviseren")}
+                            >
+                                veiviseren
+                            </Link>{" "}
+                            som en guide for å avgjøre hva som er riktig for
+                            brukeren.
+                        </Accordion.Content>
+                    </Accordion.Item>
+                </Accordion>
                 <Button
                     disabled={
                         (brukerErUnder18 && !erSamtykkeBekreftet) ||
