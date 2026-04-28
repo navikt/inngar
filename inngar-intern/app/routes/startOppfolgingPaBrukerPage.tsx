@@ -127,7 +127,7 @@ export default function StartOppfolgingPaBrukerPage({
                 navKontor={loaderData.aktivtNavKontor}
             />
             <div className="bg-bg-subtle flex flex-1">
-                <div className="flex flex-col w-[620px] p-4 mt-6 mx-auto space-y-8 ">
+                <div className="flex flex-col w-[620px] p-4 mt-6 mx-auto gap-8">
                     <Heading size="large">
                         {getTittel(loaderData.status)}
                     </Heading>
@@ -185,6 +185,7 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                     fnr={props.fnr}
                     navKontor={props.navKontor}
                     kontorOptions={props.kontorOptions}
+                    under18={props.under18}
                     kreverManuellGodkjenningPgaIkkeBosatt={
                         props.status ===
                         BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT

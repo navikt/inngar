@@ -13,13 +13,26 @@ export enum BrukerStatus {
     UGYLDIG_BRUKER_FREG_STATUS = "UGYLDIG_BRUKER_FREG_STATUS",
 }
 
+export const brukerErUnder18 = (kanStarteOppfolging: KanStarteOppfolging) => {
+    return (
+        kanStarteOppfolging === "JA_MED_MANUELL_GODKJENNING_PGA_UNDER_18" ||
+        kanStarteOppfolging ===
+            "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_UNDER_18" ||
+        kanStarteOppfolging ===
+            "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT_UNDER_18"
+    )
+}
+
 export const finnBrukerStatus = (kanStarteOppfolging: KanStarteOppfolging) => {
     switch (kanStarteOppfolging) {
         case "JA":
+        case "JA_MED_MANUELL_GODKJENNING_PGA_UNDER_18":
             return BrukerStatus.IKKE_UNDER_OPPFOLGING
         case "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT":
+        case "JA_MED_MANUELL_GODKJENNING_PGA_IKKE_BOSATT_UNDER_18":
             return BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT
         case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS":
+        case "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_UNDER_18":
             return BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS
         case "ALLEREDE_UNDER_OPPFOLGING":
             return BrukerStatus.ALLEREDE_UNDER_OPPFOLGING
