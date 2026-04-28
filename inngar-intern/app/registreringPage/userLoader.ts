@@ -9,7 +9,11 @@ import {
     VeilarboppfolgingApi,
 } from "~/api/veilarboppfolging"
 import { ModiacontextholderApi } from "~/api/modiacontextholder"
-import { BrukerStatus, finnBrukerStatus } from "~/registreringPage/BrukerStatus"
+import {
+    brukerErUnder18,
+    BrukerStatus,
+    finnBrukerStatus,
+} from "~/registreringPage/BrukerStatus"
 import { redirect } from "react-router"
 import type { NavKontor } from "~/registreringPage/StartOppfolgingForm.tsx"
 import { AoOppfolgingskontorApi } from "~/api/aoOppfolgingskontor.ts"
@@ -22,6 +26,7 @@ export interface UserLoaderSuccessResponse {
     aktivtNavKontor: string
     fnr: string
     kanStarteOppfolging: KanStarteOppfolging
+    under18: boolean
 }
 
 export const userLoader = async (request: Request, fnrCode: string) => {
@@ -153,6 +158,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
             : null
         return {
             status: finnBrukerStatus(oppfolging.kanStarteOppfolging),
+            under18: brukerErUnder18(oppfolging.kanStarteOppfolging),
             navKontor,
             kontorOptions,
             aktivtNavKontor: aktivEnhet,

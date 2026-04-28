@@ -31,12 +31,14 @@ export const StartOppfolgingForm = ({
     navKontor,
     kontorOptions,
     fnr,
+    under18,
     kreverManuellGodkjenningPgaIkkeBosatt,
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr,
 }: {
     navKontor: Promise<NavKontor | null>
     kontorOptions?: Promise<NavKontor[]>
     fnr: string
+    under18: boolean | undefined
     kreverManuellGodkjenningPgaIkkeBosatt: boolean
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr: boolean
 }) => {
@@ -52,7 +54,7 @@ export const StartOppfolgingForm = ({
                   resultat: string
               })
             : null
-    const brukerErUnder18 = isUnder18(fnr)
+    const brukerErUnder18 = under18 || isUnder18(fnr)
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
     const viseInformasjonOmVeiviser = getEnv().type !== EnvType.prod
@@ -115,15 +117,15 @@ export const StartOppfolgingForm = ({
                     name="actionType"
                     value="startOppfolging"
                 />
-                { viseInformasjonOmVeiviser &&
+                {viseInformasjonOmVeiviser && (
                     <Accordion className="my-8">
                         <Accordion.Item>
                             <Accordion.Header>
                                 Arbeidssøker eller kun arbeidsrettet oppfølging?
                             </Accordion.Header>
                             <Accordion.Content>
-                                Det er laget en veiviser for brukere på nav.no som
-                                er usikre på om de skal registrere seg som
+                                Det er laget en veiviser for brukere på nav.no
+                                som er usikre på om de skal registrere seg som
                                 arbeidssøker eller kun be om arbeidsrettet
                                 oppfølging. Du kan bruke{" "}
                                 <Link
@@ -137,7 +139,7 @@ export const StartOppfolgingForm = ({
                             </Accordion.Content>
                         </Accordion.Item>
                     </Accordion>
-                }
+                )}
                 <Button
                     disabled={
                         (brukerErUnder18 && !erSamtykkeBekreftet) ||
