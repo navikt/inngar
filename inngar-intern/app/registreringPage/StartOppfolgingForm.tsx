@@ -154,11 +154,12 @@ export const StartOppfolgingForm = ({
                     }
                     loading={startOppfolgingFetcher.state != "idle"}
                     onClick={() => {
-                        loggKnappKlikket("Start arbeidsrettet oppfølging")
                         if (brukerErUnder18) {
                             loggKnappKlikket(
                                 "Start arbeidsrettet oppfølging for bruker under 18",
                             )
+                        } else {
+                            loggKnappKlikket("Start arbeidsrettet oppfølging")
                         }
                     }}
                 >
