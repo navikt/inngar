@@ -1,6 +1,5 @@
 import { useFetcher } from "react-router"
-import { isUnder18 } from "~/util/erUnder18Helper"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
     Accordion,
     Alert,
@@ -14,7 +13,7 @@ import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
 import ManuellGodkjenningMidlertidigBosattAlert from "~/registreringPage/ManuellGodkjenningMidlertidigBosattAlert.tsx"
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo.tsx"
-import { EnvType, loggKnappKlikket, loggBesokUnder18 } from "common"
+import { EnvType, loggBesokUnder18, loggKnappKlikket } from "common"
 import { getEnv } from "~/util/envUtil.ts"
 
 export const arbeidssokerRegistreringUrl =
@@ -54,7 +53,7 @@ export const StartOppfolgingForm = ({
                   resultat: string
               })
             : null
-    const brukerErUnder18 = under18 || isUnder18(fnr)
+    const brukerErUnder18 = under18
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
 
@@ -128,14 +127,18 @@ export const StartOppfolgingForm = ({
                             Arbeidssøker eller kun arbeidsrettet oppfølging?
                         </Accordion.Header>
                         <Accordion.Content>
-                            Det er laget en veiviser for brukere på nav.no
-                            som er usikre på om de skal registrere seg som
+                            Det er laget en veiviser for brukere på nav.no som
+                            er usikre på om de skal registrere seg som
                             arbeidssøker eller kun be om arbeidsrettet
                             oppfølging. Du kan bruke{" "}
                             <Link
                                 href="https://www.nav.no/arbeid/veiviser"
                                 target="_blank"
-                                onClick={() => loggKnappKlikket("Trykket på lenke til veiviseren")}
+                                onClick={() =>
+                                    loggKnappKlikket(
+                                        "Trykket på lenke til veiviseren",
+                                    )
+                                }
                             >
                                 veiviseren
                             </Link>{" "}
