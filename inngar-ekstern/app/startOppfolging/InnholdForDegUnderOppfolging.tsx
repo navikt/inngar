@@ -13,7 +13,7 @@ export const InnholdForDegUnderOppfolging = () => {
             </LinkCard.Anchor>
           </LinkCard.Title>
           <LinkCard.Description>
-            Oversikt over dine aktiviteter, møter og samtalereferat
+            Oversikt over aktivitetene dine, møter og referater
           </LinkCard.Description>
         </LinkCard>
         <LinkCard>
@@ -29,7 +29,7 @@ export const InnholdForDegUnderOppfolging = () => {
             <LinkCard.Anchor href={urls.dialog[env]}>Dialogen</LinkCard.Anchor>
           </LinkCard.Title>
           <LinkCard.Description>
-            Spør f.eks. om avtalte møter og tiltak
+            Still spørsmål, for eksempel om avtalte møter eller tiltak
           </LinkCard.Description>
         </LinkCard>
       </div>

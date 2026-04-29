@@ -12,10 +12,10 @@ const OppfolgingStartetPage = () => {
         </Heading>
         <BodyShort>Du vil etterhvert bli kontaktet av en veileder</BodyShort>
         <BodyLong>
-          Dere vil ha en samtale om din situasjon og sammen lage en plan for
-          veien videre. Det vil bli fattet et oppfølgingsvedtak som sendes til
-          deg. Vedtaket forteller hvordan Nav vurderer din situasjon i
-          arbeidsmarkedet og hvilken hjelp du kan få fra Nav.
+          Sammen går dere gjennom situasjonen din og lager en plan for veien
+          videre. Nav fatter et oppfølgingsvedtak som sendes til deg. Vedtaket
+          beskriver hvordan Nav vurderer situasjonen din i arbeidsmarkedet, og
+          hvilken hjelp du kan få.
         </BodyLong>
         <div className="mt-4">
           <InnholdForDegUnderOppfolging />
