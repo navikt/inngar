@@ -121,7 +121,7 @@ export const loggBesok = () => {
 }
 
 export const loggBesokUnder18 = () => {
-    logEvent("besøk av bruker under 18 år")
+    logEvent("besok av bruker under 18 år")
 }
 
 export const loggSkjemaFullført = (arenaStatus: string) => {

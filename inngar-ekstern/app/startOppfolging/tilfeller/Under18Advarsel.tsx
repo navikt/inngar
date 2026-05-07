@@ -8,13 +8,7 @@ import {
 } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import { urls } from "~/startOppfolging/urls"
-import {
-  EnvType,
-  loadUmami,
-  loggBesok,
-  loggBesokUnder18,
-  loggKnappKlikket,
-} from "common"
+import { EnvType, loadUmami, loggBesokUnder18, loggKnappKlikket } from "common"
 import { getEnv } from "~/util/envUtil.ts"
 import { useEffect } from "react"
 
