@@ -1,4 +1,7 @@
-@import "tailwindcss";
+@import "tailwindcss" layer(tailwind);
+@import "@navikt/ds-css" layer(ds);
+
+@layer tailwind, ds;
 
 @theme {
   --font-sans:
