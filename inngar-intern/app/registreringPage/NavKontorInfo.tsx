@@ -117,9 +117,6 @@ const KontorVelger = ({
     return (
         <>
             <Combobox
-                defaultValue={
-                    selectedKontor ? kontorNavn(selectedKontor) : undefined
-                }
                 label="Oppfølgingsenhet"
                 options={kontorList.map((it) => kontorNavn(it))}
                 description={beskrivelseTekst}

@@ -12,10 +12,10 @@
         "typecheck": "react-router typegen && tsc"
     },
     "dependencies": {
-        "@navikt/ds-css": "^8.6.0",
-        "@navikt/ds-react": "^8.6.0",
-        "@navikt/ds-tailwind": "^8.6.0",
-        "@navikt/aksel-icons": "^8.6.0",
+        "@navikt/ds-css": "catalog:",
+        "@navikt/ds-react": "catalog:",
+        "@navikt/ds-tailwind": "catalog:",
+        "@navikt/aksel-icons": "catalog:",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/auto-instrumentations-node": "^0.55.3",
         "@opentelemetry/instrumentation-pino": "^0.46.1",
