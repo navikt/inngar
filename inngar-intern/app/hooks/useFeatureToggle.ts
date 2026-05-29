@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { logger } from "common"
 
-type FeatureToggles = "inngar.overstyr-kontor"
+type FeatureToggles = "bruk_ao_kontor_som_master"
 type Features = Record<FeatureToggles, boolean>
 
 export function useFeatureToggle(featureName: FeatureToggles): boolean {

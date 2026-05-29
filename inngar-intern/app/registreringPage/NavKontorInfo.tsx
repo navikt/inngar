@@ -39,7 +39,7 @@ export const NavKontorInfo = ({
     enhet: Promise<NavKontor | null | undefined>
     kontorOptions?: Promise<NavKontor[]>
 }) => {
-    const kanOverstyreKontor = useFeatureToggle("inngar.overstyr-kontor")
+    const kanOverstyreKontor = useFeatureToggle("bruk_ao_kontor_som_master")
 
     return (
         <Suspense

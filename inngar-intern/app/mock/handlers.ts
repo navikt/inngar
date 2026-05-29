@@ -224,8 +224,7 @@ export const handlers = [
     }),
     http.get(`${oboUnleash}/api/feature`, () => {
         return HttpResponse.json({
-            "veilarbvisittkortfs.vis-ny-inngang-til-arbeidsrettet-oppfolging":
-                true,
+            "veilarbvisittkortfs.vis-ny-inngang-til-arbeidsrettet-oppfolging": true,
         })
     }),
     http.get(
@@ -234,7 +233,7 @@ export const handlers = [
             const url = new URL(request.url)
 
             const features: Record<string, boolean> = {
-                "inngar.overstyr-kontor":
+                bruk_ao_kontor_som_master:
                     mockSettings.kanOverstyreKontor ?? true,
             }
 
