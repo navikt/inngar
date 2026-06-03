@@ -1,0 +1,33 @@
+allowBuilds:
+  esbuild: true
+  msw: true
+  protobufjs: true
+packages:
+  - "common"
+  - "inngar-intern"
+  - "inngar-ekstern"
+catalog:
+  "@react-router/express": "^7.16.0"
+  "@react-router/node": "^7.16.0"
+  "@react-router/serve": "^7.16.0"
+  "@react-router/dev": "^7.16.0"
+  "react-router": "^7.16.0"
+  "@navikt/ds-css": "^8.11.0"
+  "@navikt/ds-react": "^8.11.0"
+  "@navikt/ds-tailwind": "^8.11.0"
+  "@navikt/aksel-icons": "^8.11.0"
+  "@types/compression": "^1.8.1"
+  "@types/express": "^4.17.25"
+  "@types/morgan": "^1.9.10"
+  "@types/react": "^19.2.14"
+  "@types/react-dom": "^19.2.3"
+  "@types/source-map-support": "^0.5.10"
+  "compression": "^1.8.1"
+  "express": "^4.22.1"
+  "get-port": "^7.1.0"
+  "morgan": "^1.10.1"
+  "react": "^19.2.4"
+  "react-dom": "^19.2.4"
+  "source-map-support": "^0.5.21"
+  "typescript": "^6.0.2"
+  "vite": "^8.0.7"
