@@ -10,7 +10,7 @@ export const apps = {
         namespace: "poao",
         preserveContextPath: true,
     },
-    "ao-oppfolgingskontor": {
+    aoOppfolgingskontor: {
         name: "ao-oppfolgingskontor",
         namespace: "dab",
         preserveContextPath: true,
