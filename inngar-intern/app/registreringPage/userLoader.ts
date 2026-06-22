@@ -139,6 +139,16 @@ export const userLoader = async (request: Request, fnrCode: string) => {
                         return []
                     }
                     const alleKontor = alleKontorResponse.data.data.alleKontor
+                    logger.info(
+                        {
+                            alleKontorCount: alleKontor.length,
+                            firstKontor: alleKontor[0],
+                            fullResponse: JSON.stringify(
+                                alleKontorResponse.data,
+                            ),
+                        },
+                        "alleKontor response data",
+                    )
 
                     return alleKontor.map((kontor) => ({
                         id: kontor.kontorId,
