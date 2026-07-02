@@ -38,6 +38,12 @@ export default [
     route("/veilarbaktivitet/*", "routes/veilarbProxy.tsx", {
         id: "veilarbaktivitet",
     }),
+    route("/ao-oppfolgingskontor/*", "routes/veilarbProxy.tsx", {
+        id: "ao-oppfolgingskontor",
+    }),
+    route("/veilarboppgave/*", "routes/veilarbProxy.tsx", {
+        id: "veilarboppgave",
+    }),
     ...devRoutes,
     route("*", "routes/redirectToIndex.tsx"),
 ] satisfies RouteConfig

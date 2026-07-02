@@ -8,7 +8,6 @@ import {
 import { Suspense, useState } from "react"
 import { Await } from "react-router"
 import type { NavKontor } from "~/registreringPage/StartOppfolgingForm"
-import { useFeatureToggle } from "~/hooks/useFeatureToggle"
 
 const beskrivelseTekst =
     "Brukeren blir lagt til i porteføljen til denne enheten"
@@ -39,7 +38,6 @@ export const NavKontorInfo = ({
     enhet: Promise<NavKontor | null | undefined>
     kontorOptions?: Promise<NavKontor[]>
 }) => {
-    const kanOverstyreKontor = useFeatureToggle("bruk_ao_kontor_som_master")
 
     return (
         <Suspense
@@ -59,7 +57,7 @@ export const NavKontorInfo = ({
                         return <IngenKontorAlert />
                     }
 
-                    if (!kanOverstyreKontor || !kontorOptions) {
+                    if (!kontorOptions) {
                         return (
                             <TextField
                                 label="Oppfølgingsenhet"

@@ -55,6 +55,11 @@ export const apps = {
         namespace: "dab",
         preserveContextPath: true,
     },
+    veilarboppgave: {
+        name: "veilarboppgave",
+        namespace: "obo",
+        preserveContextPath: true,
+    },
 }
 
 export const toAppUrl = (targetApp: App, url: URL | string): string => {

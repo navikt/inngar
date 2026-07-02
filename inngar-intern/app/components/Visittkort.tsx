@@ -43,7 +43,7 @@ const VisittkortInner = ({
                 enhet={enhet ?? "1234"}
                 fnr={fnr ?? "123123123"}
                 tilbakeTilFlate={oversiktenLink}
-                visVeilederVerktoy={"true"}
+                visVeilederVerktoy={"false"}
                 key={fnr}
             ></ao-visittkort>
         </div>
