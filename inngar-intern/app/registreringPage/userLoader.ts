@@ -30,7 +30,6 @@ export interface UserLoaderSuccessResponse {
 }
 
 export const userLoader = async (request: Request, fnrCode: string) => {
-    const brukAoOppfolgingskontor = getEnv().type !== EnvType.prod
     const hentAktivEnhet = () =>
         resilientFetch<{ aktivEnhet: string | null }>(
             new Request(aktivEnhetUrl, new Request(request)),
@@ -108,46 +107,38 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
 
         const hentNavKontor = async () => {
-            if (brukAoOppfolgingskontor) {
-                return AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(
-                    aktivBruker,
-                    aoOppfolgingskontorTokenOrResponse.token,
-                ).then((arbeidsoppfolgingskontorResponse) => {
-                    if (!arbeidsoppfolgingskontorResponse.ok) {
-                        throw arbeidsoppfolgingskontorResponse.error
-                    }
-                    return {
-                        navn: arbeidsoppfolgingskontorResponse.data.kontorNavn,
-                        id: arbeidsoppfolgingskontorResponse.data.kontorId,
-                    }
-                })
-            } else {
-                return Promise.resolve(oppfolgingsEnhet.enhet)
-            }
+            return AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(
+                aktivBruker,
+                aoOppfolgingskontorTokenOrResponse.token,
+            ).then((arbeidsoppfolgingskontorResponse) => {
+                if (!arbeidsoppfolgingskontorResponse.ok) {
+                    throw arbeidsoppfolgingskontorResponse.error
+                }
+                return {
+                    navn: arbeidsoppfolgingskontorResponse.data.kontorNavn,
+                    id: arbeidsoppfolgingskontorResponse.data.kontorId,
+                }
+            })
         }
 
         const hentKontorOptions = async (): Promise<NavKontor[]> => {
-            if (brukAoOppfolgingskontor) {
-                return AoOppfolgingskontorApi.hentAlleKontor(
-                    aktivBruker,
-                    aoOppfolgingskontorTokenOrResponse.token,
-                ).then((alleKontorResponse) => {
-                    if (!alleKontorResponse.ok) {
-                        logger.warn(
-                            `Kunne ikke hente alle kontor: ${alleKontorResponse.type}, ${alleKontorResponse.error.message}`,
-                        )
-                        return []
-                    }
-                    const alleKontor = alleKontorResponse.data.data.alleKontor
+            return AoOppfolgingskontorApi.hentAlleKontor(
+                aktivBruker,
+                aoOppfolgingskontorTokenOrResponse.token,
+            ).then((alleKontorResponse) => {
+                if (!alleKontorResponse.ok) {
+                    logger.warn(
+                        `Kunne ikke hente alle kontor: ${alleKontorResponse.type}, ${alleKontorResponse.error.message}`,
+                    )
+                    return []
+                }
+                const alleKontor = alleKontorResponse.data.data.alleKontor
 
-                    return alleKontor.map((kontor) => ({
-                        id: kontor.kontorId,
-                        navn: kontor.kontorNavn,
-                    }))
-                })
-            } else {
-                return Promise.resolve([])
-            }
+                return alleKontor.map((kontor) => ({
+                    id: kontor.kontorId,
+                    navn: kontor.kontorNavn,
+                }))
+            })
         }
 
         const navKontor = hentNavKontor()
