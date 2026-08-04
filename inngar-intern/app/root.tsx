@@ -23,6 +23,7 @@ import process from "node:process"
 import { Theme } from "@navikt/ds-react"
 import { MockSettingsForm } from "~/mock/MockSettingsForm.tsx"
 import { getEnv } from "~/util/envUtil.ts"
+import { useTheme } from "~/util/useTheme.ts"
 
 const isProd = process.env.NAIS_CLUSTER_NAME === "prod-gcp"
 
@@ -82,7 +83,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }, [])
 
     return (
-        <html lang="en" className="min-h-screen bg-ax-bg-sunken">
+        <html lang="en" className="min-h-screen bg-white dark:bg-ax-bg-default">
             <head>
                 <meta charSet="utf-8" />
                 <meta
@@ -142,21 +143,23 @@ export const action = async ({
 }
 
 export default function App({ loaderData }: Route.ComponentProps) {
+    const { theme } = useTheme()
+
     if (import.meta.env.DEV) {
         return (
-            <Theme theme="light">
+            <Theme theme={theme}>
                 <MockSettingsForm
                     mockSettings={(loaderData as any).mockSettings}
                 />
-                <div className="bg-ax-bg-sunken">
+                <div className="min-h-screen bg-white dark:bg-ax-bg-default">
                     <Outlet />
                 </div>
             </Theme>
         )
     } else {
         return (
-            <Theme theme="light">
-                <div className="bg-ax-bg-sunken">
+            <Theme theme={theme}>
+                <div className="min-h-screen bg-white dark:bg-ax-bg-default">
                     <Outlet />
                 </div>
             </Theme>
