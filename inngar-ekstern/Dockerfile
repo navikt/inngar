@@ -21,5 +21,6 @@ WORKDIR /app/inngar-ekstern
 
 EXPOSE 3000
 
+USER nonroot
 ENTRYPOINT []
 CMD ["node", "--experimental-strip-types", "--experimental-transform-types", "server/server.ts", "./build/server/index.js"]
