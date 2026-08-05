@@ -1,7 +1,7 @@
 import { Button, Select, ToggleGroup } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { MockSettings } from "~/routes/mocksSettings"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { XMarkIcon } from "@navikt/aksel-icons"
 
 const registrerArenaSvarVerdier = [
@@ -41,18 +41,10 @@ export const MockSettingsForm = ({
     mockSettings?: MockSettings
 }) => {
     const [isOpen, setIsOpen] = useState(false)
-    const [tema, setTema] = useState<"light" | "dark">("light")
     const fetcher = useFetcher()
 
-    useEffect(() => {
-        setTema(document.body.classList.contains("dark") ? "dark" : "light")
-    }, [])
-
     const toggleTema = (value: string) => {
-        const isDark = value === "dark"
-        document.body.classList.toggle("aksel-theme", true)
-        document.body.classList.toggle("dark", isDark)
-        setTema(isDark ? "dark" : "light")
+        document.documentElement.setAttribute("data-theme", value)
     }
 
     const oppfolgingsEnhet = mockSettings?.oppfolgingsEnhet || "Ingen"
@@ -76,9 +68,7 @@ export const MockSettingsForm = ({
         )
 
     return (
-        <div
-            className={`${tema === "dark" ? "bg-ax-bg-default" : "bg-white"} border rounded-lg drop-shadow-2xl p-2 absolute bottom-6 right-6`}
-        >
+        <div className="bg-ax-bg-default border rounded-lg drop-shadow-2xl p-2 absolute bottom-6 right-6">
             <div className="flex flex-row-reverse items-start">
                 <Button onClick={toggleMockSetting}>
                     <XMarkIcon />
@@ -87,7 +77,7 @@ export const MockSettingsForm = ({
                 <div className="flex flex-col items-start space-y-2">
                     <div className="flex items-center space-x-2">
                         <p>Tema:</p>
-                        <ToggleGroup value={tema} onChange={toggleTema}>
+                        <ToggleGroup defaultValue="light" onChange={toggleTema}>
                             <ToggleGroup.Item value="light">
                                 Light
                             </ToggleGroup.Item>

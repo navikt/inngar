@@ -83,7 +83,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }, [])
 
     return (
-        <html lang="en" className="min-h-screen bg-white dark:bg-ax-bg-default">
+        <html lang="en" className="min-h-screen bg-ax-bg-default">
             <head>
                 <meta charSet="utf-8" />
                 <meta
@@ -151,7 +151,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
                 <MockSettingsForm
                     mockSettings={(loaderData as any).mockSettings}
                 />
-                <div className="min-h-screen bg-white dark:bg-ax-bg-default">
+                <div className="min-h-screen bg-ax-bg-default">
                     <Outlet />
                 </div>
             </Theme>
@@ -159,7 +159,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
     } else {
         return (
             <Theme theme={theme}>
-                <div className="min-h-screen bg-white dark:bg-ax-bg-default">
+                <div className="min-h-screen bg-ax-bg-default">
                     <Outlet />
                 </div>
             </Theme>

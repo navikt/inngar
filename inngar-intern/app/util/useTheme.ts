@@ -2,21 +2,29 @@ import { useEffect, useState } from "react"
 
 export type Theme = "light" | "dark"
 
-const getThemeFromDom = (): Theme => {
-    if (document.body.classList.contains("dark")) return "dark"
-    if (document.documentElement.classList.contains("dark")) return "dark"
+const VISITTKORT_THEME_SELECTOR = ".aksel-theme.dark"
+const VISITTKORT_PRESENT_SELECTOR = ".aksel-theme"
 
-    const bodyTheme = document.body.getAttribute("data-theme")
-    if (bodyTheme === "dark") return "dark"
-
+const getThemeFromVisittkort = (): Theme | null => {
     const visittkort = document.querySelector("ao-visittkort")
-    const visittkortTheme =
-        visittkort?.getAttribute("data-theme") ??
-        visittkort?.getAttribute("theme") ??
-        visittkort?.getAttribute("color-scheme")
-    if (visittkortTheme === "dark") return "dark"
 
-    if (bodyTheme === "light") return "light"
+    const shadowRoot = visittkort?.shadowRoot
+    if (!shadowRoot) return null
+
+    if (shadowRoot.querySelector(VISITTKORT_THEME_SELECTOR)) {
+        return "dark"
+    }
+
+    if (shadowRoot.querySelector(VISITTKORT_PRESENT_SELECTOR)) {
+        return "light"
+    }
+
+    return null
+}
+
+const getThemeFromDom = (): Theme => {
+    const visittkortTheme = getThemeFromVisittkort()
+    if (visittkortTheme) return visittkortTheme
 
     const htmlTheme = document.documentElement.getAttribute("data-theme")
     if (htmlTheme === "dark" || htmlTheme === "light") return htmlTheme
@@ -25,7 +33,9 @@ const getThemeFromDom = (): Theme => {
 }
 
 const applyTheme = (theme: Theme) => {
-    document.documentElement.setAttribute("data-theme", theme)
+    if (document.documentElement.getAttribute("data-theme") !== theme) {
+        document.documentElement.setAttribute("data-theme", theme)
+    }
 }
 
 export const useTheme = (): { theme: Theme } => {
@@ -43,32 +53,37 @@ export const useTheme = (): { theme: Theme } => {
         }
 
         const observer = new MutationObserver(updateThemeFromDom)
+        const visittkortObserver = new MutationObserver(updateThemeFromDom)
+
+        let observedShadowRoot: ShadowRoot | null = null
+
+        const observeVisittkort = () => {
+            const visittkort = document.querySelector("ao-visittkort")
+            const shadowRoot = visittkort?.shadowRoot ?? null
+
+            if (shadowRoot && shadowRoot !== observedShadowRoot) {
+                visittkortObserver.disconnect()
+                visittkortObserver.observe(shadowRoot, {
+                    subtree: true,
+                    childList: true,
+                    attributes: true,
+                    attributeFilter: ["class"],
+                })
+                observedShadowRoot = shadowRoot
+                updateThemeFromDom()
+                return
+            }
+        }
 
         observer.observe(document.body, {
-            attributes: true,
-            attributeFilter: ["class", "data-theme"],
+            childList: true,
+            subtree: true,
         })
 
         observer.observe(document.documentElement, {
             attributes: true,
-            attributeFilter: ["class", "data-theme"],
+            attributeFilter: ["data-theme"],
         })
-
-        const visittkortObserver = new MutationObserver(updateThemeFromDom)
-        const observeVisittkort = () => {
-            const visittkort = document.querySelector("ao-visittkort")
-            if (visittkort) {
-                visittkortObserver.observe(visittkort, {
-                    attributes: true,
-                    attributeFilter: [
-                        "class",
-                        "data-theme",
-                        "theme",
-                        "color-scheme",
-                    ],
-                })
-            }
-        }
 
         observeVisittkort()
         const delayedObserve = window.setTimeout(observeVisittkort, 0)
