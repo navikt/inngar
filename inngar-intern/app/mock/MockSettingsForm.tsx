@@ -1,8 +1,7 @@
-import { Button, Select, ToggleGroup } from "@navikt/ds-react"
+import { Button, Label, Modal, Select, ToggleGroup } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { MockSettings } from "~/routes/mocksSettings"
-import { useState } from "react"
-import { XMarkIcon } from "@navikt/aksel-icons"
+import { useRef, useState } from "react"
 
 const registrerArenaSvarVerdier = [
     "OK_REGISTRERT_I_ARENA",
@@ -49,173 +48,189 @@ export const MockSettingsForm = ({
     const registrerArenaSvar =
         mockSettings?.registrerArenaSvar || "OK_REGISTRERT_I_ARENA"
     const kanStarteOppfolging = mockSettings?.kanStarteOppfolging || "JA"
-    const kanOverstyreKontor = mockSettings?.kanOverstyreKontor ?? true
+    const startOppfolgingFeiler = mockSettings?.startOppfolgingFeiler || "false"
 
-    const toggleMockSetting = () => setIsOpen(!isOpen)
+    const modalRef = useRef<HTMLDialogElement>(null)
+    const toggleMockSetting = () => {
+        modalRef.current?.showModal()
+    }
 
-    if (!isOpen)
-        return (
+    return (
+        <>
             <Button
                 onClick={toggleMockSetting}
                 className="drop-shadow-2xl absolute bottom-6 right-6"
             >
                 Mock settings
             </Button>
-        )
-
-    return (
-        <div className="bg-white border rounded-lg drop-shadow-2xl p-2 absolute bottom-6 right-6">
-            <div className="flex flex-row-reverse items-start">
-                <Button onClick={toggleMockSetting}>
-                    <XMarkIcon />
-                </Button>
-
-                <div className="flex flex-col items-start space-y-2">
-                    <div className="flex items-center space-x-2">
-                        <p>Aktiv bruker:</p>
-                        <ToggleGroup
-                            defaultValue={aktivBruker}
-                            onChange={(value) => {
-                                fetcher.submit(
-                                    {
-                                        ...mockSettings,
-                                        aktivBruker: value,
-                                    },
-                                    {
-                                        action: "/mock-settings",
-                                        method: "POST",
-                                    },
-                                )
-                            }}
-                        >
-                            <ToggleGroup.Item value="ja">Ja</ToggleGroup.Item>
-                            <ToggleGroup.Item value="nei">Nei</ToggleGroup.Item>
-                        </ToggleGroup>
+            <Modal
+                ref={modalRef}
+                aria-label={"Mock settings"}
+                header={{ heading: "Mock settings" }}
+            >
+                <Modal.Body>
+                    <div className="flex flex-row-reverse items-start">
+                        <div className="flex flex-col items-start space-y-2">
+                            <div className="flex items-center space-x-2">
+                                <p>Aktiv bruker:</p>
+                                <ToggleGroup
+                                    defaultValue={aktivBruker}
+                                    onChange={(value) => {
+                                        fetcher.submit(
+                                            {
+                                                ...mockSettings,
+                                                aktivBruker: value,
+                                            },
+                                            {
+                                                action: "/mock-settings",
+                                                method: "POST",
+                                            },
+                                        )
+                                    }}
+                                >
+                                    <ToggleGroup.Item value="ja">
+                                        Ja
+                                    </ToggleGroup.Item>
+                                    <ToggleGroup.Item value="nei">
+                                        Nei
+                                    </ToggleGroup.Item>
+                                </ToggleGroup>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <p>Over 18:</p>
+                                <ToggleGroup
+                                    defaultValue={over18}
+                                    onChange={(value) => {
+                                        fetcher.submit(
+                                            {
+                                                ...mockSettings,
+                                                over18: value,
+                                            },
+                                            {
+                                                action: "/mock-settings",
+                                                method: "POST",
+                                            },
+                                        )
+                                    }}
+                                >
+                                    <ToggleGroup.Item value="Over18">
+                                        Over 18
+                                    </ToggleGroup.Item>
+                                    <ToggleGroup.Item value="Under18">
+                                        Under 18
+                                    </ToggleGroup.Item>
+                                </ToggleGroup>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <p>Oppfølgingsenhet:</p>
+                                <ToggleGroup
+                                    defaultValue={oppfolgingsEnhet}
+                                    onChange={(value) => {
+                                        fetcher.submit(
+                                            {
+                                                ...mockSettings,
+                                                oppfolgingsEnhet: value,
+                                            },
+                                            {
+                                                action: "/mock-settings",
+                                                method: "POST",
+                                            },
+                                        )
+                                    }}
+                                >
+                                    <ToggleGroup.Item value="Arena">
+                                        Arena
+                                    </ToggleGroup.Item>
+                                    <ToggleGroup.Item value="GT_PDL">
+                                        GT PDL
+                                    </ToggleGroup.Item>
+                                    <ToggleGroup.Item value="Ingen">
+                                        Ingen
+                                    </ToggleGroup.Item>
+                                    <ToggleGroup.Item value="Error">
+                                        Error
+                                    </ToggleGroup.Item>
+                                </ToggleGroup>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Select
+                                    label="Arena respons"
+                                    defaultValue={registrerArenaSvar}
+                                    onChange={(event) => {
+                                        fetcher.submit(
+                                            {
+                                                ...mockSettings,
+                                                registrerArenaSvar:
+                                                    event.target.value,
+                                            },
+                                            {
+                                                action: "/mock-settings",
+                                                method: "POST",
+                                            },
+                                        )
+                                    }}
+                                >
+                                    {registrerArenaSvarVerdier.map((svar) => (
+                                        <option value={svar} key={svar}>
+                                            {svar}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Label>Start oppfolging feiler:</Label>
+                                <ToggleGroup
+                                    defaultValue={startOppfolgingFeiler}
+                                    onChange={(value) => {
+                                        fetcher.submit(
+                                            {
+                                                ...mockSettings,
+                                                startOppfolgingFeiler: value,
+                                            },
+                                            {
+                                                action: "/mock-settings",
+                                                method: "POST",
+                                            },
+                                        )
+                                    }}
+                                >
+                                    <ToggleGroup.Item value="false">
+                                        Ok
+                                    </ToggleGroup.Item>
+                                    <ToggleGroup.Item value="true">
+                                        Feiler
+                                    </ToggleGroup.Item>
+                                </ToggleGroup>
+                            </div>
+                            <div>
+                                <Select
+                                    label="Kan starte oppfolging?"
+                                    defaultValue={kanStarteOppfolging}
+                                    onChange={(event) => {
+                                        fetcher.submit(
+                                            {
+                                                ...mockSettings,
+                                                kanStarteOppfolging:
+                                                    event.target.value,
+                                            },
+                                            {
+                                                action: "/mock-settings",
+                                                method: "POST",
+                                            },
+                                        )
+                                    }}
+                                >
+                                    {kanStarteOppfolgingOptions.map((svar) => (
+                                        <option value={svar} key={svar}>
+                                            {svar}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                        <p>Over 18:</p>
-                        <ToggleGroup
-                            defaultValue={over18}
-                            onChange={(value) => {
-                                fetcher.submit(
-                                    {
-                                        ...mockSettings,
-                                        over18: value,
-                                    },
-                                    {
-                                        action: "/mock-settings",
-                                        method: "POST",
-                                    },
-                                )
-                            }}
-                        >
-                            <ToggleGroup.Item value="Over18">
-                                Over 18
-                            </ToggleGroup.Item>
-                            <ToggleGroup.Item value="Under18">
-                                Under 18
-                            </ToggleGroup.Item>
-                        </ToggleGroup>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <p>Oppfølgingsenhet:</p>
-                        <ToggleGroup
-                            defaultValue={oppfolgingsEnhet}
-                            onChange={(value) => {
-                                fetcher.submit(
-                                    {
-                                        ...mockSettings,
-                                        oppfolgingsEnhet: value,
-                                    },
-                                    {
-                                        action: "/mock-settings",
-                                        method: "POST",
-                                    },
-                                )
-                            }}
-                        >
-                            <ToggleGroup.Item value="Arena">
-                                Arena
-                            </ToggleGroup.Item>
-                            <ToggleGroup.Item value="GT_PDL">
-                                GT PDL
-                            </ToggleGroup.Item>
-                            <ToggleGroup.Item value="Ingen">
-                                Ingen
-                            </ToggleGroup.Item>
-                            <ToggleGroup.Item value="Error">
-                                Error
-                            </ToggleGroup.Item>
-                        </ToggleGroup>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <Select
-                            label="Arena respons"
-                            defaultValue={registrerArenaSvar}
-                            onChange={(event) => {
-                                fetcher.submit(
-                                    {
-                                        ...mockSettings,
-                                        registrerArenaSvar: event.target.value,
-                                    },
-                                    {
-                                        action: "/mock-settings",
-                                        method: "POST",
-                                    },
-                                )
-                            }}
-                        >
-                            {registrerArenaSvarVerdier.map((svar) => (
-                                <option value={svar} key={svar}>
-                                    {svar}
-                                </option>
-                            ))}
-                        </Select>
-                    </div>
-                    <div>
-                        <Select
-                            label="Kan starte oppfolging?"
-                            defaultValue={kanStarteOppfolging}
-                            onChange={(event) => {
-                                fetcher.submit(
-                                    {
-                                        ...mockSettings,
-                                        kanStarteOppfolging: event.target.value,
-                                    },
-                                    {
-                                        action: "/mock-settings",
-                                        method: "POST",
-                                    },
-                                )
-                            }}
-                        >
-                            {kanStarteOppfolgingOptions.map((svar) => (
-                                <option value={svar} key={svar}>
-                                    {svar}
-                                </option>
-                            ))}
-                        </Select>
-                    </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <p>Kan overstyre kontor:</p>
-                    <ToggleGroup
-                        defaultValue={kanOverstyreKontor ? "ja" : "nei"}
-                        onChange={(value) => {
-                            fetcher.submit(
-                                {
-                                    ...mockSettings,
-                                    kanOverstyreKontor: value === "ja",
-                                },
-                                { action: "/mock-settings", method: "POST" },
-                            )
-                        }}
-                    >
-                        <ToggleGroup.Item value="ja">Ja</ToggleGroup.Item>
-                        <ToggleGroup.Item value="nei">Nei</ToggleGroup.Item>
-                    </ToggleGroup>
-                </div>
-            </div>
-        </div>
+                </Modal.Body>
+            </Modal>
+        </>
     )
 }

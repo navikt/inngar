@@ -150,6 +150,16 @@ export const handlers = [
     http.post(
         `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/startOppfolgingsperiode`,
         () => {
+            console.log(
+                `Mock startOppfolging - ${mockSettings.startOppfolgingFeiler}`,
+            )
+            if (mockSettings.startOppfolgingFeiler === "true") {
+                return new HttpResponse(
+                    JSON.stringify({ error: "Internal server error" }),
+                    { status: 500 },
+                )
+            }
+
             const feilSvar = ["FNR_FINNES_IKKE", "UKJENT_FEIL"]
             const arenaSvar = mockSettings.registrerArenaSvar!!
             return HttpResponse.json(
