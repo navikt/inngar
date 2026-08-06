@@ -3,6 +3,7 @@ preload = ["./server/instrumentation.ts"]
 [install]
 registry = "https://registry.npmjs.org"
 ignoreScripts = true
+minimumReleaseAge = 604_800 # 1 week (seconds)
 
 [install.scopes]
 "@navikt" = { token = "$BUN_AUTH_TOKEN", url = "https://npm.pkg.github.com/" }
