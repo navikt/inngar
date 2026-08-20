@@ -11,7 +11,7 @@ export interface MockSettings {
     aktivBruker: "nei" | "ja"
     registrerArenaSvar: ArenaResponseKoder
     fnr: string | null
-    kanOverstyreKontor: boolean
+    startOppfolgingFeiler: "true" | "false"
 }
 
 export const action = async ({ request }: { request: Request }) => {
@@ -24,7 +24,7 @@ export const action = async ({ request }: { request: Request }) => {
     mockSettings.aktivBruker = payload.aktivBruker
     mockSettings.registrerArenaSvar = payload.registrerArenaSvar
     mockSettings.kanStarteOppfolging = payload.kanStarteOppfolging
-    mockSettings.kanOverstyreKontor = payload.kanOverstyreKontor
+    mockSettings.startOppfolgingFeiler = payload.startOppfolgingFeiler
 
     return new Response("Ok", { status: 200 })
 }

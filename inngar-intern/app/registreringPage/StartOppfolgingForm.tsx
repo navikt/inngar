@@ -5,9 +5,9 @@ import {
     Alert,
     BodyShort,
     Button,
-    ErrorSummary,
     Heading,
     Link,
+    LocalAlert,
 } from "@navikt/ds-react"
 import RegistreringUnder18 from "~/registreringPage/RegistreringUnder18"
 import ManuellGodkjenningIkkeBosattAlert from "~/registreringPage/ManuellGodkjenningIkkeBosattAlert.tsx"
@@ -181,10 +181,23 @@ export const StartOppfolgingForm = ({
 
 export const FormError = ({ message }: { message: string }) => {
     return (
-        <ErrorSummary>
-            <ErrorSummary.Item href="#searchfield-r2">
-                {message}
-            </ErrorSummary.Item>
-        </ErrorSummary>
+        <LocalAlert status={"error"}>
+            <LocalAlert.Header>
+                <LocalAlert.Title>
+                    Kunne ikke starte oppfølging på bruker
+                </LocalAlert.Title>
+            </LocalAlert.Header>
+            <LocalAlert.Content>
+                Oppfølging ble ikke startet på grunn av en teknisk feil, lag
+                gjerne en sak i{" "}
+                <Link
+                    href="https://jira.adeo.no/plugins/servlet/desk/portal/541/create/1401"
+                    target="_blank"
+                >
+                    porten
+                </Link>{" "}
+                eller kontakt brukerstøtte
+            </LocalAlert.Content>
+        </LocalAlert>
     )
 }
