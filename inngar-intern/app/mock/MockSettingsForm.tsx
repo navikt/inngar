@@ -1,7 +1,8 @@
 import { Button, Label, Modal, Select, ToggleGroup } from "@navikt/ds-react"
 import { useFetcher } from "react-router"
 import type { MockSettings } from "~/routes/mocksSettings"
-import { useRef, useState } from "react"
+import { setThemeOverride, useTheme, type Theme } from "~/util/useTheme"
+import { useRef } from "react"
 
 const registrerArenaSvarVerdier = [
     "OK_REGISTRERT_I_ARENA",
@@ -39,11 +40,11 @@ export const MockSettingsForm = ({
 }: {
     mockSettings?: MockSettings
 }) => {
-    const [isOpen, setIsOpen] = useState(false)
     const fetcher = useFetcher()
+    const { theme } = useTheme()
 
-    const toggleTema = (value: string) => {
-        document.documentElement.setAttribute("data-theme", value)
+    const toggleTema = (value: Theme) => {
+        setThemeOverride(value)
     }
 
     const oppfolgingsEnhet = mockSettings?.oppfolgingsEnhet || "Ingen"
@@ -75,6 +76,24 @@ export const MockSettingsForm = ({
                 <Modal.Body>
                     <div className="flex flex-row-reverse items-start">
                         <div className="flex flex-col items-start space-y-2">
+                            <div className="flex items-center space-x-2">
+                                <Label>Tema:</Label>
+                                <ToggleGroup
+                                    value={theme}
+                                    onChange={(value) => {
+                                        if (value === "dark" || value === "light") {
+                                            toggleTema(value)
+                                        }
+                                    }}
+                                >
+                                    <ToggleGroup.Item value="light">
+                                        Light
+                                    </ToggleGroup.Item>
+                                    <ToggleGroup.Item value="dark">
+                                        Dark
+                                    </ToggleGroup.Item>
+                                </ToggleGroup>
+                            </div>
                             <div className="flex items-center space-x-2">
                                 <p>Aktiv bruker:</p>
                                 <ToggleGroup

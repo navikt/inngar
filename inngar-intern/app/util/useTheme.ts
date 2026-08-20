@@ -4,6 +4,11 @@ export type Theme = "light" | "dark"
 
 const VISITTKORT_THEME_SELECTOR = ".aksel-theme.dark"
 const VISITTKORT_PRESENT_SELECTOR = ".aksel-theme"
+const THEME_OVERRIDE_ATTRIBUTE = "data-theme-override"
+
+const isTheme = (value: string | null): value is Theme => {
+    return value === "dark" || value === "light"
+}
 
 const getThemeFromVisittkort = (): Theme | null => {
     const visittkort = document.querySelector("ao-visittkort")
@@ -23,11 +28,16 @@ const getThemeFromVisittkort = (): Theme | null => {
 }
 
 const getThemeFromDom = (): Theme => {
+    const themeOverride = document.documentElement.getAttribute(
+        THEME_OVERRIDE_ATTRIBUTE,
+    )
+    if (isTheme(themeOverride)) return themeOverride
+
     const visittkortTheme = getThemeFromVisittkort()
     if (visittkortTheme) return visittkortTheme
 
     const htmlTheme = document.documentElement.getAttribute("data-theme")
-    if (htmlTheme === "dark" || htmlTheme === "light") return htmlTheme
+    if (isTheme(htmlTheme)) return htmlTheme
 
     return "light"
 }
@@ -36,6 +46,15 @@ const applyTheme = (theme: Theme) => {
     if (document.documentElement.getAttribute("data-theme") !== theme) {
         document.documentElement.setAttribute("data-theme", theme)
     }
+}
+
+export const setThemeOverride = (theme: Theme) => {
+    document.documentElement.setAttribute(THEME_OVERRIDE_ATTRIBUTE, theme)
+    applyTheme(theme)
+}
+
+export const clearThemeOverride = () => {
+    document.documentElement.removeAttribute(THEME_OVERRIDE_ATTRIBUTE)
 }
 
 export const useTheme = (): { theme: Theme } => {
@@ -82,7 +101,7 @@ export const useTheme = (): { theme: Theme } => {
 
         observer.observe(document.documentElement, {
             attributes: true,
-            attributeFilter: ["data-theme"],
+            attributeFilter: ["data-theme", THEME_OVERRIDE_ATTRIBUTE],
         })
 
         observeVisittkort()
