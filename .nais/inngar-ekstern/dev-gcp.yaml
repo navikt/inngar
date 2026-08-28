@@ -43,7 +43,7 @@ spec:
     enabled: true
     sidecar:
       enabled: true
-      level: idporten-loa-high
+      level: idporten-loa-substantial
       autoLogin: true
   tokenx:
     enabled: true
