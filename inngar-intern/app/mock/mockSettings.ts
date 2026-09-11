@@ -7,4 +7,5 @@ export const mockSettings: Partial<MockSettings> = {
     kanStarteOppfolging: "JA",
     fnr: null,
     startOppfolgingFeiler: "false",
+    harVeilederLeseTilgangTilBruker: "ja",
 }

@@ -48,6 +48,7 @@ export const MockSettingsForm = ({
         mockSettings?.registrerArenaSvar || "OK_REGISTRERT_I_ARENA"
     const kanStarteOppfolging = mockSettings?.kanStarteOppfolging || "JA"
     const startOppfolgingFeiler = mockSettings?.startOppfolgingFeiler || "false"
+    const harVeilederLeseTilgangTilBruker = mockSettings?.harVeilederLeseTilgangTilBruker || "ja"
 
     const modalRef = useRef<HTMLDialogElement>(null)
     const toggleMockSetting = () => {
@@ -117,6 +118,31 @@ export const MockSettingsForm = ({
                                     </ToggleGroup.Item>
                                     <ToggleGroup.Item value="Under18">
                                         Under 18
+                                    </ToggleGroup.Item>
+                                </ToggleGroup>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <p>Har tilgang til brukers enhet:</p>
+                                <ToggleGroup
+                                    defaultValue={harVeilederLeseTilgangTilBruker}
+                                    onChange={(value) => {
+                                        fetcher.submit(
+                                            {
+                                                ...mockSettings,
+                                                harVeilederLeseTilgangTilBruker: value,
+                                            },
+                                            {
+                                                action: "/mock-settings",
+                                                method: "POST",
+                                            },
+                                        )
+                                    }}
+                                >
+                                    <ToggleGroup.Item value="ja">
+                                        Ja
+                                    </ToggleGroup.Item>
+                                    <ToggleGroup.Item value="nei">
+                                        Nei
                                     </ToggleGroup.Item>
                                 </ToggleGroup>
                             </div>

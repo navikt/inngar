@@ -10,6 +10,7 @@ export const hentStatusPayload = {
     underKvp: false,
     oppfolgingUtgang: null,
     kanStarteOppfolging: false,
+    harVeilederLeseTilgangTilBruker: true,
     avslutningStatus: null,
     oppfolgingsPerioder: [
         // {

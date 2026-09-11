@@ -194,6 +194,10 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                         props.status ===
                         BrukerStatus.KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS
                     }
+                    harVeilederLeseTilgangTilBruker={
+                        props.harVeilederLeseTilgangTilBruker
+                    }
+                    aktivtNavKontor={props.aktivtNavKontor}
                 />
             )
         case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT:

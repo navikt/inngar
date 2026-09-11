@@ -11,6 +11,7 @@ export interface MockSettings {
     registrerArenaSvar: ArenaResponseKoder
     fnr: string | null
     startOppfolgingFeiler: "true" | "false"
+    harVeilederLeseTilgangTilBruker: "ja" | "nei"
 }
 
 export const action = async ({ request }: { request: Request }) => {
@@ -23,6 +24,7 @@ export const action = async ({ request }: { request: Request }) => {
     mockSettings.registrerArenaSvar = payload.registrerArenaSvar
     mockSettings.kanStarteOppfolging = payload.kanStarteOppfolging
     mockSettings.startOppfolgingFeiler = payload.startOppfolgingFeiler
+    mockSettings.harVeilederLeseTilgangTilBruker = payload.harVeilederLeseTilgangTilBruker
 
     return new Response("Ok", { status: 200 })
 }

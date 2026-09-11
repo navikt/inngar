@@ -28,6 +28,9 @@ const baseGraphqlResponse = {
         oppfolging: {
             erUnderOppfolging: true,
         },
+        veilederTilgang: {
+            harVeilederLeseTilgangTilBruker: true,
+        },
         utmeldingskandidatTag:
             "ARBEIDSSOKERPERIODE_AVSLUTTET_SVARTE_NEI_I_BEKREFTELSE",
     },
@@ -38,10 +41,15 @@ export const graphqlMock = (mockSettings: Partial<MockSettings>) => {
     const oppfolging = {
         kanStarteOppfolging: kanStarteOppfolgingSetting,
     }
+    const harVeilederLeseTilgangTilBrukerSetting = mockSettings.harVeilederLeseTilgangTilBruker
+    const veilederTilgang = {
+        harVeilederLeseTilgangTilBruker: harVeilederLeseTilgangTilBrukerSetting === "ja",
+    }
     return HttpResponse.json({
         data: {
             ...baseGraphqlResponse.data,
-            oppfolging
+            oppfolging,
+            veilederTilgang
         }
     })
 }

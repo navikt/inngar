@@ -143,6 +143,9 @@ const query = `
     oppfolging(fnr: $fnr) {
         kanStarteOppfolging
     }
+    veilederTilgang(fnr: $fnr) {
+        harVeilederLeseTilgangTilBruker
+    }
   }
 `
 
@@ -182,6 +185,9 @@ interface GraphqlSuccessResponse {
     data: {
         oppfolging: {
             kanStarteOppfolging: KanStarteOppfolging
+        };
+        veilederTilgang: {
+            harVeilederLeseTilgangTilBruker: boolean
         }
     }
 }
