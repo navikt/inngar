@@ -104,7 +104,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         if (!oppfolgingsStatus.ok) {
             throw oppfolgingsStatus.error
         }
-        const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
+        const { oppfolging } = oppfolgingsStatus.data.data
 
         const hentNavKontor = async () => {
             return AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(

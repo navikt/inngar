@@ -42,7 +42,6 @@ export const MockSettingsForm = ({
     const [isOpen, setIsOpen] = useState(false)
     const fetcher = useFetcher()
 
-    const oppfolgingsEnhet = mockSettings?.oppfolgingsEnhet || "Ingen"
     const over18 = mockSettings?.over18 || "Over18"
     const aktivBruker = mockSettings?.aktivBruker || "ja"
     const registrerArenaSvar =
@@ -118,37 +117,6 @@ export const MockSettingsForm = ({
                                     </ToggleGroup.Item>
                                     <ToggleGroup.Item value="Under18">
                                         Under 18
-                                    </ToggleGroup.Item>
-                                </ToggleGroup>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <p>Oppfølgingsenhet:</p>
-                                <ToggleGroup
-                                    defaultValue={oppfolgingsEnhet}
-                                    onChange={(value) => {
-                                        fetcher.submit(
-                                            {
-                                                ...mockSettings,
-                                                oppfolgingsEnhet: value,
-                                            },
-                                            {
-                                                action: "/mock-settings",
-                                                method: "POST",
-                                            },
-                                        )
-                                    }}
-                                >
-                                    <ToggleGroup.Item value="Arena">
-                                        Arena
-                                    </ToggleGroup.Item>
-                                    <ToggleGroup.Item value="GT_PDL">
-                                        GT PDL
-                                    </ToggleGroup.Item>
-                                    <ToggleGroup.Item value="Ingen">
-                                        Ingen
-                                    </ToggleGroup.Item>
-                                    <ToggleGroup.Item value="Error">
-                                        Error
                                     </ToggleGroup.Item>
                                 </ToggleGroup>
                             </div>
