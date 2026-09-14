@@ -27,6 +27,7 @@ export interface UserLoaderSuccessResponse {
     fnr: string
     kanStarteOppfolging: KanStarteOppfolging
     under18: boolean
+    harVeilederLeseTilgangTilBruker: boolean
 }
 
 export const userLoader = async (request: Request, fnrCode: string) => {
@@ -104,7 +105,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
         if (!oppfolgingsStatus.ok) {
             throw oppfolgingsStatus.error
         }
-        const { oppfolging, oppfolgingsEnhet } = oppfolgingsStatus.data.data
+        const { oppfolging, veilederTilgang } = oppfolgingsStatus.data.data
 
         const hentNavKontor = async () => {
             return AoOppfolgingskontorApi.finnArbeidsoppfolgingskontor(
@@ -155,6 +156,7 @@ export const userLoader = async (request: Request, fnrCode: string) => {
             aktivtNavKontor: aktivEnhet,
             fnr: aktivBruker,
             kanStarteOppfolging: oppfolging.kanStarteOppfolging,
+            harVeilederLeseTilgangTilBruker: veilederTilgang.harVeilederLeseTilgangTilBruker,
         }
     }
 }

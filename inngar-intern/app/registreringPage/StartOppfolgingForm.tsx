@@ -33,6 +33,8 @@ export const StartOppfolgingForm = ({
     under18,
     kreverManuellGodkjenningPgaIkkeBosatt,
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr,
+    harVeilederLeseTilgangTilBruker,
+    aktivtNavKontor,
 }: {
     navKontor: Promise<NavKontor | null>
     kontorOptions?: Promise<NavKontor[]>
@@ -40,6 +42,8 @@ export const StartOppfolgingForm = ({
     under18: boolean | undefined
     kreverManuellGodkjenningPgaIkkeBosatt: boolean
     kreverManuellGodkjenningPgaDnummerIkkeEosGbr: boolean
+    harVeilederLeseTilgangTilBruker: boolean
+    aktivtNavKontor: string
 }) => {
     const startOppfolgingFetcher = useFetcher()
     const error =
@@ -54,6 +58,7 @@ export const StartOppfolgingForm = ({
               })
             : null
     const brukerErUnder18 = under18
+    const veiledersKontorId = harVeilederLeseTilgangTilBruker ? undefined : aktivtNavKontor
     const [erSamtykkeBekreftet, setErSamtykkeBekreftet] = useState(false)
     const [erManueltGodkjent, setErManueltGodkjent] = useState(false)
 
@@ -65,6 +70,13 @@ export const StartOppfolgingForm = ({
 
     return (
         <div className="flex flex-col mt-4 space-y-8 mx-auto">
+            {!harVeilederLeseTilgangTilBruker ? (
+                <Alert variant="warning">
+                    <BodyShort>
+                        Du har ikke tilgang til bruker, men du kan starte arbeidsrettet oppfølging.
+                    </BodyShort>
+                </Alert>
+            ) : null}
             {brukerErUnder18 ? (
                 <RegistreringUnder18 bekreftSamtykke={setErSamtykkeBekreftet} />
             ) : null}
@@ -83,6 +95,7 @@ export const StartOppfolgingForm = ({
                 <NavKontorInfo
                     enhet={navKontor}
                     kontorOptions={kontorOptions}
+                    aktivEnhetId={veiledersKontorId}
                 />
                 <Alert inline variant={"info"}>
                     <div className="space-y-4">

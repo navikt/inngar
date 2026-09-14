@@ -140,15 +140,11 @@ const startOppfolging = async (
 
 const query = `
   query($fnr: String!) {
-    oppfolgingsEnhet(fnr: $fnr) {
-        enhet {
-            navn,
-            id,
-            kilde
-        }
-    }
     oppfolging(fnr: $fnr) {
         kanStarteOppfolging
+    }
+    veilederTilgang(fnr: $fnr) {
+        harVeilederLeseTilgangTilBruker
     }
   }
 `
@@ -159,12 +155,6 @@ const graphqlBody = (fnr: string) => ({
         fnr,
     },
 })
-
-interface Enhet {
-    id: string
-    navn: string
-    kilde: string
-}
 
 export type KanIkkeStarteOppfolgingPgaIkkeTilgang =
     | "IKKE_TILGANG_FORTROLIG_ADRESSE"
@@ -195,9 +185,9 @@ interface GraphqlSuccessResponse {
     data: {
         oppfolging: {
             kanStarteOppfolging: KanStarteOppfolging
-        }
-        oppfolgingsEnhet: {
-            enhet?: Enhet
+        };
+        veilederTilgang: {
+            harVeilederLeseTilgangTilBruker: boolean
         }
     }
 }

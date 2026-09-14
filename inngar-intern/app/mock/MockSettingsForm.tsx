@@ -42,13 +42,13 @@ export const MockSettingsForm = ({
     const [isOpen, setIsOpen] = useState(false)
     const fetcher = useFetcher()
 
-    const oppfolgingsEnhet = mockSettings?.oppfolgingsEnhet || "Ingen"
     const over18 = mockSettings?.over18 || "Over18"
     const aktivBruker = mockSettings?.aktivBruker || "ja"
     const registrerArenaSvar =
         mockSettings?.registrerArenaSvar || "OK_REGISTRERT_I_ARENA"
     const kanStarteOppfolging = mockSettings?.kanStarteOppfolging || "JA"
     const startOppfolgingFeiler = mockSettings?.startOppfolgingFeiler || "false"
+    const harVeilederLeseTilgangTilBruker = mockSettings?.harVeilederLeseTilgangTilBruker || "ja"
 
     const modalRef = useRef<HTMLDialogElement>(null)
     const toggleMockSetting = () => {
@@ -122,14 +122,14 @@ export const MockSettingsForm = ({
                                 </ToggleGroup>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <p>Oppfølgingsenhet:</p>
+                                <p>Har tilgang til brukers enhet:</p>
                                 <ToggleGroup
-                                    defaultValue={oppfolgingsEnhet}
+                                    defaultValue={harVeilederLeseTilgangTilBruker}
                                     onChange={(value) => {
                                         fetcher.submit(
                                             {
                                                 ...mockSettings,
-                                                oppfolgingsEnhet: value,
+                                                harVeilederLeseTilgangTilBruker: value,
                                             },
                                             {
                                                 action: "/mock-settings",
@@ -138,17 +138,11 @@ export const MockSettingsForm = ({
                                         )
                                     }}
                                 >
-                                    <ToggleGroup.Item value="Arena">
-                                        Arena
+                                    <ToggleGroup.Item value="ja">
+                                        Ja
                                     </ToggleGroup.Item>
-                                    <ToggleGroup.Item value="GT_PDL">
-                                        GT PDL
-                                    </ToggleGroup.Item>
-                                    <ToggleGroup.Item value="Ingen">
-                                        Ingen
-                                    </ToggleGroup.Item>
-                                    <ToggleGroup.Item value="Error">
-                                        Error
+                                    <ToggleGroup.Item value="nei">
+                                        Nei
                                     </ToggleGroup.Item>
                                 </ToggleGroup>
                             </div>

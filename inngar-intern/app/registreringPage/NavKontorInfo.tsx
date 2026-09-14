@@ -34,9 +34,11 @@ const IngenKontorAlert = () => (
 export const NavKontorInfo = ({
     enhet,
     kontorOptions,
+    aktivEnhetId,
 }: {
     enhet: Promise<NavKontor | null | undefined>
     kontorOptions?: Promise<NavKontor[]>
+    aktivEnhetId?: string
 }) => {
 
     return (
@@ -84,6 +86,7 @@ export const NavKontorInfo = ({
                                     <KontorVelger
                                         kontor={kontor}
                                         kontorList={kontorList}
+                                        aktivEnhetId={aktivEnhetId}
                                     />
                                 )}
                             </Await>
@@ -98,11 +101,15 @@ export const NavKontorInfo = ({
 const KontorVelger = ({
     kontor,
     kontorList,
+    aktivEnhetId,
 }: {
     kontor: NavKontor
-    kontorList: NavKontor[]
+    kontorList: NavKontor[],
+    aktivEnhetId?: string,
 }) => {
-    const defaultKontor = kontorList.find((it) => it.id === kontor.id)
+    const veiledersKontor = kontorList.find((it) => it.id === aktivEnhetId)
+    const foretrukketKontor = veiledersKontor ?? kontor
+    const defaultKontor = kontorList.find((it) => it.id === foretrukketKontor.id)
     const [selectedKontor, setSelectedKontor] = useState<NavKontor | null>(
         defaultKontor ?? null,
     )
