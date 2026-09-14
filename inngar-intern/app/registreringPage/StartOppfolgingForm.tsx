@@ -15,7 +15,6 @@ import ManuellGodkjenningMidlertidigBosattAlert from "~/registreringPage/Manuell
 import { NavKontorInfo } from "~/registreringPage/NavKontorInfo.tsx"
 import { EnvType, loggBesokUnder18, loggKnappKlikket } from "common"
 import { getEnv } from "~/util/envUtil.ts"
-import { aktivEnhetUrl } from "~/config.ts"
 
 export const arbeidssokerRegistreringUrl =
     getEnv().type === EnvType.prod
