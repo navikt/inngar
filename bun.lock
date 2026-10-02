@@ -24,7 +24,7 @@
         "@navikt/aksel-icons": "catalog:",
         "@navikt/ds-css": "catalog:",
         "@navikt/ds-react": "catalog:",
-        "@navikt/nav-dekoratoren-moduler": "^3.7.1",
+        "@navikt/nav-dekoratoren-moduler": "^4.5.0",
         "@react-router/express": "catalog:",
         "@react-router/node": "catalog:",
         "@react-router/serve": "catalog:",
@@ -294,6 +294,8 @@
 
     "@navikt/aksel-icons": ["@navikt/aksel-icons@8.11.0", "https://npm.pkg.github.com/download/@navikt/aksel-icons/8.11.0/964e1e0e34af7007f43b4522246daea582e44952", {}, "sha512-enprSpDl7j4yDEAtVtp/BPby2McZKtgXIgarTVDeZ0pmiqnYbXFyCTgzl/ZMg2/EV+hd2DXpLsKzU73PDljpmw=="],
 
+    "@navikt/analytics-types": ["@navikt/analytics-types@0.0.9", "https://npm.pkg.github.com/download/@navikt/analytics-types/0.0.9/5919241a6dbb782eb101fff3234ce5c36d16e942", {}, "sha512-bopCvqEogyFcmrJiBxK/Mr25d6yPKF7GR36MGrJqiHCPJYf1rDu6lK4cpooTG4Q//D/1xTkHRom8ZH5BI6dTew=="],
+
     "@navikt/ds-css": ["@navikt/ds-css@8.11.0", "https://npm.pkg.github.com/download/@navikt/ds-css/8.11.0/888861af213f1f01d1becab42fe59810b6dba2be", {}, "sha512-UxPVWtZC9JW1vho0JFdxh9XmQpiKVQgM2+HhE5st5h8W5AUKOgzrSUkSjQQNEdeAg1RhWhJ2Jwu3W2rC4VZS1Q=="],
 
     "@navikt/ds-react": ["@navikt/ds-react@8.11.0", "https://npm.pkg.github.com/download/@navikt/ds-react/8.11.0/3d9c8daf43639aa8b37b321280a74201eb15b6f9", { "dependencies": { "@floating-ui/react": "0.27.19", "@floating-ui/react-dom": "^2.1.8", "@navikt/aksel-icons": "^8.11.0", "@navikt/ds-tokens": "^8.11.0", "date-fns": "^4.0.0", "react-day-picker": "9.14.0" }, "peerDependencies": { "@types/react": "^17.0.30 || ^18 || ^19", "react": "^17 || ^18 || ^19", "react-dom": "^17 || ^18 || ^19" } }, "sha512-wZa5qIsQx/LWvjNGYuutR4oHZAjhA5pVxEyAIIo8HOmSXwTgcPhZItBjeDYYM53RmrctLd/NcovB8LjIoCwgcA=="],
@@ -302,7 +304,7 @@
 
     "@navikt/ds-tokens": ["@navikt/ds-tokens@8.11.0", "https://npm.pkg.github.com/download/@navikt/ds-tokens/8.11.0/247cb6dd6c04352aceea2df5f3ce9588f6cd5883", {}, "sha512-4vte9eN1/6h/Gnbh1Ls9kOt+jRYjNYs/uNk3CzYW/5cSDrmjKnCMhdFKQdpkfolu4ff+GCDoHc1WaJJpeYn/dQ=="],
 
-    "@navikt/nav-dekoratoren-moduler": ["@navikt/nav-dekoratoren-moduler@3.7.1", "https://npm.pkg.github.com/download/@navikt/nav-dekoratoren-moduler/3.7.1/09490a131cedd7779e35d413d20c36bd01ef57a0", { "dependencies": { "csp-header": "6.3.1", "js-cookie": "3.0.5" }, "peerDependencies": { "html-react-parser": ">=5.x", "react": ">=17.x" } }, "sha512-MQLxR4uoADCd6i0hFnWHN/XLPevEfxkBK9yEgbtcY0v2gsj69nALH/7DvTKqSxqRovxOHibVa7mZKZEBAMRBvg=="],
+    "@navikt/nav-dekoratoren-moduler": ["@navikt/nav-dekoratoren-moduler@4.5.0", "https://npm.pkg.github.com/download/@navikt/nav-dekoratoren-moduler/4.5.0/e3c7d8e6e3f2efd2fb46952564e6c9c47ca200ad", { "dependencies": { "@navikt/analytics-types": "0.0.9", "csp-header": "6.4.0", "js-cookie": "3.0.8" }, "peerDependencies": { "html-react-parser": ">=5.x", "react": ">=17.x" } }, "sha512-0eTtpgk+kOGjxncAA5PT2+yLPIobPdvIMVJzWDVdlZmuKUGG1NMoom8DYtnCPkro3Mw+dZeoFJ0TVY+4F57J5Q=="],
 
     "@navikt/oasis": ["@navikt/oasis@4.1.4", "https://npm.pkg.github.com/download/@navikt/oasis/4.1.4/0d9c93820b9b6d93b1bd9da134feb95461ad8a47", { "dependencies": { "@navikt/texas": "^4.1.4", "@opentelemetry/api": "^1.9.0", "jose": "^6.1.3", "prom-client": "^15.1.3" } }, "sha512-v+LW8V5CTiHkfIXhceQ8RXRtrBktCK8wSFYmiR6hmzl9CJRYRLUpFC7YbLiC7jwHIuLHKUyl+Zawf8zQm6fDeQ=="],
 
@@ -794,7 +796,7 @@
 
     "cross-spawn": ["cross-spawn@7.0.6", "", { "dependencies": { "path-key": "^3.1.0", "shebang-command": "^2.0.0", "which": "^2.0.1" } }, "sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA=="],
 
-    "csp-header": ["csp-header@6.3.1", "", {}, "sha512-ykcqGMOGP/uU7RLXDD83k2Ge5Stgc/N3qgKgSN+dATDlNgLHnIoI1IdZBjOskD5Ev1RSKTabLdIETJ6VzXTmvA=="],
+    "csp-header": ["csp-header@6.4.0", "", {}, "sha512-9YEpW20tPtKzVouyAxNtXqSE4EGaTd4ZiT1n/FbUQ5xhmFkPCjC3Db/gHDbesryQoO/TigBAUCqgKypOHviRgQ=="],
 
     "csstype": ["csstype@3.2.3", "", {}, "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ=="],
 
@@ -976,7 +978,7 @@
 
     "joycon": ["joycon@3.1.1", "", {}, "sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw=="],
 
-    "js-cookie": ["js-cookie@3.0.5", "", {}, "sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw=="],
+    "js-cookie": ["js-cookie@3.0.8", "", {}, "sha512-yeJd4aNAdYZQjaon2bpD/Gb0B/omw7HQOsynXXcOiWVCacbBcPlgn8S/d1X6blFSaHao7ozqtW7NZW19xpCtIw=="],
 
     "js-tokens": ["js-tokens@4.0.0", "", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
 
