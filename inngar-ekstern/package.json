@@ -15,7 +15,7 @@
     "@navikt/ds-css": "catalog:",
     "@navikt/ds-react": "catalog:",
     "@navikt/aksel-icons": "catalog:",
-    "@navikt/nav-dekoratoren-moduler": "^3.7.1",
+    "@navikt/nav-dekoratoren-moduler": "^4.5.0",
     "@react-router/express": "catalog:",
     "@react-router/node": "catalog:",
     "@react-router/serve": "catalog:",
