@@ -20,11 +20,8 @@ const kanStarteOppfolgingOptions: MockSettings["kanStarteOppfolging"][] = [
     "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS",
     "JA_MED_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS_UNDER_18",
     "ALLEREDE_UNDER_OPPFOLGING",
-    "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT",
     "IKKE_TILGANG_FORTROLIG_ADRESSE",
     "IKKE_TILGANG_STRENGT_FORTROLIG_ADRESSE",
-    "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT",
-    "ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS",
     "IKKE_TILGANG_EGNE_ANSATTE",
     "IKKE_TILGANG_ENHET",
     "IKKE_TILGANG_MODIA",
@@ -48,7 +45,8 @@ export const MockSettingsForm = ({
         mockSettings?.registrerArenaSvar || "OK_REGISTRERT_I_ARENA"
     const kanStarteOppfolging = mockSettings?.kanStarteOppfolging || "JA"
     const startOppfolgingFeiler = mockSettings?.startOppfolgingFeiler || "false"
-    const harVeilederLeseTilgangTilBruker = mockSettings?.harVeilederLeseTilgangTilBruker || "ja"
+    const harVeilederLeseTilgangTilBruker =
+        mockSettings?.harVeilederLeseTilgangTilBruker || "ja"
 
     const modalRef = useRef<HTMLDialogElement>(null)
     const toggleMockSetting = () => {
@@ -124,12 +122,15 @@ export const MockSettingsForm = ({
                             <div className="flex items-center space-x-2">
                                 <p>Har tilgang til brukers enhet:</p>
                                 <ToggleGroup
-                                    defaultValue={harVeilederLeseTilgangTilBruker}
+                                    defaultValue={
+                                        harVeilederLeseTilgangTilBruker
+                                    }
                                     onChange={(value) => {
                                         fetcher.submit(
                                             {
                                                 ...mockSettings,
-                                                harVeilederLeseTilgangTilBruker: value,
+                                                harVeilederLeseTilgangTilBruker:
+                                                    value,
                                             },
                                             {
                                                 action: "/mock-settings",
