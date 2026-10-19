@@ -49,6 +49,7 @@ export function AvsluttOppfolgingInnhold() {
           <Accordion.Item defaultOpen>
             <Accordion.Header>Informasjonen vi henter om deg</Accordion.Header>
             <Accordion.Content>
+              TODO: Endelig tekst
               Her skal det stå informasjon om hvor vi vil hente opplysninger om
               søkeren og hva slags opplysninger vi henter.
             </Accordion.Content>
