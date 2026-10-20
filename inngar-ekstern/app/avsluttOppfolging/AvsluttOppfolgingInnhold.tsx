@@ -10,23 +10,24 @@ export function AvsluttOppfolgingInnhold() {
   return (
     <>
       <GuidePanel poster>
-        {/* TODO: Personlig hilsen og endelige informasjonstekster avklares. */}
-        <Heading level="2" size="medium" spacing>
-          Hei!
-        </Heading>
-        <BodyLong>
-          Du får arbeidsrettet oppfølging fra Nav. Med arbeidsrettet oppfølging
-          kan du blant annet få:
-        </BodyLong>
-        <List>
-          <List.Item>Samtaler med veileder</List.Item>
-          <List.Item>Arbeidsrettede tiltak eller kurs</List.Item>
-          <List.Item>Veiledning og hjelp tilpasset din situasjon</List.Item>
-        </List>
-        <BodyLong weight="semibold">
-          Hvis du mener at du ikke lenger trenger denne oppfølgingen, kan du
-          avslutte den nå.
-        </BodyLong>
+        <div className="flex flex-col gap-3">
+          <Heading level="2" size="medium" spacing>
+            Hei!
+          </Heading>
+          <BodyLong>
+            Du får arbeidsrettet oppfølging fra Nav. Med arbeidsrettet
+            oppfølging kan du blant annet få:
+          </BodyLong>
+          <List as="ul">
+            <List.Item>Samtaler med veileder</List.Item>
+            <List.Item>Arbeidsrettede tiltak eller kurs</List.Item>
+            <List.Item>Veiledning og hjelp tilpasset din situasjon</List.Item>
+          </List>
+          <BodyLong weight="semibold">
+            Hvis du mener at du ikke lenger trenger denne oppfølgingen, kan du
+            avslutte den nå.
+          </BodyLong>
+        </div>
       </GuidePanel>
       <div>
         <Heading level="2" size="large" spacing>
