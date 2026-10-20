@@ -46,23 +46,14 @@ export function AvsluttOppfolgingInnhold() {
           Er du usikker på om du bør avslutte? Snakk med veilederen din først.
         </BodyLong>
         <Accordion>
-          <Accordion.Item defaultOpen>
-            <Accordion.Header>Informasjonen vi henter om deg</Accordion.Header>
-            <Accordion.Content>
-              TODO: Endelig tekst
-              Her skal det stå informasjon om hvor vi vil hente opplysninger om
-              søkeren og hva slags opplysninger vi henter.
-            </Accordion.Content>
-          </Accordion.Item>
           <Accordion.Item>
             <Accordion.Header>
-              Hvordan vi behandler personopplysninger
+              Hva skjer med dine personopplysninger?
             </Accordion.Header>
-            <Accordion.Content>TODO: Endelig tekst</Accordion.Content>
-          </Accordion.Item>
-          <Accordion.Item>
-            <Accordion.Header>Automatisk saksbehandling</Accordion.Header>
-            <Accordion.Content>TODO: Endelig tekst</Accordion.Content>
+            <Accordion.Content>
+              Vi oppbevarer dine personopplysninger i vårt arkiv, men vi vil
+              ikke behandle nye opplysninger.
+            </Accordion.Content>
           </Accordion.Item>
         </Accordion>
       </div>
