@@ -58,7 +58,9 @@ export function AvsluttOppfolgingPage() {
 
   return (
     <main id="main" className="flex justify-center gap-8 p-4 md:pt-12 pb-16">
-      <AvsluttOppfolgingPiktogram className="hidden lg:block shrink-0" />
+      <div className="hidden lg:block shrink-0 pt-14">
+        <AvsluttOppfolgingPiktogram />
+      </div>
       <div className="max-w-paragraph-width flex-1 flex flex-col gap-8 min-w-0">
         {!vellykket && (
           <Link href={urls.aktivitetsplan[lenkeMiljo]} className="self-start">
