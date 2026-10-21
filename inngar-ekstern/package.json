@@ -47,7 +47,7 @@
     "@types/react-dom": "catalog:",
     "jsdom": "^27.4.0",
     "msw": "^2.13.2",
-    "prettier": "3.8.4",
+    "prettier": "3.9.8",
     "tailwindcss": "^4.1.13",
     "typescript": "catalog:",
     "vite": "catalog:",
