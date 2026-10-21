@@ -52,8 +52,7 @@ export function AvsluttOppfolgingInnhold() {
               Hva skjer med dine personopplysninger?
             </Accordion.Header>
             <Accordion.Content>
-              Vi oppbevarer dine personopplysninger i vårt arkiv, men vi vil
-              ikke behandle nye opplysninger.
+              Vi oppbevarer dine personopplysninger for arkivformål.
             </Accordion.Content>
           </Accordion.Item>
         </Accordion>
