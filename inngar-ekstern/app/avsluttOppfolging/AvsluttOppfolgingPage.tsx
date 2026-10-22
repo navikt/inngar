@@ -9,7 +9,7 @@ import {
 } from "@navikt/ds-react"
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useFetcher } from "react-router"
-import { EnvType } from "common"
+import { EnvType, loggKnappKlikket } from "common"
 import type { clientAction } from "~/routes/avsluttOppfolgingPage"
 import { env, urls } from "~/startOppfolging/urls"
 import { AvsluttOppfolgingInnhold } from "./AvsluttOppfolgingInnhold"
@@ -134,7 +134,15 @@ export function AvsluttOppfolgingPage() {
                   </LocalAlert>
                 )}
               <div>
-                <Button type="submit" loading={sender} disabled={sender}>
+                <Button
+                  type="submit"
+                  loading={sender}
+                  disabled={sender}
+                  onClick={() =>
+                    loggKnappKlikket("Avslutt arbeidsrettet oppfølging")
+                  }
+                  data-umami-event="avslutt-oppfolging"
+                >
                   Avslutt arbeidsrettet oppfølging
                 </Button>
               </div>
