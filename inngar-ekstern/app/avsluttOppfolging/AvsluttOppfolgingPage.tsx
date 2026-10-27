@@ -5,7 +5,7 @@ import {
   Heading,
   Link,
   LocalAlert,
-  Textarea,
+  Radio, RadioGroup,
 } from "@navikt/ds-react"
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useFetcher } from "react-router"
@@ -14,16 +14,16 @@ import type { clientAction } from "~/routes/avsluttOppfolgingPage"
 import { env, urls } from "~/startOppfolging/urls"
 import { AvsluttOppfolgingInnhold } from "./AvsluttOppfolgingInnhold"
 import AvsluttOppfolgingPiktogram from "./avslutt-oppfolging.svg?react"
-import { maksBegrunnelseLengde, validerSkjema, type Skjemafeil } from "./skjema"
+import { validerSkjema, type Skjemafeil, type Begrunnelse } from "./skjema"
 
 export function AvsluttOppfolgingPage() {
   const lenkeMiljo = env === EnvType.local ? EnvType.dev : env
   const fetcher = useFetcher<typeof clientAction>()
   const [bekreftet, setBekreftet] = useState(false)
-  const [begrunnelse, setBegrunnelse] = useState("")
+  const [begrunnelse, setBegrunnelse] = useState<Begrunnelse | "">("")
   const [feil, setFeil] = useState<Skjemafeil>({})
   const bekreftelseRef = useRef<HTMLInputElement>(null)
-  const begrunnelseRef = useRef<HTMLTextAreaElement>(null)
+  const begrunnelseRef = useRef<HTMLFieldSetElement>(null)
   const meldingRef = useRef<HTMLDivElement>(null)
   const innsendingRef = useRef(false)
   const sender = fetcher.state !== "idle"
@@ -93,10 +93,31 @@ export function AvsluttOppfolgingPage() {
               aria-busy={sender}
               className="flex flex-col gap-8"
             >
+              <RadioGroup
+                legend={
+                  "Velg årsak til at du ikke lenger ønsker arbeidsrettet oppfølging"
+                }
+                value={begrunnelse}
+                onChange={(value) => {
+                  setBegrunnelse(value as Begrunnelse)
+                }}
+                ref={begrunnelseRef}
+                error={feil.begrunnelse}
+                disabled={sender}
+                name="begrunnelse"
+              >
+                <Radio value="IJOBB">I jobb</Radio>
+                <Radio value="ALDERSPENSJON">Alderspensjon</Radio>
+                <Radio value="UFØRERTRYGD">Uførertrygd</Radio>
+                <Radio value="FORELDREPERMISJON">Foreldrepermisjon</Radio>
+                <Radio value="STUDIER">Studier</Radio>
+                <Radio value="ANNET">Annet</Radio>
+              </RadioGroup>
               <CheckboxGroup
                 legend="Bekreftelse"
                 hideLegend
                 error={feil.bekreftet}
+                disabled={sender}
               >
                 <Checkbox
                   name="bekreftet"
@@ -110,16 +131,6 @@ export function AvsluttOppfolgingPage() {
                   arbeidsrettede oppfølging.
                 </Checkbox>
               </CheckboxGroup>
-              <Textarea
-                name="begrunnelse"
-                label="Fortell kort hvorfor du ikke lenger ønsker arbeidsrettet oppfølging (Valgfritt)"
-                maxLength={maksBegrunnelseLengde}
-                value={begrunnelse}
-                onChange={(event) => setBegrunnelse(event.target.value)}
-                error={feil.begrunnelse}
-                ref={begrunnelseRef}
-                disabled={sender}
-              />
               {!sender &&
                 (resultat?.status === "feilet" ||
                   resultat?.status === "kanIkkeAvsluttes") && (
