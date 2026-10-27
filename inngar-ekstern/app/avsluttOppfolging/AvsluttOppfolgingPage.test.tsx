@@ -7,6 +7,8 @@ import type { AvsluttOppfolgingResultat } from "./skjema"
 
 const overskrift = "Avslutt arbeidsrettet oppfølging"
 const suksess = "Avslutningen av arbeidsrettet oppfølging var vellykket."
+const arsakLegend =
+  "Velg årsak til at du ikke lenger ønsker arbeidsrettet oppfølging"
 const generellFeil =
   "Noe gikk galt, og oppfølgingen ble ikke avsluttet. Prøv igjen senere."
 
@@ -48,29 +50,31 @@ describe("avslutt egen oppfølging", () => {
     expect(action).not.toHaveBeenCalled()
   })
 
-  it("avviser over 500 tegn og fokuserer begrunnelsen", async () => {
+  it("krever valgt avslutningsårsak for at skjema skal sendes", async () => {
     const { user, action } = renderSkjema()
     await user.click(screen.getByRole("checkbox"))
-    fireEvent.change(screen.getByRole("textbox"), {
-      target: { value: "a".repeat(501) },
-    })
     await user.click(screen.getByRole("button", { name: overskrift }))
+    expect(screen.getByText("Du må velge en årsak.")).toBeInTheDocument()
     expect(
-      screen.getByText("Du må korte ned teksten til 500 tegn"),
+      screen.getByRole("radiogroup", { name: arsakLegend }),
     ).toBeInTheDocument()
-    expect(screen.getByRole("textbox")).toHaveFocus()
     expect(action).not.toHaveBeenCalled()
   })
 
-  it.each(["", "Min begrunnelse", "a".repeat(500)])(
-    "erstatter innholdet med bekreftelse og sender begrunnelsen (%s)",
-    async (begrunnelse) => {
+  it.each([
+    ["I jobb", "IJOBB"],
+    ["Alderspensjon", "ALDERSPENSJON"],
+    ["Uførertrygd", "UFØRERTRYGD"],
+    ["Foreldrepermisjon", "FORELDREPERMISJON"],
+    ["Studier", "STUDIER"],
+    ["Annet", "ANNET"],
+  ])(
+    "erstatter innholdet med bekreftelse og sender valgt årsak (%s)",
+    async (etikett, begrunnelse) => {
       const { user, motta, container } = renderSkjema()
       const piktogram = container.querySelector("main > svg")
+      await user.click(screen.getByRole("radio", { name: etikett }))
       await user.click(screen.getByRole("checkbox"))
-      fireEvent.change(screen.getByRole("textbox"), {
-        target: { value: begrunnelse },
-      })
       await user.click(screen.getByRole("button", { name: overskrift }))
       const bekreftelse = await screen.findByText(suksess)
       await waitFor(() =>
@@ -82,7 +86,8 @@ describe("avslutt egen oppfølging", () => {
         bekreftet: "bekreftet",
         begrunnelse,
       })
-      expect(screen.queryByRole("textbox")).not.toBeInTheDocument()
+      // Sjekker om AvsluttOppgfolgingPage komponenten er fjernet fra DOM og erstattet med bekreftelse
+      expect(screen.queryByRole("radio")).not.toBeInTheDocument()
       expect(screen.queryByText("Hei!")).not.toBeInTheDocument()
       expect(
         screen.queryByRole("link", { name: "Tilbake" }),
@@ -104,12 +109,12 @@ describe("avslutt egen oppfølging", () => {
     "beholder skjema og fokuserer feilen ved %s",
     async (status, tekst) => {
       const { user } = renderSkjema(async () => ({ status }))
+      await user.click(screen.getByRole("radio", { name: "Studier" }))
       await user.click(screen.getByRole("checkbox"))
-      await user.type(screen.getByRole("textbox"), "Min begrunnelse")
       await user.click(screen.getByRole("button", { name: overskrift }))
       const melding = await screen.findByText(tekst)
       await waitFor(() => expect(melding.closest("[tabindex]")).toHaveFocus())
-      expect(screen.getByRole("textbox")).toHaveValue("Min begrunnelse")
+      expect(screen.getByRole("radio", { name: "Studier" })).toBeChecked()
       expect(screen.getByRole("checkbox")).toBeChecked()
       expect(screen.queryByText(suksess)).not.toBeInTheDocument()
     },
@@ -124,12 +129,15 @@ describe("avslutt egen oppfølging", () => {
       await venter
       return { status: "vellykket" }
     })
+    await user.click(screen.getByRole("radio", { name: "I jobb" }))
     await user.click(screen.getByRole("checkbox"))
     const knapp = screen.getByRole("button", { name: overskrift })
     await user.dblClick(knapp)
     fireEvent.submit(container.querySelector("form")!)
     expect(knapp).toBeDisabled()
-    expect(screen.getByRole("textbox")).toBeDisabled()
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio).toBeDisabled()
+    }
     expect(action).toHaveBeenCalledTimes(1)
     expect(screen.queryByText(suksess)).not.toBeInTheDocument()
     await act(async () => fullfor())
@@ -139,6 +147,7 @@ describe("avslutt egen oppfølging", () => {
   it("lar innbygger prøve på nytt etter feil", async () => {
     let status: AvsluttOppfolgingResultat = { status: "feilet" }
     const { user } = renderSkjema(async () => status)
+    await user.click(screen.getByRole("radio", { name: "Annet" }))
     await user.click(screen.getByRole("checkbox"))
     await user.click(screen.getByRole("button", { name: overskrift }))
     expect(await screen.findByText(generellFeil)).toBeInTheDocument()
