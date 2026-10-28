@@ -28,7 +28,7 @@ async function send(body: FormData) {
   return result
 }
 
-function skjema(begrunnelse = "", bekreftet = true) {
+function skjema(begrunnelse = "IJOBB", bekreftet = true) {
   const body = new FormData()
   body.set("begrunnelse", begrunnelse)
   if (bekreftet) body.set("bekreftet", "bekreftet")
@@ -42,20 +42,24 @@ beforeEach(() => {
 })
 
 describe("avslutningsrutens server-action", () => {
-  it.each(["", "a".repeat(500)])(
-    "aksepterer valgfri begrunnelse innenfor grensen",
-    async (begrunnelse) => {
-      const result = await send(skjema(begrunnelse))
-      expect(result.actionData?.avslutt).toEqual({ status: "vellykket" })
-      expect(avsluttEgenOppfolging).toHaveBeenCalledExactlyOnceWith(
-        "test-token",
-        begrunnelse,
-      )
-    },
-  )
+  it.each([
+    "IJOBB",
+    "ALDERSPENSJON",
+    "UFØRERTRYGD",
+    "FORELDREPERMISJON",
+    "STUDIER",
+    "ANNET",
+  ])("aksepterer gyldig årsak (%s)", async (begrunnelse) => {
+    const result = await send(skjema(begrunnelse))
+    expect(result.actionData?.avslutt).toEqual({ status: "vellykket" })
+    expect(avsluttEgenOppfolging).toHaveBeenCalledExactlyOnceWith(
+      "test-token",
+      begrunnelse,
+    )
+  })
 
   it("avviser manglende bekreftelse på serveren", async () => {
-    const result = await send(skjema("", false))
+    const result = await send(skjema("IJOBB", false))
     expect(result.statusCode).toBe(400)
     expect(result.actionData?.avslutt).toMatchObject({
       status: "ugyldig",
@@ -64,15 +68,18 @@ describe("avslutningsrutens server-action", () => {
     expect(avsluttEgenOppfolging).not.toHaveBeenCalled()
   })
 
-  it("avviser over 500 tegn på serveren", async () => {
-    const result = await send(skjema("a".repeat(501)))
-    expect(result.statusCode).toBe(400)
-    expect(result.actionData?.avslutt).toMatchObject({
-      status: "ugyldig",
-      feil: { begrunnelse: "Du må korte ned teksten til 500 tegn" },
-    })
-    expect(avsluttEgenOppfolging).not.toHaveBeenCalled()
-  })
+  it.each(["", "UKJENT", "ijobb"])(
+    "avviser manglende eller ugyldig årsak på serveren (%j)",
+    async (begrunnelse) => {
+      const result = await send(skjema(begrunnelse))
+      expect(result.statusCode).toBe(400)
+      expect(result.actionData?.avslutt).toMatchObject({
+        status: "ugyldig",
+        feil: { begrunnelse: "Du må velge en årsak." },
+      })
+      expect(avsluttEgenOppfolging).not.toHaveBeenCalled()
+    },
+  )
 
   it("avviser en fil i stedet for tekst", async () => {
     const body = skjema()

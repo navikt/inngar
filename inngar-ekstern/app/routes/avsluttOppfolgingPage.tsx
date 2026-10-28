@@ -7,6 +7,7 @@ import { AvsluttOppfolgingPage } from "~/avsluttOppfolging/AvsluttOppfolgingPage
 import {
   validerSkjema,
   type AvsluttOppfolgingResultat,
+  type Begrunnelse,
 } from "~/avsluttOppfolging/skjema"
 
 export const meta: Route.MetaFunction = () => [
@@ -45,7 +46,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   }
   const feil = validerSkjema(
     formData.get("bekreftet") === "bekreftet",
-    begrunnelse,
+    begrunnelse as Begrunnelse,
   )
   if (feil.bekreftet || feil.begrunnelse) {
     return data<AvsluttOppfolgingResultat>(
