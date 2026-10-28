@@ -5,7 +5,7 @@ import {
   Heading,
   Link,
   LocalAlert,
-  Radio, RadioGroup,
+  Select,
 } from "@navikt/ds-react"
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useFetcher } from "react-router"
@@ -14,7 +14,13 @@ import type { clientAction } from "~/routes/avsluttOppfolgingPage"
 import { env, urls } from "~/startOppfolging/urls"
 import { AvsluttOppfolgingInnhold } from "./AvsluttOppfolgingInnhold"
 import AvsluttOppfolgingPiktogram from "./avslutt-oppfolging.svg?react"
-import { validerSkjema, type Skjemafeil, type Begrunnelse } from "./skjema"
+import {
+  validerSkjema,
+  type Skjemafeil,
+  type Begrunnelse,
+  begrunnelseEtiketter,
+  begrunnelser,
+} from "./skjema"
 
 export function AvsluttOppfolgingPage() {
   const lenkeMiljo = env === EnvType.local ? EnvType.dev : env
@@ -23,7 +29,7 @@ export function AvsluttOppfolgingPage() {
   const [begrunnelse, setBegrunnelse] = useState<Begrunnelse | "">("")
   const [feil, setFeil] = useState<Skjemafeil>({})
   const bekreftelseRef = useRef<HTMLInputElement>(null)
-  const begrunnelseRef = useRef<HTMLFieldSetElement>(null)
+  const begrunnelseRef = useRef<HTMLSelectElement>(null)
   const meldingRef = useRef<HTMLDivElement>(null)
   const innsendingRef = useRef(false)
   const sender = fetcher.state !== "idle"
@@ -35,8 +41,8 @@ export function AvsluttOppfolgingPage() {
     innsendingRef.current = false
     if (resultat?.status === "ugyldig") {
       setFeil(resultat.feil)
-      if (resultat.feil.bekreftet) bekreftelseRef.current?.focus()
-      else begrunnelseRef.current?.focus()
+      if (resultat.feil.begrunnelse) begrunnelseRef.current?.focus()
+      else bekreftelseRef.current?.focus()
     } else if (resultat) {
       meldingRef.current?.focus()
     }
@@ -48,8 +54,8 @@ export function AvsluttOppfolgingPage() {
     const skjemafeil = validerSkjema(bekreftet, begrunnelse)
     setFeil(skjemafeil)
     if (skjemafeil.bekreftet || skjemafeil.begrunnelse) {
-      if (skjemafeil.bekreftet) bekreftelseRef.current?.focus()
-      else begrunnelseRef.current?.focus()
+      if (skjemafeil.begrunnelse) begrunnelseRef.current?.focus()
+      else bekreftelseRef.current?.focus()
       return
     }
     innsendingRef.current = true
@@ -93,26 +99,22 @@ export function AvsluttOppfolgingPage() {
               aria-busy={sender}
               className="flex flex-col gap-8"
             >
-              <RadioGroup
-                legend={
-                  "Velg årsak til at du ikke lenger ønsker arbeidsrettet oppfølging"
-                }
-                value={begrunnelse}
-                onChange={(value) => {
-                  setBegrunnelse(value as Begrunnelse)
+              <Select
+                label="Velg årsak til at du ikke lenger ønsker arbeidsrettet oppfølging."
+                error={feil.begrunnelse}
+                onChange={(e) => {
+                  setBegrunnelse(e.target.value as Begrunnelse)
                 }}
                 ref={begrunnelseRef}
-                error={feil.begrunnelse}
+                defaultValue=""
                 disabled={sender}
                 name="begrunnelse"
               >
-                <Radio value="IJOBB">I jobb</Radio>
-                <Radio value="ALDERSPENSJON">Alderspensjon</Radio>
-                <Radio value="UFØRERTRYGD">Uførertrygd</Radio>
-                <Radio value="FORELDREPERMISJON">Foreldrepermisjon</Radio>
-                <Radio value="STUDIER">Studier</Radio>
-                <Radio value="ANNET">Annet</Radio>
-              </RadioGroup>
+                <option value="">Velg årsak</option>
+                {begrunnelser.map((key) => (
+                  <option key={key} value={key}>{begrunnelseEtiketter[key]}</option>
+                ))}
+              </Select>
               <CheckboxGroup
                 legend="Bekreftelse"
                 hideLegend
@@ -123,7 +125,9 @@ export function AvsluttOppfolgingPage() {
                   name="bekreftet"
                   value="bekreftet"
                   checked={bekreftet}
-                  onChange={(event) => setBekreftet(event.target.checked)}
+                  onChange={(event) => {
+                    setBekreftet(event.target.checked)
+                  }}
                   ref={bekreftelseRef}
                   disabled={sender}
                 >

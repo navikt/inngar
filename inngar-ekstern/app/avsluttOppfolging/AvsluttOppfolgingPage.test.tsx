@@ -7,8 +7,8 @@ import type { AvsluttOppfolgingResultat } from "./skjema"
 
 const overskrift = "Avslutt arbeidsrettet oppfølging"
 const suksess = "Avslutningen av arbeidsrettet oppfølging var vellykket."
-const arsakLegend =
-  "Velg årsak til at du ikke lenger ønsker arbeidsrettet oppfølging"
+const arsakLabel =
+  "Velg årsak til at du ikke lenger ønsker arbeidsrettet oppfølging."
 const generellFeil =
   "Noe gikk galt, og oppfølgingen ble ikke avsluttet. Prøv igjen senere."
 
@@ -40,9 +40,53 @@ function renderSkjema(
 }
 
 describe("avslutt egen oppfølging", () => {
-  it("krever bekreftelse og flytter fokus uten å sende skjemaet", async () => {
+  it("krever valgt avslutningsårsak og flytter fokus til select uten å sende skjema", async () => {
     const { user, action } = renderSkjema()
+
+    await user.click(screen.getByRole("checkbox"))
     await user.click(screen.getByRole("button", { name: overskrift }))
+
+    const select = screen.getByRole("combobox", { name: arsakLabel })
+    expect(screen.getByText("Du må velge en årsak.")).toBeInTheDocument()
+    expect(select).toBeInvalid()
+    expect(select).toHaveFocus()
+    expect(action).not.toHaveBeenCalled()
+  })
+
+  it("feiler validering når bruker velger tilbake til «Velg årsak»", async () => {
+    const { user, action } = renderSkjema()
+    const select = screen.getByRole("combobox")
+
+    await user.selectOptions(select, "Studier")
+    await user.selectOptions(select, "Velg årsak")
+    await user.click(screen.getByRole("checkbox"))
+    await user.click(screen.getByRole("button", { name: overskrift }))
+
+    expect(screen.getByText("Du må velge en årsak.")).toBeInTheDocument()
+    expect(select).toBeInvalid()
+    expect(select).toHaveFocus()
+    expect(action).not.toHaveBeenCalled()
+  })
+
+  it("viser begge feil og flytter fokus til første felt (årsak) uten å sende skjemaet", async () => {
+    const { user, action } = renderSkjema()
+
+    await user.click(screen.getByRole("button", { name: overskrift }))
+
+    expect(screen.getByText("Du må velge en årsak.")).toBeInTheDocument()
+    expect(
+      screen.getByText("Du må bekrefte før du kan avslutte oppfølgingen."),
+    ).toBeInTheDocument()
+    expect(screen.getByRole("combobox")).toHaveFocus()
+    expect(action).not.toHaveBeenCalled()
+  })
+
+  it("flytter fokus til checkbox når bare bekreftelse mangler", async () => {
+    const { user, action } = renderSkjema()
+
+    await user.selectOptions(screen.getByRole("combobox"), "Studier")
+    await user.click(screen.getByRole("button", { name: overskrift }))
+
     expect(
       screen.getByText("Du må bekrefte før du kan avslutte oppfølgingen."),
     ).toBeInTheDocument()
@@ -50,32 +94,19 @@ describe("avslutt egen oppfølging", () => {
     expect(action).not.toHaveBeenCalled()
   })
 
-  it("krever valgt avslutningsårsak for at skjema skal sendes", async () => {
-    const { user, action } = renderSkjema()
-    await user.click(screen.getByRole("checkbox"))
-    await user.click(screen.getByRole("button", { name: overskrift }))
-    expect(screen.getByText("Du må velge en årsak.")).toBeInTheDocument()
-    expect(
-      screen.getByRole("radiogroup", { name: arsakLegend }),
-    ).toBeInTheDocument()
-    expect(action).not.toHaveBeenCalled()
-  })
-
   it.each([
-    ["I jobb", "IJOBB"],
-    ["Alderspensjon", "ALDERSPENSJON"],
-    ["Uførertrygd", "UFØRERTRYGD"],
-    ["Foreldrepermisjon", "FORELDREPERMISJON"],
     ["Studier", "STUDIER"],
     ["Annet", "ANNET"],
   ])(
-    "erstatter innholdet med bekreftelse og sender valgt årsak (%s)",
+    "Valgt årsak og bekreftelse sender skjema og erstatter innholdet på siden (%s)",
     async (etikett, begrunnelse) => {
       const { user, motta, container } = renderSkjema()
       const piktogram = container.querySelector("main > svg")
-      await user.click(screen.getByRole("radio", { name: etikett }))
+
+      await user.selectOptions(screen.getByRole("combobox"), etikett)
       await user.click(screen.getByRole("checkbox"))
       await user.click(screen.getByRole("button", { name: overskrift }))
+
       const bekreftelse = await screen.findByText(suksess)
       await waitFor(() =>
         expect(bekreftelse.closest("[tabindex]")).toHaveFocus(),
@@ -86,18 +117,12 @@ describe("avslutt egen oppfølging", () => {
         bekreftet: "bekreftet",
         begrunnelse,
       })
-      // Sjekker om AvsluttOppgfolgingPage komponenten er fjernet fra DOM og erstattet med bekreftelse
-      expect(screen.queryByRole("radio")).not.toBeInTheDocument()
+      // Sjekker om AvsluttOppfolgingPage komponenten er fjernet fra DOM og erstattet med bekreftelse
+      expect(screen.queryByRole("combobox")).not.toBeInTheDocument()
       expect(screen.queryByText("Hei!")).not.toBeInTheDocument()
       expect(
         screen.queryByRole("link", { name: "Tilbake" }),
       ).not.toBeInTheDocument()
-      expect(
-        screen.getByRole("link", { name: "Gå til Min side" }),
-      ).toHaveAttribute("href", "https://www.ansatt.dev.nav.no/minside")
-      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        overskrift,
-      )
       expect(container.querySelector("main > svg")).toBe(piktogram)
     },
   )
@@ -109,12 +134,14 @@ describe("avslutt egen oppfølging", () => {
     "beholder skjema og fokuserer feilen ved %s",
     async (status, tekst) => {
       const { user } = renderSkjema(async () => ({ status }))
-      await user.click(screen.getByRole("radio", { name: "Studier" }))
+
+      await user.selectOptions(screen.getByRole("combobox"), "Studier")
       await user.click(screen.getByRole("checkbox"))
       await user.click(screen.getByRole("button", { name: overskrift }))
       const melding = await screen.findByText(tekst)
+
       await waitFor(() => expect(melding.closest("[tabindex]")).toHaveFocus())
-      expect(screen.getByRole("radio", { name: "Studier" })).toBeChecked()
+      expect(screen.getByRole("combobox")).toHaveValue("STUDIER")
       expect(screen.getByRole("checkbox")).toBeChecked()
       expect(screen.queryByText(suksess)).not.toBeInTheDocument()
     },
@@ -129,25 +156,23 @@ describe("avslutt egen oppfølging", () => {
       await venter
       return { status: "vellykket" }
     })
-    await user.click(screen.getByRole("radio", { name: "I jobb" }))
+    await user.selectOptions(screen.getByRole("combobox"), "I Jobb")
     await user.click(screen.getByRole("checkbox"))
     const knapp = screen.getByRole("button", { name: overskrift })
     await user.dblClick(knapp)
     fireEvent.submit(container.querySelector("form")!)
     expect(knapp).toBeDisabled()
-    for (const radio of screen.getAllByRole("radio")) {
-      expect(radio).toBeDisabled()
-    }
+    expect(screen.getByRole("combobox")).toBeDisabled()
     expect(action).toHaveBeenCalledTimes(1)
     expect(screen.queryByText(suksess)).not.toBeInTheDocument()
     await act(async () => fullfor())
     expect(await screen.findByText(suksess)).toBeInTheDocument()
   })
 
-  it("lar innbygger prøve på nytt etter feil", async () => {
+  it("lar bruker prøve på nytt etter skjemafeil", async () => {
     let status: AvsluttOppfolgingResultat = { status: "feilet" }
     const { user } = renderSkjema(async () => status)
-    await user.click(screen.getByRole("radio", { name: "Annet" }))
+    await user.selectOptions(screen.getByRole("combobox"), "Annet")
     await user.click(screen.getByRole("checkbox"))
     await user.click(screen.getByRole("button", { name: overskrift }))
     expect(await screen.findByText(generellFeil)).toBeInTheDocument()

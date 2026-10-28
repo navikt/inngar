@@ -1,13 +1,15 @@
-export const gyldigeBegrunnelser = [
-  "IJOBB",
-  "ALDERSPENSJON",
-  "UFØRERTRYGD",
-  "FORELDREPERMISJON",
-  "STUDIER",
-  "ANNET",
-] as const
 
-export type Begrunnelse = (typeof gyldigeBegrunnelser)[number]
+export const begrunnelseEtiketter = {
+  IJOBB: "I Jobb",
+  ALDERSPENSJON: "Alderspensjon",
+  UFØRERTRYGD: "Uførertrygd",
+  FORELDREPERMISJON: "Foreldrepermisjon",
+  STUDIER: "Studier",
+  ANNET: "Annet",
+} as const satisfies Record<string, string>
+
+export type Begrunnelse = keyof typeof begrunnelseEtiketter
+export const begrunnelser = Object.keys(begrunnelseEtiketter) as Begrunnelse[]
 
 export type Skjemafeil = {
   bekreftet?: string
@@ -28,7 +30,7 @@ export function validerSkjema(
       ? undefined
       : "Du må bekrefte før du kan avslutte oppfølgingen.",
     begrunnelse:
-      begrunnelse !== "" && gyldigeBegrunnelser.includes(begrunnelse)
+      begrunnelse !== "" && begrunnelser.includes(begrunnelse)
         ? undefined
         : "Du må velge en årsak.",
   }
