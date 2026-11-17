@@ -1,0 +1,62 @@
+import {
+  Accordion,
+  BodyLong,
+  GuidePanel,
+  Heading,
+  List,
+} from "@navikt/ds-react"
+
+export function AvsluttOppfolgingInnhold() {
+  return (
+    <>
+      <GuidePanel poster>
+        <div className="flex flex-col gap-3">
+          <Heading level="2" size="medium" spacing>
+            Hei!
+          </Heading>
+          <BodyLong>
+            Du får arbeidsrettet oppfølging fra Nav. Med arbeidsrettet
+            oppfølging kan du blant annet få:
+          </BodyLong>
+          <List as="ul">
+            <List.Item>Samtaler med veileder</List.Item>
+            <List.Item>Arbeidsrettede tiltak eller kurs</List.Item>
+            <List.Item>Veiledning og hjelp tilpasset din situasjon</List.Item>
+          </List>
+          <BodyLong weight="semibold">
+            Hvis du mener at du ikke lenger trenger denne oppfølgingen, kan du
+            avslutte den nå.
+          </BodyLong>
+        </div>
+      </GuidePanel>
+      <div>
+        <Heading level="2" size="large" spacing>
+          Før du avslutter oppfølgingen din
+        </Heading>
+        <BodyLong spacing>
+          Når du melder deg av arbeidsrettet oppfølging, slutter Nav å hjelpe
+          deg med å komme i jobb eller beholde jobben din. Du har ikke lenger en
+          veileder som følger deg opp. Nav vurderer heller ikke lenger om du
+          trenger tiltak, kurs eller annen støtte.
+        </BodyLong>
+        <BodyLong spacing>
+          Hvis situasjonen din endrer seg, kan du kontakte Nav og be om en ny
+          vurdering.
+        </BodyLong>
+        <BodyLong spacing>
+          Er du usikker på om du bør avslutte? Snakk med veilederen din først.
+        </BodyLong>
+        <Accordion>
+          <Accordion.Item>
+            <Accordion.Header>
+              Hva skjer med dine personopplysninger?
+            </Accordion.Header>
+            <Accordion.Content>
+              Vi oppbevarer dine personopplysninger for arkivformål.
+            </Accordion.Content>
+          </Accordion.Item>
+        </Accordion>
+      </div>
+    </>
+  )
+}

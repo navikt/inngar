@@ -5,6 +5,10 @@ const veilarboppfolging = `http://veilarboppfolging.poao`
 const dekoratoren = `https://dekoratoren.ekstern.dev.nav.no`
 
 export const handlers = [
+  http.post(
+    `${veilarboppfolging}/veilarboppfolging/api/v3/oppfolging/avslutt-egen-oppfolging`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
   http.get(`${dekoratoren}/api/version`, () => {
     return HttpResponse.json({
       name: "dekoratoren-moduler",
