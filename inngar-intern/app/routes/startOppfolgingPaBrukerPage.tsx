@@ -18,7 +18,6 @@ import {
 import { BrukerStatus } from "~/registreringPage/BrukerStatus"
 import { ListItem } from "@navikt/ds-react/List"
 import { useEffect } from "react"
-import { ReaktiveringsForm } from "~/registreringPage/ReaktiveringsForm.tsx"
 import { startOppfolging } from "~/server/oppfolging.ts"
 import { reaktiverOppfolging } from "~/server/reaktiver.ts"
 import { isNativeError } from "node:util/types"
@@ -100,21 +99,6 @@ export function HydrateFallback() {
     return <p>Loading...</p>
 }
 
-const getTittel = (brukerStatus: BrukerStatus) => {
-    if (
-        brukerStatus ===
-            BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT ||
-        brukerStatus ===
-            BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT ||
-        brukerStatus ===
-            BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS
-    ) {
-        return "Reaktiver arbeidsrettet oppfølging"
-    } else {
-        return "Start arbeidsrettet oppfølging"
-    }
-}
-
 export default function StartOppfolgingPaBrukerPage({
     loaderData,
 }: {
@@ -129,7 +113,7 @@ export default function StartOppfolgingPaBrukerPage({
             <div className="bg-bg-subtle flex flex-1">
                 <div className="flex flex-col w-[620px] p-4 mt-6 mx-auto gap-8">
                     <Heading size="large">
-                        {getTittel(loaderData.status)}
+                        Start arbeidsrettet oppfølging
                     </Heading>
                     <IndexPage {...loaderData} />
                 </div>
@@ -200,10 +184,6 @@ const IndexPage = (props: Awaited<ReturnType<typeof loader>>) => {
                     aktivtNavKontor={props.aktivtNavKontor}
                 />
             )
-        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT:
-        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_DNUMMER_IKKE_EOS:
-        case BrukerStatus.ALLEREDE_UNDER_OPPFOLGING_MEN_INAKTIVERT_MEN_KREVER_MANUELL_GODKJENNING_PGA_IKKE_BOSATT:
-            return <ReaktiveringsForm fnr={props.fnr} />
         case BrukerStatus.UGYLDIG_BRUKER_FREG_STATUS:
             return (
                 <UgyldigFregStatusWarning
