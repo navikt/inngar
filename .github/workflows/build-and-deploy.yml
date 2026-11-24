@@ -60,7 +60,7 @@ jobs:
           byosbom: '${{ inputs.app }}-${{ inputs.env }}-bom.json'
 
       - name: Deploy ${{ inputs.app }} to ${{ inputs.env }}
-        uses: nais/deploy/actions/deploy@7b60caaded00332e9aa117a8342daa0876851dfe # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@6fe576e10c7a325643bad96566bd6cb180a2f782 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: ${{ inputs.env }}-gcp
           RESOURCE: .nais/${{ inputs.app }}/${{ inputs.env }}-gcp.yaml
